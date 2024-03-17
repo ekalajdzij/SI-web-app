@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "identityapp1": {
+      "connectionInfo": "App registration: SI Projekat grupe 9 i 10, Tenant: Faculty of Electrical Engineering Sarajevo (etfunsa.onmicrosoft.com - Microsoft Entra ID)",
+      "type": "identityapp.default"
+    },
+    "mssql1": {
+      "type": "mssql.local",
+      "connectionId": "ConnectionStrings:SI_Web_APIContext"
+    }
+  }
+}
