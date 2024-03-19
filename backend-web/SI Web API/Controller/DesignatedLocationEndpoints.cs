@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.OpenApi;
 using SI_Web_API.Data;
 using SI_Web_API.Model;
-namespace SI_Web_API;
+namespace SI_Web_API.Controller;
 
 public static class DesignatedLocationEndpoints
 {
-    public static void MapDesignatedLocationEndpoints (this IEndpointRouteBuilder routes)
+    public static void MapDesignatedLocationEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/api/DesignatedLocation").WithTags(nameof(DesignatedLocation));
 
@@ -51,7 +51,7 @@ public static class DesignatedLocationEndpoints
         {
             db.DesignatedLocation.Add(designatedLocation);
             await db.SaveChangesAsync();
-            return TypedResults.Created($"/api/DesignatedLocation/{designatedLocation.Tid}",designatedLocation);
+            return TypedResults.Created($"/api/DesignatedLocation/{designatedLocation.Tid}", designatedLocation);
         })
         .WithName("CreateDesignatedLocation")
         .WithOpenApi();

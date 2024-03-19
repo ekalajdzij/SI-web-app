@@ -6,7 +6,7 @@ using Microsoft.Identity.Web.Resource;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SI_Web_API.Data;
-using SI_Web_API;
+using SI_Web_API.Controller;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<SI_Web_APIContext>(options =>

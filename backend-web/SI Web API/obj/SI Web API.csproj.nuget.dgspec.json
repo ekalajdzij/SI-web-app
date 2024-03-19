@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\User\\source\\repos\\SI Web API\\SI-web-app\\backend-web\\SI Web API\\SI Web API.csproj": {}
+    "C:\\Users\\Emir\\source\\repos\\SI-web-app\\backend-web\\SI Web API\\SI Web API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\User\\source\\repos\\SI Web API\\SI-web-app\\backend-web\\SI Web API\\SI Web API.csproj": {
+    "C:\\Users\\Emir\\source\\repos\\SI-web-app\\backend-web\\SI Web API\\SI Web API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\source\\repos\\SI Web API\\SI-web-app\\backend-web\\SI Web API\\SI Web API.csproj",
+        "projectUniqueName": "C:\\Users\\Emir\\source\\repos\\SI-web-app\\backend-web\\SI Web API\\SI Web API.csproj",
         "projectName": "SI Web API",
-        "projectPath": "C:\\Users\\User\\source\\repos\\SI Web API\\SI-web-app\\backend-web\\SI Web API\\SI Web API.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\source\\repos\\SI Web API\\SI-web-app\\backend-web\\SI Web API\\obj\\",
+        "projectPath": "C:\\Users\\Emir\\source\\repos\\SI-web-app\\backend-web\\SI Web API\\SI Web API.csproj",
+        "packagesPath": "C:\\Users\\Emir\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Emir\\source\\repos\\SI-web-app\\backend-web\\SI Web API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Emir\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -40,6 +40,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "EPPlus": {
+              "target": "Package",
+              "version": "[7.0.10, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[8.0.0, )",
@@ -95,6 +99,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.5.0, )"
+            },
+            "itext7": {
+              "target": "Package",
+              "version": "[8.0.3, )"
             }
           },
           "imports": [

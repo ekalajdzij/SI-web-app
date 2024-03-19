@@ -15,5 +15,6 @@ namespace SI_Web_API.Data
         }
 
         public DbSet<SI_Web_API.Model.DesignatedLocation> DesignatedLocation { get; set; } = default!;
+        public DbSet<SI_Web_API.Model.User> User { get; set; } = default!;
     }
 }

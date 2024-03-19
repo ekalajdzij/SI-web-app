@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "s4jLueqmplvYAqW7z4r9Fkjsqz97T7smAC3ap/mKO6Q=",
+  "Hash": "wbS7q/HKcCV0ttwKmXBfHs2gZsudibEIcGBPe4qr3ks=",
   "Source": "SI Web API",
   "BasePath": "_content/SI Web API",
   "Mode": "Default",
@@ -9,10 +9,10 @@
   "DiscoveryPatterns": [],
   "Assets": [
     {
-      "Identity": "C:\\Users\\User\\.nuget\\packages\\microsoft.aspnetcore.components.quickgrid\\8.0.3\\staticwebassets\\Microsoft.AspNetCore.Components.QuickGrid.bundle.scp.css",
+      "Identity": "C:\\Users\\Emir\\.nuget\\packages\\microsoft.aspnetcore.components.quickgrid\\8.0.3\\staticwebassets\\Microsoft.AspNetCore.Components.QuickGrid.bundle.scp.css",
       "SourceId": "Microsoft.AspNetCore.Components.QuickGrid",
       "SourceType": "Package",
-      "ContentRoot": "C:\\Users\\User\\.nuget\\packages\\microsoft.aspnetcore.components.quickgrid\\8.0.3\\staticwebassets\\",
+      "ContentRoot": "C:\\Users\\Emir\\.nuget\\packages\\microsoft.aspnetcore.components.quickgrid\\8.0.3\\staticwebassets\\",
       "BasePath": "_content/Microsoft.AspNetCore.Components.QuickGrid",
       "RelativePath": "Microsoft.AspNetCore.Components.QuickGrid.bundle.scp.css",
       "AssetKind": "All",
@@ -25,13 +25,13 @@
       "AssetTraitValue": "ProjectBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\User\\.nuget\\packages\\microsoft.aspnetcore.components.quickgrid\\8.0.3\\staticwebassets\\Microsoft.AspNetCore.Components.QuickGrid.bundle.scp.css"
+      "OriginalItemSpec": "C:\\Users\\Emir\\.nuget\\packages\\microsoft.aspnetcore.components.quickgrid\\8.0.3\\staticwebassets\\Microsoft.AspNetCore.Components.QuickGrid.bundle.scp.css"
     },
     {
-      "Identity": "C:\\Users\\User\\.nuget\\packages\\microsoft.aspnetcore.components.quickgrid\\8.0.3\\staticwebassets\\QuickGrid.razor.js",
+      "Identity": "C:\\Users\\Emir\\.nuget\\packages\\microsoft.aspnetcore.components.quickgrid\\8.0.3\\staticwebassets\\QuickGrid.razor.js",
       "SourceId": "Microsoft.AspNetCore.Components.QuickGrid",
       "SourceType": "Package",
-      "ContentRoot": "C:\\Users\\User\\.nuget\\packages\\microsoft.aspnetcore.components.quickgrid\\8.0.3\\staticwebassets\\",
+      "ContentRoot": "C:\\Users\\Emir\\.nuget\\packages\\microsoft.aspnetcore.components.quickgrid\\8.0.3\\staticwebassets\\",
       "BasePath": "_content/Microsoft.AspNetCore.Components.QuickGrid",
       "RelativePath": "QuickGrid.razor.js",
       "AssetKind": "All",
@@ -44,13 +44,13 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\User\\.nuget\\packages\\microsoft.aspnetcore.components.quickgrid\\8.0.3\\staticwebassets\\QuickGrid.razor.js"
+      "OriginalItemSpec": "C:\\Users\\Emir\\.nuget\\packages\\microsoft.aspnetcore.components.quickgrid\\8.0.3\\staticwebassets\\QuickGrid.razor.js"
     },
     {
-      "Identity": "C:\\Users\\User\\source\\repos\\SI Web API\\SI-web-app\\backend-web\\SI Web API\\obj\\Debug\\net8.0\\scopedcss\\bundle\\SI Web API.styles.css",
+      "Identity": "C:\\Users\\Emir\\source\\repos\\SI-web-app\\backend-web\\SI Web API\\obj\\Debug\\net8.0\\scopedcss\\bundle\\SI Web API.styles.css",
       "SourceId": "SI Web API",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\User\\source\\repos\\SI Web API\\SI-web-app\\backend-web\\SI Web API\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
+      "ContentRoot": "C:\\Users\\Emir\\source\\repos\\SI-web-app\\backend-web\\SI Web API\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
       "BasePath": "_content/SI Web API",
       "RelativePath": "SI Web API.styles.css",
       "AssetKind": "All",
@@ -63,7 +63,7 @@
       "AssetTraitValue": "ApplicationBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\User\\source\\repos\\SI Web API\\SI-web-app\\backend-web\\SI Web API\\obj\\Debug\\net8.0\\scopedcss\\bundle\\SI Web API.styles.css"
+      "OriginalItemSpec": "C:\\Users\\Emir\\source\\repos\\SI-web-app\\backend-web\\SI Web API\\obj\\Debug\\net8.0\\scopedcss\\bundle\\SI Web API.styles.css"
     }
   ]
 }
