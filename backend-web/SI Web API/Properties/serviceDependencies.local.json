@@ -7,6 +7,17 @@
     "mssql1": {
       "type": "mssql.local",
       "connectionId": "ConnectionStrings:SI_Web_APIContext"
+    },
+    "mssql2": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.ServiceLinker/locations/northeurope/connectors/ConnectionStringsazuredatabase_4A848F6675",
+      "secretStore": "LocalSecretsFile",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/si-dbserver/databases/SI Web API_db",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:azuredatabase"
+    },
+    "postgresql1": {
+      "ignored": "true",
+      "type": "postgresql"
     }
   }
 }

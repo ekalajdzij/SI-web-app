@@ -10,7 +10,7 @@ using SI_Web_API.Controller;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<SI_Web_APIContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SI_Web_APIContext") ?? throw new InvalidOperationException("Connection string 'SI_Web_APIContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("azuredatabase") ?? throw new InvalidOperationException("Connection string 'SI_Web_APIContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\SI Web API.props" />
-</Project>

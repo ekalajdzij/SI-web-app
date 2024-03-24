@@ -1,4 +1,4 @@
-@SI_Web_API_HostAddress = http://localhost:5200
+@SI_Web_API_HostAddress = http://localhost:7174
 
 GET {{SI_Web_API_HostAddress}}/testendpoint/
 Accept: application/json

@@ -2,4 +2,8 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/backend-web/.vs/SI Web API/FileContentIndex/affdd904-56d3-4b00-b705-6fbdc4c84f8f.vsidx
+/backend-web/.vs/
+/.vs/
+/backend-web/SI Web API/bin/
+/backend-web/SI Web API/.config/
+/backend-web/SI Web API/obj/
