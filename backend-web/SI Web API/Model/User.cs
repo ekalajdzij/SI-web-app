@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SI_Web_API.Model
 {
@@ -10,6 +11,7 @@ namespace SI_Web_API.Model
         public string Password { get; set; }
         public string FullName { get; set; }
         public string Mail { get; set; }
+        [NotMapped]
         public string Token { get; set; }
         public string Role { get; set; }
     }

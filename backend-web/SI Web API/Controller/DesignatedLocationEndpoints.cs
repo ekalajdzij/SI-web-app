@@ -3,18 +3,22 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.OpenApi;
 using SI_Web_API.Data;
 using SI_Web_API.Model;
+using Microsoft.AspNetCore.Authorization;
+using SI_Web_API.Services;
 namespace SI_Web_API.Controller;
 
 public static class DesignatedLocationEndpoints
 {
-    public static void MapDesignatedLocationEndpoints(this IEndpointRouteBuilder routes)
+    public static void MapDesignatedLocationEndpoints(this IEndpointRouteBuilder routes, string issuer, string key)
     {
         var group = routes.MapGroup("/api/DesignatedLocation").WithTags(nameof(DesignatedLocation));
 
-        group.MapGet("/", async (SI_Web_APIContext db) =>
+        group.MapGet("/", async (HttpContext context, SI_Web_APIContext db) =>
         {
+            AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
             return await db.DesignatedLocation.ToListAsync();
         })
+        .RequireAuthorization()
         .WithName("GetAllDesignatedLocations")
         .WithOpenApi();
 
@@ -26,6 +30,7 @@ public static class DesignatedLocationEndpoints
                     ? TypedResults.Ok(model)
                     : TypedResults.NotFound();
         })
+        .RequireAuthorization()
         .WithName("GetDesignatedLocationById")
         .WithOpenApi();
 
@@ -44,6 +49,7 @@ public static class DesignatedLocationEndpoints
                     );
             return affected == 1 ? TypedResults.Ok() : TypedResults.NotFound();
         })
+        .RequireAuthorization()
         .WithName("UpdateDesignatedLocation")
         .WithOpenApi();
 
@@ -53,6 +59,7 @@ public static class DesignatedLocationEndpoints
             await db.SaveChangesAsync();
             return TypedResults.Created($"/api/DesignatedLocation/{designatedLocation.Tid}", designatedLocation);
         })
+        .RequireAuthorization()
         .WithName("CreateDesignatedLocation")
         .WithOpenApi();
 
@@ -63,6 +70,7 @@ public static class DesignatedLocationEndpoints
                 .ExecuteDeleteAsync();
             return affected == 1 ? TypedResults.Ok() : TypedResults.NotFound();
         })
+        .RequireAuthorization()
         .WithName("DeleteDesignatedLocation")
         .WithOpenApi();
     }
