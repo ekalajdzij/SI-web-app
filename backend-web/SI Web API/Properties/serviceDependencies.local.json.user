@@ -1,13 +1,32 @@
 {
   "dependencies": {
-    "mssql1": {
+    "mssql2": {
       "restored": true,
-      "restoreTime": "2024-03-17T19:47:00.3185178Z"
+      "restoreTime": "2024-03-24T10:47:12.0100748Z"
+    },
+    "postgresql1": {
+      "restored": true,
+      "restoreTime": "2024-03-24T10:51:24.9924812Z"
     },
     "identityapp1": {
       "restored": true,
       "restoreTime": "2024-03-17T13:26:22.4666416Z"
+    },
+    "mssql1": {
+      "restored": true,
+      "restoreTime": "2024-03-17T19:47:00.3185178Z"
     }
   },
-  "parameters": {}
+  "parameters": {
+    "mssql2.resourceGroupName": {
+      "Name": "mssql2.resourceGroupName",
+      "Type": "resourceGroup",
+      "Value": "DefaultResourceGroup-NEU"
+    },
+    "mssql2.subscriptionId": {
+      "Name": "mssql2.subscriptionId",
+      "Type": "subscription",
+      "Value": "f4a0178a-782d-4e7d-9bc2-0c810d938fe7"
+    }
+  }
 }

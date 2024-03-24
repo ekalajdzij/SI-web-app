@@ -11,6 +11,6 @@ namespace SI_Web_API.Model
         public string FullName { get; set; }
         public string Mail { get; set; }
         public string Token { get; set; }
-
+        public string Role { get; set; }
     }
 }
