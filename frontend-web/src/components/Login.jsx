@@ -3,8 +3,10 @@ import React, { useEffect, useState } from "react";
 import { useMsal } from "@azure/msal-react";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 
 function Login() {
+  const baseURL = process.env.VITE_BASE_URL;
   const { instance } = useMsal();
   const [flag, setFlag] = useState(
     JSON.parse(localStorage.getItem("isLoggedIn")) || false
@@ -154,6 +156,35 @@ function Login() {
           console.error(e);
           //handleLogout();
         });
+    } else if (loginType === "form") {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      try {
+        axios
+          .post(baseURL + "api/login/", {
+            username,
+            password,
+          })
+          .then((response) => {
+            console.log(response);
+            /*
+            if (response.data.username.endsWith("@etf.unsa.ba")) {
+              localStorage.setItem("isLoggedIn", "true");
+              setFlag(true);
+              localStorage.setItem("ime", `Welcome ${response.data.name}`);
+              setIme(`Welcome ${response.data.name}`);
+              navigate("/home");
+            } else {
+              //
+            }
+            */
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -174,14 +205,16 @@ function Login() {
         <div className="cover-frame">
           <div className="login-frame">
             <h2>Login to your account</h2>
-            <form id="loginForm" className="login-form">
+            <form id="loginForm" className="login-form" action="#">
               <input
                 type="text"
                 placeholder="Username or phone number"
                 id="username"
               />
               <input type="password" placeholder="Password" id="password" />
-              <button type="submit">Log in</button>
+              <button type="submit" onClick={() => handleLogin("form")}>
+                Log in
+              </button>
             </form>
             <button
               className="microsoft-button"
