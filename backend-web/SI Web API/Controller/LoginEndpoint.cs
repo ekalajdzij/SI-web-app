@@ -39,7 +39,16 @@ public static class LoginEndpoints
             else
             {
                 user.Token = AuthService.GenerateJwtToken(issuer, key);
-                return Results.Ok(user);
+                return Results.Ok(new
+                {
+                    user.Id,
+                    user.Username,
+                    user.Password,
+                    user.PhoneNumber,
+                    user.FullName,
+                    user.Mail,
+                    user.Role
+                });
             }
         }).WithName("GetUserByUsernameAndPassword")
         .AllowAnonymous()
