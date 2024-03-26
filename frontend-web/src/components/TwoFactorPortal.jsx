@@ -1,43 +1,83 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "../css/TwoFactorPortal.css";
 
-function TwoFactorPortal() {
+function TwoFactorPortal({qrcode}) {
     let navigate = useNavigate();
+    const[slika,setSlika]=useState(qrcode)
+    const [digits, setDigits] = useState(["", "", "", "", "", ""]);
+   const[click,setClick]=useState(false)
+   const[error,setError]=useState(false);
 
-    const [pin, setPin] = useState("");
+    const pin = digits.join("");
 
-    const handleLog2fa=(e)=>{
-        e.preventDefault();
+    const handleDigitChange = (digit, index) => {
+        const newDigits = [...digits];
+        newDigits[index] = digit.slice(-1); // Take the last character to ensure only one digit per input
+        setDigits(newDigits);
+
+        // Automatically move to the next input field if not the last one
+        if (digit && index < 5) {
+            document.getElementById(`digit-${index + 1}`).focus();
+        }
+    };
+
+    useEffect(() => {
+        setSlika(localStorage.getItem('QR'));
+    }, []); 
+
+
+    useEffect(() => {
+        if (pin.length === 6) {
+                handleLog2fa()}
+    }, [pin]); 
+    //<button onClick={handleLog2fa} type="submit">Verify</button>  
+    const handleLog2fa = () => {
         axios.post(`/api/login/authenticate/2fa?code=${pin}`, {
-          Username: localStorage.getItem('user'),
-          Password: localStorage.getItem('pass'),
+            Username: localStorage.getItem('user'),
+            Password: localStorage.getItem('pass'),
         })
         .then(response => {
-          console.log('Uspješno logiranje:');
-          localStorage.setItem("isLoggedIn", "true");
-          localStorage.setItem("isLoggedInVia2fa", 'true');
-
-
-          navigate('/home');
+            console.log('Successful login:');
+            localStorage.setItem("isLoggedIn", "true");
+            localStorage.setItem("isLoggedInVia2fa", 'true');
+            navigate('/home');
         })
         .catch(error => {
-          console.error('Greška prilikom logiranja:', error);
+            console.error('Error during login:', error);
+            setError(true)
         });
-      }
-  return (
-    <div>
-    <img src={localStorage.getItem('QR')}></img>
-    
-    <input
+    };
+
+    return (
+        <div className="two-factor-portal">
+            <img src={slika} alt="QR Code" />
+            <button onClick={() => setClick(!click)}>{click ? 'Hide Manual Key' : 'Show Manual Key'}</button>
+
+            {click && <input
                 type="text"
-                placeholder="Username or phone number"
-                id="username"
-                value={pin} onChange={(e)=> setPin(e.target.value)}
-              />
-                            <button onClick={(e)=>{handleLog2fa(e)}} type="submit">Log in</button>
-    </div>
-  )
+                value={localStorage.getItem('key')}
+                readOnly
+                className="inp"
+            />}
+            <div className="digit-inputs">
+                {Array.from({ length: 6 }).map((_, index) => (
+                    <input
+                        key={index}
+                        id={`digit-${index}`}
+                        type="text"
+                        maxLength="1"
+                        className="inp digit"
+                        value={digits[index]}
+                        onChange={(e) => handleDigitChange(e.target.value, index)}
+                    />
+                ))}
+            </div>
+            {error && <p id="error">Invalid pin</p>}
+         
+        </div>
+    );
 }
 
-export default TwoFactorPortal
+export default TwoFactorPortal;

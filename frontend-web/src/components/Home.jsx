@@ -16,6 +16,8 @@ function Home() {
       localStorage.removeItem('accessToken'); 
       localStorage.setItem('isLoggedInVia2fa', 'false');
       localStorage.setItem('ime', "neautorizovano");
+      localStorage.setItem("user","");
+
       navigate('/');
 
     }
@@ -25,6 +27,8 @@ function Home() {
       localStorage.removeItem('accessToken'); 
       localStorage.setItem('isLoggedIn', 'false');
       localStorage.setItem('ime', "neautorizovano");
+      localStorage.setItem("user","");
+
       navigate('/');
 
     })}

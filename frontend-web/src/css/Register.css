@@ -53,8 +53,7 @@ input:focus {
   background-color: transparent !important;
 }
 
-input[type="text"],
-input[type="password"] {
+.inputs{
   width: 250px;
   padding: 10px;
   margin: 10px 0;
@@ -98,9 +97,9 @@ p {
   color: white;
 }
 
-input:optional,
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
+.inputs:optional,
+.inputs:-webkit-autofill,
+.inputs:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 textarea:-webkit-autofill,
 textarea:-webkit-autofill:hover,

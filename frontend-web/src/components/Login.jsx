@@ -5,11 +5,10 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
-function Login() {
+function Login({QR}) {
   const { instance } = useMsal();
-  
-const [user, setUser] = useState("");
-const [pass, setPass] = useState("");
+  const [user, setUser] = useState("");
+  const [pass, setPass] = useState("");
   const [flag, setFlag] = useState(
     JSON.parse(localStorage.getItem("isLoggedIn")) || false
   );
@@ -99,7 +98,7 @@ const [pass, setPass] = useState("");
           account: accounts[accounts.length - 1],
           scopes: ["https://graph.microsoft.com/.default"],
         };
-        
+
         instance
           .acquireTokenSilent(request)
           .then((response) => {
@@ -162,53 +161,57 @@ const [pass, setPass] = useState("");
         });
     }
   };
-  
 
-  const handleLog=(e)=>{
+
+  const handleLog = (e) => {
     e.preventDefault();
 
     console.log(user);
     console.log(pass);
-    localStorage.setItem("user",user);
-    localStorage.setItem("pass",pass);
+    localStorage.setItem("user", user);
+    localStorage.setItem("pass", pass);
 
     axios.post('/api/login', {
       Username: user,
       Password: pass,
     })
-    .then(response => {
-      console.log('Uspješno logiranje:', response.data);
-      localStorage.setItem("ime", `Welcome ${response.data.fullName}`);
-      localStorage.setItem("accessToken", response.token);
-
-
-      axios.post('/api/login/setup/2fa', {
-        Username: user,
-        Password: pass,
-      })
       .then(response => {
         console.log('Uspješno logiranje:', response.data);
-        localStorage.setItem("QR", response.data.qrCodeImageUrl);
-        navigate('/twofactor')
-        
-        
-        
+        localStorage.setItem("ime", `Welcome ${response.data.fullName}`);
+        localStorage.setItem("accessToken", response.data.token);
+        //console.log(response.data.token);
+
+
+        axios.post('/api/login/setup/2fa', {
+          Username: user,
+          Password: pass,
+        })
+          .then(response => {
+            console.log('Uspješno logiranje:', response.data);
+            localStorage.setItem("QR", response.data.qrCodeImageUrl);
+            localStorage.setItem("key", response.data.manualEntryKey);
+            QR(response.data.qrCodeImageUrl)
+
+            navigate('/twofactor')
+
+
+
+          })
+          .catch(error => {
+            console.error('Greška prilikom logiranja:', error);
+          });
+
+
+
       })
       .catch(error => {
         console.error('Greška prilikom logiranja:', error);
       });
-  
-      
-      
-    })
-    .catch(error => {
-      console.error('Greška prilikom logiranja:', error);
-    });
   }
 
 
 
-  
+
 
   const handleLogout = () => {
     instance.logoutPopup();
@@ -232,10 +235,12 @@ const [pass, setPass] = useState("");
                 type="text"
                 placeholder="Username or phone number"
                 id="username"
-                value={user} onChange={(e)=> setUser(e.target.value)}
+                value={user} onChange={(e) => setUser(e.target.value)}
+                className="inputs"
               />
-              <input type="password" placeholder="Password" id="password" value={pass} onChange={(e)=> setPass(e.target.value)} />
-              <button onClick={(e)=>{handleLog(e)}} type="submit">Log in</button>
+              <input type="password" className="inputs"
+                placeholder="Password" id="password" value={pass} onChange={(e) => setPass(e.target.value)} />
+              <button onClick={(e) => { handleLog(e) }} type="submit">Log in</button>
             </form>
             <button
               className="microsoft-button"
