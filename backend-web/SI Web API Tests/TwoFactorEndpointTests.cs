@@ -44,7 +44,42 @@ namespace SI_Web_API.Tests
             var response = await _client.SendAsync(request);
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
-        
-        
+        [Fact]
+        public async Task TestTwoFactorSetupOkResponse()
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, "/api/login/setup/2fa")
+            {
+                Content = new StringContent("{\"username\":\"test\",\"password\":\"test\"}", Encoding.UTF8, "application/json")
+            };
+            var response = await _client.SendAsync(request);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+        [Fact]
+        public async Task TestTwoFactorAuthOkResponse()
+        {
+            var totp = new Totp(Encoding.UTF8.GetBytes("LMY2MHJMR565ZFLFYSND"));
+            var code = totp.ComputeTotp(DateTime.UtcNow);
+            var request = new HttpRequestMessage(HttpMethod.Post, $"/api/login/authenticate/2fa?code={code}")
+            {
+                Content = new StringContent("{\"username\":\"test2FA\",\"password\":\"test2FA\"}", Encoding.UTF8, "application/json")
+            };
+
+
+            var response = await _client.SendAsync(request);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+        [Fact]
+        public async Task TestTwoFactorAuthBadResponse()
+        {
+            var totp = new Totp(Encoding.UTF8.GetBytes("badKey"));
+            var code = totp.ComputeTotp(DateTime.UtcNow);
+            var request = new HttpRequestMessage(HttpMethod.Post, $"/api/login/authenticate/2fa?code={code}")
+            {
+                Content = new StringContent("{\"username\":\"test2FA\",\"password\":\"test2FA\"}", Encoding.UTF8, "application/json")
+            };
+
+            var response = await _client.SendAsync(request);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
     }
 }
