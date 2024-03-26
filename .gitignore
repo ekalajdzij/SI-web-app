@@ -11,3 +11,5 @@
 /obj/Debug/net8.0/
 
 
+/backend-web/SI Web API Tests/obj
+/backend-web/SI Web API Tests/bin/Debug/net8.0
