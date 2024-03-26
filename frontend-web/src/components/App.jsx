@@ -8,7 +8,7 @@ import Home from "./Home"; // Pretpostavljamo da imate komponentu RouteMap
 import TwoFactorPortal from "./TwoFactorPortal";
 
 function App() {
-  const [qr, setQR] = useState("");
+  const [qr, setQR] = useState("default");
    const setQRfunction=(x)=>{
        setQR(x);
    }
