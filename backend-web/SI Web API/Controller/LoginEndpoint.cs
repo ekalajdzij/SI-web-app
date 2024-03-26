@@ -46,8 +46,10 @@ public static class LoginEndpoints
                     user.Password,
                     user.PhoneNumber,
                     user.FullName,
+                    user.Token,
                     user.Mail,
-                    user.Role
+                    user.Role,
+                    user.SecretKey
                 });
             }
         }).WithName("GetUserByUsernameAndPassword")
