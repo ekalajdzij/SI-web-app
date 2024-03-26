@@ -22,7 +22,6 @@ using System.IO;
 
 namespace SI_Web_API.Controller;
 
-[Authorize]
 public static class LoginEndpoints
 {
     public static void MapLoginEndpoints(this IEndpointRouteBuilder routes, string issuer, string key)
@@ -70,7 +69,8 @@ public static class LoginEndpoints
                     QRCodeImageUrl = $"https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=otpauth://totp/SIWeb%20App:{Uri.EscapeDataString(user.FullName)}%3Fsecret={setup2fa.ManualEntryKey}%26issuer=SIWeb%20App"
                 });
             }
-        }).WithName("SetupTwoFactorAuth");
+        }).WithName("SetupTwoFactorAuth")
+        .AllowAnonymous();
 
 
         group.MapPost("/authenticate/2fa", async (HttpContext httpContext, string code, SI_Web_APIContext db, [FromBody] LoginRequest payload) =>
@@ -80,6 +80,7 @@ public static class LoginEndpoints
             if (user == null) return Results.NotFound("User not found.");
             else
             {
+                AuthService.ExtendJwtTokenExpirationTime(httpContext, issuer, key);
                 bool isValidToken = TwoFactorAuthService.ValidateToken(user.SecretKey, code);
                 if (!isValidToken) return Results.BadRequest("Invalid code. Please try again.");
                 else
@@ -87,8 +88,7 @@ public static class LoginEndpoints
                     return Results.Ok();
                 }
             }
-        }).WithName("AuthorizeToken");
-
-
+        }).WithName("AuthorizeToken")
+        .RequireAuthorization();
     }
 }
