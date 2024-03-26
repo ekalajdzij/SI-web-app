@@ -20,7 +20,7 @@ namespace SI_Web_API.Services
             var Sectoken = new JwtSecurityToken(issuer,
               issuer,
               null,
-              expires: DateTime.Now.AddMinutes(30),
+              expires: DateTime.UtcNow.AddMinutes(30),
               signingCredentials: credentials);
 
             var token = new JwtSecurityTokenHandler().WriteToken(Sectoken);
@@ -46,7 +46,7 @@ namespace SI_Web_API.Services
 
                 var expiryTime = validatedToken.ValidTo;
 
-                if (expiryTime <= DateTime.Now.AddMinutes(30)) 
+                if (expiryTime > DateTime.UtcNow) 
                 {
                     var newToken = GenerateJwtToken(validatedToken.Issuer, key);
                     context.Response.Headers.Add("Authorization", "Bearer " + newToken);
