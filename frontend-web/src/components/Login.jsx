@@ -3,9 +3,13 @@ import React, { useEffect, useState } from "react";
 import { useMsal } from "@azure/msal-react";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 
 function Login() {
   const { instance } = useMsal();
+  
+const [user, setUser] = useState("");
+const [pass, setPass] = useState("");
   const [flag, setFlag] = useState(
     JSON.parse(localStorage.getItem("isLoggedIn")) || false
   );
@@ -95,7 +99,7 @@ function Login() {
           account: accounts[accounts.length - 1],
           scopes: ["https://graph.microsoft.com/.default"],
         };
-        s;
+        
         instance
           .acquireTokenSilent(request)
           .then((response) => {
@@ -136,6 +140,8 @@ function Login() {
                 setIme(`Welcome ${decodedAcc.name}`);
                 setDecodedToken(decodedAcc);
                 console.log("Decoded Token:", decodedAcc);
+                localStorage.setItem('isLoggedInVia2fa', 'false');
+
 
                 if (decodedId.roles !== undefined) {
                   console.log("Role:", decodedId.roles[0]);
@@ -156,6 +162,53 @@ function Login() {
         });
     }
   };
+  
+
+  const handleLog=(e)=>{
+    e.preventDefault();
+
+    console.log(user);
+    console.log(pass);
+    localStorage.setItem("user",user);
+    localStorage.setItem("pass",pass);
+
+    axios.post('/api/login', {
+      Username: user,
+      Password: pass,
+    })
+    .then(response => {
+      console.log('Uspješno logiranje:', response.data);
+      localStorage.setItem("ime", `Welcome ${response.data.fullName}`);
+      localStorage.setItem("accessToken", response.token);
+
+
+      axios.post('/api/login/setup/2fa', {
+        Username: user,
+        Password: pass,
+      })
+      .then(response => {
+        console.log('Uspješno logiranje:', response.data);
+        localStorage.setItem("QR", response.data.qrCodeImageUrl);
+        navigate('/twofactor')
+        
+        
+        
+      })
+      .catch(error => {
+        console.error('Greška prilikom logiranja:', error);
+      });
+  
+      
+      
+    })
+    .catch(error => {
+      console.error('Greška prilikom logiranja:', error);
+    });
+  }
+
+
+
+  
 
   const handleLogout = () => {
     instance.logoutPopup();
@@ -179,9 +232,10 @@ function Login() {
                 type="text"
                 placeholder="Username or phone number"
                 id="username"
+                value={user} onChange={(e)=> setUser(e.target.value)}
               />
-              <input type="password" placeholder="Password" id="password" />
-              <button type="submit">Log in</button>
+              <input type="password" placeholder="Password" id="password" value={pass} onChange={(e)=> setPass(e.target.value)} />
+              <button onClick={(e)=>{handleLog(e)}} type="submit">Log in</button>
             </form>
             <button
               className="microsoft-button"
