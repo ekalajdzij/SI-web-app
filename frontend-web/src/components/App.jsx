@@ -9,6 +9,11 @@ import TwoFactorPortal from "./TwoFactorPortal";
 
 function App() {
   const [qr, setQR] = useState("default");
+  const [visible, setVisible] = useState();
+  const setVisfunction=(x)=>{
+    setVisible(x);
+}
+
    const setQRfunction=(x)=>{
        setQR(x);
    }
@@ -16,9 +21,9 @@ function App() {
     <Router>
       <Routes>
         <Route path="/home" element={<Home />} />
-        <Route path="/" element={<Login QR={setQRfunction} />} />
+        <Route path="/" element={<Login QR={setQRfunction} visib={setVisfunction} />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/twofactor" element={<TwoFactorPortal qrcode={qr}/>} />
+        <Route path="/twofactor" element={<TwoFactorPortal qrcode={qr} vis={visible}/>} />
 
       </Routes>
     </Router>

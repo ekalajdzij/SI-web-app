@@ -5,7 +5,7 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
-function Login({QR}) {
+function Login({ QR,visib }) {
   const { instance } = useMsal();
   const [user, setUser] = useState("");
   const [pass, setPass] = useState("");
@@ -181,17 +181,19 @@ function Login({QR}) {
         localStorage.setItem("accessToken", response.data.token);
         //console.log(response.data.token);
 
-
-        axios.post('/api/login/setup/2fa', {
-          Username: user,
-          Password: pass,
-        })
+        if (response.data.secretKey == '' || response.data.secretKey == null || response.data.secretKey ==undefined ) {
+          visib(true);
+          axios.post('/api/login/setup/2fa', {
+            Username: user,
+            Password: pass,
+          })
           .then(response => {
-            console.log('Uspješno logiranje:', response.data);
+            console.log("uslo");
+            console.log('Uspješno:', response.data);
             localStorage.setItem("QR", response.data.qrCodeImageUrl);
             localStorage.setItem("key", response.data.manualEntryKey);
             QR(response.data.qrCodeImageUrl)
-
+            localStorage.setItem("logged", true);
             navigate('/twofactor')
 
 
@@ -200,7 +202,17 @@ function Login({QR}) {
           .catch(error => {
             console.error('Greška prilikom logiranja:', error);
           });
+        }
 
+        else {
+          console.log("ovdje");
+          localStorage.setItem("logged", false);
+          console.log(localStorage.getItem('logged'));
+          visib(false);
+          navigate('/twofactor')
+
+
+        }
 
 
       })

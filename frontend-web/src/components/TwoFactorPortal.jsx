@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../css/TwoFactorPortal.css";
 
-function TwoFactorPortal({qrcode}) {
+function TwoFactorPortal({qrcode,vis}) {
     let navigate = useNavigate();
     const[slika,setSlika]=useState(qrcode)
     const [digits, setDigits] = useState(["", "", "", "", "", ""]);
    const[click,setClick]=useState(false)
    const[error,setError]=useState(false);
+   const[visible,setVisible]=useState(vis);
+
 
     const pin = digits.join("");
 
@@ -37,8 +39,15 @@ function TwoFactorPortal({qrcode}) {
         axios.post(`/api/login/authenticate/2fa?code=${pin}`, {
             Username: localStorage.getItem('user'),
             Password: localStorage.getItem('pass'),
+        }, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+            }
         })
         .then(response => {
+            console.log(response.headers.authorization);
+            localStorage.setItem("accessToken", response.headers.authorization );
+
             console.log('Successful login:');
             localStorage.setItem("isLoggedIn", "true");
             localStorage.setItem("isLoggedInVia2fa", 'true');
@@ -52,9 +61,9 @@ function TwoFactorPortal({qrcode}) {
 
     return (
         <div className="two-factor-portal">
-            <img src={slika} alt="QR Code" />
-            <button onClick={() => setClick(!click)}>{click ? 'Hide Manual Key' : 'Show Manual Key'}</button>
-
+          {visible &&  <img src={slika} alt="QR Code" />}
+           {visible && <button onClick={() => setClick(!click)}>{click ? 'Hide Manual Key' : 'Show Manual Key'}</button>}
+    
             {click && <input
                 type="text"
                 value={localStorage.getItem('key')}
