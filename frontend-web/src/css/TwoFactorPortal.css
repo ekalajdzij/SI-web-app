@@ -8,8 +8,22 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
     border-radius: 8px; 
     margin: auto; 
-    background-color: white; 
+    background-color: white;
+    margin-top: 20px; 
 }
+#hello{
+    color:black;
+    font-size:24px;
+}
+.digit-visible {
+    display: flex;
+    justify-content: center; 
+    width: 100%; 
+    max-width: 300px; 
+    margin: 0 auto;
+    gap: 7px;
+}
+
 #error{
     color:red;
     font-size: 22px;
@@ -63,5 +77,5 @@
 
 
 .two-factor-portal {
-    background: linear-gradient(145deg, #ffffff, #f0f0f0);
+    background: linear-gradient(145deg, #9e8fd5, #f0f0f0);
 }

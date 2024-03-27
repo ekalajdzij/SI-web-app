@@ -92,7 +92,7 @@ input::placeholder {
   color: rgba(255, 255, 255, 0.519);
 }
 
-p {
+#redirect {
   font-size: 13px;
   color: white;
 }

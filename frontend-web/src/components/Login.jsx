@@ -5,10 +5,12 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
-function Login({ QR,visib }) {
+function Login({ QR, visib }) {
   const { instance } = useMsal();
   const [user, setUser] = useState("");
   const [pass, setPass] = useState("");
+  const [warning, setWarning] = useState(false);
+
   const [flag, setFlag] = useState(
     JSON.parse(localStorage.getItem("isLoggedIn")) || false
   );
@@ -179,9 +181,10 @@ function Login({ QR,visib }) {
         console.log('Uspješno logiranje:', response.data);
         localStorage.setItem("ime", `Welcome ${response.data.fullName}`);
         localStorage.setItem("accessToken", response.data.token);
+        console.log("Token na loginu:", response.data.token)
         //console.log(response.data.token);
 
-        if (response.data.secretKey == '' || response.data.secretKey == 'default' || response.data.secretKey ==undefined ) {
+        if (response.data.secretKey == '' || response.data.secretKey == 'default' || response.data.secretKey == undefined) {
           visib(true);
           localStorage.setItem("logged", true);
 
@@ -189,21 +192,21 @@ function Login({ QR,visib }) {
             Username: user,
             Password: pass,
           })
-          .then(response => {
-            console.log("uslo");
-            console.log('Uspješno:', response.data);
-            localStorage.setItem("QR", response.data.qrCodeImageUrl);
-            localStorage.setItem("key", response.data.manualEntryKey);
-            QR(response.data.qrCodeImageUrl)
-            //localStorage.setItem("logged", 'true');
-            navigate('/twofactor')
+            .then(response => {
+              console.log("uslo");
+              console.log('Uspješno:', response.data);
+              localStorage.setItem("QR", response.data.qrCodeImageUrl);
+              localStorage.setItem("key", response.data.manualEntryKey);
+              QR(response.data.qrCodeImageUrl)
+              //localStorage.setItem("logged", 'true');
+              navigate('/twofactor')
 
 
 
-          })
-          .catch(error => {
-            console.error('Greška prilikom logiranja:', error);
-          });
+            })
+            .catch(error => {
+              console.error('Greška prilikom logiranja:', error);
+            });
         }
 
         else {
@@ -220,8 +223,17 @@ function Login({ QR,visib }) {
       })
       .catch(error => {
         console.error('Greška prilikom logiranja:', error);
+        setWarning(true);
+        setUser('');
+        setPass('');
       });
   }
+
+  useEffect(() => {
+    if (user != '' || pass != '') {
+      setWarning(false);
+    }
+  }, [user, pass])
 
 
 
@@ -254,6 +266,8 @@ function Login({ QR,visib }) {
               />
               <input type="password" className="inputs"
                 placeholder="Password" id="password" value={pass} onChange={(e) => setPass(e.target.value)} />
+              {warning && <p id='errorLogin'>Invalid login data</p>}
+
               <button onClick={(e) => { handleLog(e) }} type="submit">Log in</button>
             </form>
             <button
@@ -267,7 +281,7 @@ function Login({ QR,visib }) {
               ></img>
               Log in with Microsoft
             </button>
-            <p>
+            <p id='redirect'>
               Don't have an account?{" "}
               <Link id="linkToRegister" to="/register">
                 Sign up here!

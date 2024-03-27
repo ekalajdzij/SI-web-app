@@ -9,7 +9,7 @@
 /backend-web/SI Web API/obj/
 /backend-web/SI Web API/Migrations/
 /obj/Debug/net8.0/
-
+.env
 
 /backend-web/SI Web API Tests/obj
 /backend-web/SI Web API Tests/bin/Debug/net8.0

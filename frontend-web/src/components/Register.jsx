@@ -27,7 +27,7 @@ function Register() {
               />
               <button type="submit">Create account</button>
             </form>
-            <p>
+            <p id='redirect'>
               Already have an account?
               <Link id="linkToLogin" to="/">
                 Log in!

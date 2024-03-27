@@ -112,15 +112,22 @@ input:focus {
   justify-content: center;
   align-items: center;
   justify-content: space-evenly;
+  width: 275px;
+  height: 45px;
 }
 
 .microsoft-button:hover {
   color: white;
 }
 
-p {
+#redirect {
   font-size: 13px;
   color: white;
+}
+#errorLogin{
+  color:red;
+  font-size: 18px;
+  font-style:italic;
 }
 
 .inputs:-webkit-autofill,
