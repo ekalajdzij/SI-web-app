@@ -27,6 +27,8 @@ function TwoFactorPortal({qrcode,vis}) {
 
     useEffect(() => {
         setSlika(localStorage.getItem('QR'));
+        setVisible(JSON.parse(localStorage.getItem('logged')));
+        console.log(JSON.parse(localStorage.getItem('logged')))
     }, []); 
 
 
@@ -51,6 +53,9 @@ function TwoFactorPortal({qrcode,vis}) {
             console.log('Successful login:');
             localStorage.setItem("isLoggedIn", "true");
             localStorage.setItem("isLoggedInVia2fa", 'true');
+            localStorage.setItem("logged", false);
+            setVisible(false);
+
             navigate('/home');
         })
         .catch(error => {

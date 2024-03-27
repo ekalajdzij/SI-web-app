@@ -181,8 +181,10 @@ function Login({ QR,visib }) {
         localStorage.setItem("accessToken", response.data.token);
         //console.log(response.data.token);
 
-        if (response.data.secretKey == '' || response.data.secretKey == null || response.data.secretKey ==undefined ) {
+        if (response.data.secretKey == '' || response.data.secretKey == 'default' || response.data.secretKey ==undefined ) {
           visib(true);
+          localStorage.setItem("logged", true);
+
           axios.post('/api/login/setup/2fa', {
             Username: user,
             Password: pass,
@@ -193,7 +195,7 @@ function Login({ QR,visib }) {
             localStorage.setItem("QR", response.data.qrCodeImageUrl);
             localStorage.setItem("key", response.data.manualEntryKey);
             QR(response.data.qrCodeImageUrl)
-            localStorage.setItem("logged", true);
+            //localStorage.setItem("logged", 'true');
             navigate('/twofactor')
 
 
