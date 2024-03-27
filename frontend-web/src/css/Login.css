@@ -114,20 +114,33 @@ input:focus {
   justify-content: space-evenly;
   width: 275px;
   height: 45px;
+  position: relative;
 }
 
 .microsoft-button:hover {
   color: white;
 }
 
+.microsoft-button:hover::after {
+  content: "Recommended";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  border-radius: 5px;
+  background-color: white;
+  padding: 5px;
+  color: black;
+  font-size: 14px;
+}
+
 #redirect {
   font-size: 13px;
   color: white;
 }
-#errorLogin{
-  color:red;
+#errorLogin {
+  color: red;
   font-size: 18px;
-  font-style:italic;
+  font-style: italic;
 }
 
 .inputs:-webkit-autofill,

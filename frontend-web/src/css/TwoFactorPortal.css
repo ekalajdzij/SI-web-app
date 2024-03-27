@@ -1,81 +1,133 @@
+.main-container {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(
+      hsla(205, 41%, 16%, 0.7),
+      hsla(205, 41%, 16%, 0.7)
+    ),
+    url("https://wallpapercave.com/wp/wp4313180.jpg");
+  background-size: cover;
+}
+
 .two-factor-portal {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    padding: 20px;
-    max-width: 400px; 
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-    border-radius: 8px; 
-    margin: auto; 
-    background-color: white;
-    margin-top: 20px; 
-}
-#hello{
-    color:black;
-    font-size:24px;
-}
-.digit-visible {
-    display: flex;
-    justify-content: center; 
-    width: 100%; 
-    max-width: 300px; 
-    margin: 0 auto;
-    gap: 7px;
+  max-width: 600px;
+  background-color: rgba(255, 255, 255, 0.8);
+  font-family: "Poppins", sans-serif;
+  padding: 20px 50px;
+  border-radius: 20px;
 }
 
-#error{
-    color:red;
-    font-size: 22px;
-    font-style:italic;
+.two-factor-portal h3,
+.two-factor-portal h4 {
+  margin: 0;
+  font-weight: 500;
+  font-size: 15px;
 }
+
+.two-factor-portal h3 {
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 23px;
+  font-weight: 600;
+}
+
+.two-factor-portal h5 {
+  margin: 0;
+  margin-bottom: 10px;
+  font-weight: 500;
+  font-size: 15px;
+  text-align: center;
+}
+
 .two-factor-portal img {
-    width: 80%; 
-    border-radius: 8px; 
-}
-
-.two-factor-portal input.inp {
-    width: calc(100% - 20px); 
-    padding: 12px;
-    margin: 10px 0;
-    border: 2px solid #007bff; 
-    border-radius: 8px; 
-    color: black;
-    font-size: 16px; 
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); 
-}
-.digit-inputs {
-    display: flex;
-    justify-content: space-between;
-    width: 100%; 
-    max-width: 300px; 
-    margin: 0 auto;
-    gap:7px 
-}
-
-.digit-inputs .digit {
-    width: 60px; 
-    text-align: center;
+  margin: 10px auto;
+  margin-bottom: 15px;
+  display: block;
+  width: 40%;
+  border-radius: 8px;
 }
 
 .two-factor-portal button {
-    cursor: pointer;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 8px;
-    background-color: #007bff;
-    color: white;
-    font-size: 16px; 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
-    transition: background-color 0.3s, box-shadow 0.3s;
+  display: block;
+  margin: 0 auto;
+  margin-top: 10px;
+  cursor: pointer;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 5px 9px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .two-factor-portal button:hover {
-    background-color: #0056b3;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  background-color: #0056b3;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+#digit-text {
+  margin-top: 20px;
+}
 
-.two-factor-portal {
-    background: linear-gradient(145deg, #9e8fd5, #f0f0f0);
+.digit-visible {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  gap: 7px;
+}
+
+#error {
+  color: red;
+  font-size: 22px;
+  font-style: italic;
+  text-align: center;
+  margin: auto;
+}
+
+.two-factor-portal input.inp {
+  width: calc(100% - 20px);
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #004b9b;
+  border-radius: 8px;
+  color: black;
+  font-size: 16px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 5px 9px rgba(0, 0, 0, 0.2);
+}
+
+.digit-inputs {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  gap: 8px;
+}
+
+.digit-inputs .digit {
+  width: 60px;
+  text-align: center;
+}
+
+#lock-logo {
+  border: 2px solid black;
+  margin: auto;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50px;
+  margin-bottom: 15px;
+}
+
+#lock-logo img {
+  width: 40px;
 }

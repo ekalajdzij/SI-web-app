@@ -43,9 +43,6 @@ function Login({ QR, visib }) {
       setAccessToken(null);
     }
 
-    /*console.log(accessToken)
-        console.log(flag);*/
-
     if (accessToken) {
       setDecodedToken(localStorage.getItem("decodedToken") || null);
     }
@@ -93,7 +90,6 @@ function Login({ QR, visib }) {
   const getAccessToken = () => {
     return new Promise((resolve, reject) => {
       const accounts = instance.getAllAccounts();
-      //console.log(accounts.length - 1);
 
       if (accounts.length > 0) {
         const request = {
@@ -131,7 +127,6 @@ function Login({ QR, visib }) {
         .loginPopup()
         .then((response) => {
           if (response.account.username.endsWith("@etf.unsa.ba")) {
-            //console.log(response);
             localStorage.setItem("isLoggedIn", "true");
             setFlag(true);
 
@@ -140,13 +135,7 @@ function Login({ QR, visib }) {
                 localStorage.setItem("ime", `Welcome ${decodedAcc.name}`);
                 setIme(`Welcome ${decodedAcc.name}`);
                 setDecodedToken(decodedAcc);
-                console.log("Decoded Token:", decodedAcc);
-                localStorage.setItem('isLoggedInVia2fa', 'false');
-
-
-                if (decodedId.roles !== undefined) {
-                  console.log("Role:", decodedId.roles[0]);
-                }
+                localStorage.setItem("isLoggedInVia2fa", "false");
 
                 navigate("/home");
               })
@@ -164,80 +153,63 @@ function Login({ QR, visib }) {
     }
   };
 
-
   const handleLog = (e) => {
     e.preventDefault();
 
-    console.log(user);
-    console.log(pass);
     localStorage.setItem("user", user);
     localStorage.setItem("pass", pass);
 
-    axios.post('/api/login', {
-      Username: user,
-      Password: pass,
-    })
-      .then(response => {
-        console.log('Uspješno logiranje:', response.data);
+    axios
+      .post("/api/login", {
+        Username: user,
+        Password: pass,
+      })
+      .then((response) => {
         localStorage.setItem("ime", `Welcome ${response.data.fullName}`);
         localStorage.setItem("accessToken", response.data.token);
-        console.log("Token na loginu:", response.data.token)
-        //console.log(response.data.token);
+        console.log("Token na loginu:", response.data.token);
 
-        if (response.data.secretKey == '' || response.data.secretKey == 'default' || response.data.secretKey == undefined) {
+        if (
+          response.data.secretKey == "" ||
+          response.data.secretKey == "default" ||
+          response.data.secretKey == undefined
+        ) {
           visib(true);
           localStorage.setItem("logged", true);
 
-          axios.post('/api/login/setup/2fa', {
-            Username: user,
-            Password: pass,
-          })
-            .then(response => {
-              console.log("uslo");
-              console.log('Uspješno:', response.data);
+          axios
+            .post("/api/login/setup/2fa", {
+              Username: user,
+              Password: pass,
+            })
+            .then((response) => {
               localStorage.setItem("QR", response.data.qrCodeImageUrl);
               localStorage.setItem("key", response.data.manualEntryKey);
-              QR(response.data.qrCodeImageUrl)
-              //localStorage.setItem("logged", 'true');
-              navigate('/twofactor')
-
-
-
+              QR(response.data.qrCodeImageUrl);
+              navigate("/twofactor");
             })
-            .catch(error => {
-              console.error('Greška prilikom logiranja:', error);
+            .catch((error) => {
+              console.error("Greška prilikom logiranja:", error);
             });
-        }
-
-        else {
-          console.log("ovdje");
+        } else {
           localStorage.setItem("logged", false);
-          console.log(localStorage.getItem('logged'));
           visib(false);
-          navigate('/twofactor')
-
-
+          navigate("/twofactor");
         }
-
-
       })
-      .catch(error => {
-        console.error('Greška prilikom logiranja:', error);
+      .catch((error) => {
+        console.error("Greška prilikom logiranja:", error);
         setWarning(true);
-        setUser('');
-        setPass('');
+        setUser("");
+        setPass("");
       });
-  }
+  };
 
   useEffect(() => {
-    if (user != '' || pass != '') {
+    if (user != "" || pass != "") {
       setWarning(false);
     }
-  }, [user, pass])
-
-
-
-
+  }, [user, pass]);
 
   const handleLogout = () => {
     instance.logoutPopup();
@@ -261,14 +233,28 @@ function Login({ QR, visib }) {
                 type="text"
                 placeholder="Username or phone number"
                 id="username"
-                value={user} onChange={(e) => setUser(e.target.value)}
+                value={user}
+                onChange={(e) => setUser(e.target.value)}
                 className="inputs"
               />
-              <input type="password" className="inputs"
-                placeholder="Password" id="password" value={pass} onChange={(e) => setPass(e.target.value)} />
-              {warning && <p id='errorLogin'>Invalid login data</p>}
+              <input
+                type="password"
+                className="inputs"
+                placeholder="Password"
+                id="password"
+                value={pass}
+                onChange={(e) => setPass(e.target.value)}
+              />
+              {warning && <p id="errorLogin">Invalid login data</p>}
 
-              <button onClick={(e) => { handleLog(e) }} type="submit">Log in</button>
+              <button
+                onClick={(e) => {
+                  handleLog(e);
+                }}
+                type="submit"
+              >
+                Log in
+              </button>
             </form>
             <button
               className="microsoft-button"
@@ -281,7 +267,7 @@ function Login({ QR, visib }) {
               ></img>
               Log in with Microsoft
             </button>
-            <p id='redirect'>
+            <p id="redirect">
               Don't have an account?{" "}
               <Link id="linkToRegister" to="/register">
                 Sign up here!
