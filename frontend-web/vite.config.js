@@ -9,8 +9,10 @@ export default defineConfig({
         target: 'https://fieldlogistics-control.azurewebsites.net', 
         changeOrigin: true, // Opcija da se promijeni origin zahtjeva
         secure: false, 
-        
       },
     },
+    build: {
+      outDir: 'build'
+    }
   },
 });
