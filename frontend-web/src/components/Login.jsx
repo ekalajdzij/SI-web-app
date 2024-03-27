@@ -165,7 +165,7 @@ function Login({ QR, visib }) {
         Password: pass,
       },{
         headers:{
-          'Referrer-Policy': "strict-origin-when-cross-origin"
+          'Referrer Policy': "strict-origin-when-cross-origin"
 
         },})
       .then((response) => {
@@ -187,7 +187,7 @@ function Login({ QR, visib }) {
               Password: pass,
             },{
               headers:{
-                'Referrer-Policy': "strict-origin-when-cross-origin"
+                'Referrer Policy': "strict-origin-when-cross-origin"
 
               },
             })
