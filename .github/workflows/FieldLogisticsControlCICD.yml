@@ -1,9 +1,12 @@
-name: Azure Static Web Apps CI/CD
+name: FieldLogisticsControlCICD
 
 on:
   push:
     branches:
       - Feature
+    path:
+      - 'frontend-web/**'
+      - '.github/workflows/**'
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
