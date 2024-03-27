@@ -163,11 +163,7 @@ function Login({ QR, visib }) {
       .post("/api/login", {
         Username: user,
         Password: pass,
-      },{
-        headers:{
-          'Referrer Policy': "strict-origin-when-cross-origin"
-
-        },})
+      })
       .then((response) => {
         localStorage.setItem("ime", `Welcome ${response.data.fullName}`);
         localStorage.setItem("accessToken", response.data.token);
@@ -185,12 +181,9 @@ function Login({ QR, visib }) {
             .post("/api/login/setup/2fa", {
               Username: user,
               Password: pass,
-            },{
-              headers:{
-                'Referrer Policy': "strict-origin-when-cross-origin"
-
-              },
-            })
+            }
+              
+            )
             .then((response) => {
               localStorage.setItem("QR", response.data.qrCodeImageUrl);
               localStorage.setItem("key", response.data.manualEntryKey);
