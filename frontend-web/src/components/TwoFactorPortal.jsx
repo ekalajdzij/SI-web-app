@@ -46,6 +46,8 @@ function TwoFactorPortal({ qrcode, vis }) {
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            'Referer-Policy': "strict-origin-when-cross-origin"
+
           },
         }
       )
