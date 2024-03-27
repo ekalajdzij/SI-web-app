@@ -19,9 +19,11 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace SI_Web_API.Controller;
 
+[Authorize]
 public static class LoginEndpoints
 {
     public static void MapLoginEndpoints(this IEndpointRouteBuilder routes, string issuer, string key)
@@ -31,8 +33,9 @@ public static class LoginEndpoints
 
         group.MapPost("/", async (HttpContext httpContext, [FromBody] LoginRequest payload, SI_Web_APIContext db) =>
         {
+            var hashedPassword = AuthService.GetSha256Hash(payload.Password);
             var user = await db.User.FirstOrDefaultAsync(u => (u.Username == payload.Username || u.PhoneNumber == payload.Username) &&
-                u.Password == payload.Password);
+                u.Password == hashedPassword);
 
             if (user == null) return Results.NotFound("User not found.");
             else
@@ -42,7 +45,7 @@ public static class LoginEndpoints
                 {
                     user.Id,
                     user.Username,
-                    user.Password,
+                    payload.Password,
                     user.PhoneNumber,
                     user.FullName,
                     user.Token,
@@ -57,8 +60,9 @@ public static class LoginEndpoints
 
         group.MapPost("/setup/2fa", async (HttpContext httpContext, SI_Web_APIContext db, [FromBody] LoginRequest payload) =>
         {
+            var hashedPassword = AuthService.GetSha256Hash(payload.Password);
             var user = await db.User.FirstOrDefaultAsync(u => (u.Username == payload.Username || u.PhoneNumber == payload.Username) &&
-                u.Password == payload.Password);
+                u.Password == hashedPassword);
             if (user == null) return Results.NotFound("User not found.");
             else
             {
@@ -69,18 +73,17 @@ public static class LoginEndpoints
                     QRCodeImageUrl = $"https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=otpauth://totp/SIWeb%20App:{Uri.EscapeDataString(user.FullName)}%3Fsecret={setup2fa.ManualEntryKey}%26issuer=SIWeb%20App"
                 });
             }
-        }).WithName("SetupTwoFactorAuth")
-        .AllowAnonymous();
+        }).WithName("SetupTwoFactorAuth");
 
 
         group.MapPost("/authenticate/2fa", async (HttpContext httpContext, string code, SI_Web_APIContext db, [FromBody] LoginRequest payload) =>
         {
+            var hashedPassword = AuthService.GetSha256Hash(payload.Password);
             var user = await db.User.FirstOrDefaultAsync(u => (u.Username == payload.Username || u.PhoneNumber == payload.Username) &&
-                 u.Password == payload.Password);
+                u.Password == hashedPassword);
             if (user == null) return Results.NotFound("User not found.");
             else
             {
-                AuthService.ExtendJwtTokenExpirationTime(httpContext, issuer, key);
                 bool isValidToken = TwoFactorAuthService.ValidateToken(user.SecretKey, code);
                 if (!isValidToken) return Results.BadRequest("Invalid code. Please try again.");
                 else
@@ -88,7 +91,8 @@ public static class LoginEndpoints
                     return Results.Ok();
                 }
             }
-        }).WithName("AuthorizeToken")
-        .RequireAuthorization();
+        }).WithName("AuthorizeToken");
+
+
     }
 }

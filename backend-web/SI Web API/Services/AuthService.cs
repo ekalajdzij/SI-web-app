@@ -7,6 +7,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 
 namespace SI_Web_API.Services
 {
@@ -20,7 +21,7 @@ namespace SI_Web_API.Services
             var Sectoken = new JwtSecurityToken(issuer,
               issuer,
               null,
-              expires: DateTime.UtcNow.AddMinutes(30),
+              expires: DateTime.Now.AddMinutes(30),
               signingCredentials: credentials);
 
             var token = new JwtSecurityTokenHandler().WriteToken(Sectoken);
@@ -46,11 +47,25 @@ namespace SI_Web_API.Services
 
                 var expiryTime = validatedToken.ValidTo;
 
-                if (expiryTime > DateTime.UtcNow) 
+                if (expiryTime <= DateTime.Now.AddMinutes(30))
                 {
                     var newToken = GenerateJwtToken(validatedToken.Issuer, key);
                     context.Response.Headers.Add("Authorization", "Bearer " + newToken);
                 }
+            }
+        }
+        public static string GetSha256Hash(string input)
+        {
+            using (var sha256Hash = SHA256.Create())
+            {
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
             }
         }
     }
