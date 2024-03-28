@@ -168,7 +168,6 @@ function Login({ QR, visib }) {
         localStorage.setItem("ime", `Welcome ${response.data.fullName}`);
         localStorage.setItem("accessToken", response.data.token);
         console.log("Token na loginu:", response.data.token);
-
         if (
           response.data.secretKey == "" ||
           response.data.secretKey == "default" ||
@@ -176,7 +175,6 @@ function Login({ QR, visib }) {
         ) {
           visib(true);
           localStorage.setItem("logged", true);
-
           axios
             .post("/api/login/setup/2fa", {
               Username: user,
@@ -250,6 +248,7 @@ function Login({ QR, visib }) {
               {warning && <p id="errorLogin">Invalid login data</p>}
 
               <button
+                id="loginButton"
                 onClick={(e) => {
                   handleLog(e);
                 }}
