@@ -160,7 +160,7 @@ function Login({ QR, visib }) {
     localStorage.setItem("pass", pass);
 
     axios
-      .post(`${process.env.VITE_APP_URL}/api/login`, {
+      .post(`https://fieldlogistics-control.azurewebsites.net/api/login`, {
         Username: user,
         Password: pass,
       })

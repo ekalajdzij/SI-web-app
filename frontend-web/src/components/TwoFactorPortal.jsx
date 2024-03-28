@@ -38,7 +38,7 @@ function TwoFactorPortal({ qrcode, vis }) {
   const handleLog2fa = () => {
     axios
       .post(
-        `${process.env.VITE_APP_URL}/api/login/authenticate/2fa?code=${pin}`,
+        `https://fieldlogistics-control.azurewebsites.net/api/login/authenticate/2fa?code=${pin}`,
         {
           Username: localStorage.getItem("user"),
           Password: localStorage.getItem("pass"),
