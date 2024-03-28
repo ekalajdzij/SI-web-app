@@ -92,8 +92,7 @@ public static class LoginEndpoints
                     return Results.Ok();
                 }
             }
-        }).WithName("AuthorizeToken")
-        .RequireAuthorization();
+        }).WithName("AuthorizeToken");
 
 
     }
