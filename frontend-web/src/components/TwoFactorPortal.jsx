@@ -38,7 +38,7 @@ function TwoFactorPortal({ qrcode, vis }) {
   const handleLog2fa = () => {
     axios
       .post(
-        `/api/login/authenticate/2fa?code=${pin}`,
+        `${process.env.VITE_APP_URL}/api/login/authenticate/2fa?code=${pin}`,
         {
           Username: localStorage.getItem("user"),
           Password: localStorage.getItem("pass"),
