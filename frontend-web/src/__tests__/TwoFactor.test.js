@@ -71,7 +71,7 @@ describe("TwoFactorPortal component", () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(axios.post).toHaveBeenCalledWith(
-      "/api/login/authenticate/2fa?code=111111",
+      `https://fieldlogistics-control.azurewebsites.net/api/login/authenticate/2fa?code=111111`,
       {
         Username: "mockedUser",
         Password: "mockedPass",
@@ -139,7 +139,7 @@ describe("TwoFactorPortal component", () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
 
     expect(axios.post).toHaveBeenCalledWith(
-      "/api/login/authenticate/2fa?code=111111",
+      `https://fieldlogistics-control.azurewebsites.net/api/login/authenticate/2fa?code=111111`,
       {
         Username: "mockedUser",
         Password: "mockedPass",

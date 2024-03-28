@@ -136,7 +136,7 @@ describe("Login component", () => {
     await waitFor(
       () => {
         expect(axios.post).toHaveBeenCalledTimes(1);
-        expect(axios.post).toHaveBeenCalledWith("/api/login", {
+        expect(axios.post).toHaveBeenCalledWith(`https://fieldlogistics-control.azurewebsites.net/api/login`, {
           Username: "test",
           Password: "test",
         });
@@ -171,7 +171,7 @@ describe("Login component", () => {
     await waitFor(
       () => {
         expect(axios.post).toHaveBeenCalledTimes(1);
-        expect(axios.post).toHaveBeenCalledWith("/api/login", {
+        expect(axios.post).toHaveBeenCalledWith(`https://fieldlogistics-control.azurewebsites.net/api/login`, {
           Username: "test",
           Password: "test",
         });
@@ -218,7 +218,7 @@ describe("Login component", () => {
     await waitFor(
       () => {
         expect(axios.post).toHaveBeenCalledTimes(1);
-        expect(axios.post).toHaveBeenCalledWith("/api/login", {
+        expect(axios.post).toHaveBeenCalledWith(`https://fieldlogistics-control.azurewebsites.net/api/login`, {
           Username: "test",
           Password: "test",
         });
@@ -230,7 +230,7 @@ describe("Login component", () => {
         expect(mockVisib2).toHaveBeenCalledWith(true);
 
         expect(axios.post).toHaveBeenCalledTimes(2);
-        expect(axios.post).toHaveBeenCalledWith("/api/login/setup/2fa", {
+        expect(axios.post).toHaveBeenCalledWith(`https://fieldlogistics-control.azurewebsites.net/api/login/setup/2fa`, {
           Username: "test",
           Password: "test",
         });

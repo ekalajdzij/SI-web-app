@@ -178,7 +178,7 @@ function Login({ QR, visib }) {
           localStorage.setItem("logged", true);
 
           axios
-            .post("/api/login/setup/2fa", {
+            .post(`https://fieldlogistics-control.azurewebsites.net/api/login/setup/2fa`, {
               Username: user,
               Password: pass,
             })
