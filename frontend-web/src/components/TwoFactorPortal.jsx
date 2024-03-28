@@ -106,6 +106,7 @@ function TwoFactorPortal({ qrcode, vis }) {
             <input
               key={index}
               id={`digit-${index}`}
+              data-testid={`digit-${index}`}
               type="text"
               maxLength="1"
               className="inp digit"
