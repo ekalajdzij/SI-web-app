@@ -35,10 +35,7 @@ public static class LoginEndpoints
             var hashedPassword = AuthService.GetSha256Hash(payload.Password);
             var user = await db.User.FirstOrDefaultAsync(u => (u.Username == payload.Username || u.PhoneNumber == payload.Username) &&
                 u.Password == hashedPassword);
-
-            if (user == null) return Results.NotFound("User not found.");
-            else
-            {
+            if (user != null) { 
                 user.Token = AuthService.GenerateJwtToken(issuer, key);
                 return Results.Ok(new
                 {
@@ -53,6 +50,43 @@ public static class LoginEndpoints
                     user.SecretKey
                 });
             }
+            var admin = await db.Admin.FirstOrDefaultAsync(a => (a.Username == payload.Username || a.PhoneNumber == payload.Username) &&
+                a.Password == hashedPassword);
+            if (admin != null)
+            {
+                if (admin.IsSuperAdmin)
+                {
+                    var superAdmin = await db.SuperAdmin.FirstOrDefaultAsync(a => (a.Username == payload.Username || a.PhoneNumber == payload.Username) &&
+                a.Password == hashedPassword);
+                    if (superAdmin == null) return Results.NotFound("User not found.");
+                    else
+                    {
+                        //dodati generisanje tokena
+                        return Results.Ok(new
+                        {
+                            superAdmin.Id,
+                            superAdmin.Username,
+                            payload.Password,
+                            superAdmin.PhoneNumber,
+                            superAdmin.SecretKey
+                            //vratiti token
+                        });
+                    }
+                } else
+                {
+                    //dodati generisanje tokena
+                    return Results.Ok(new
+                    {
+                        admin.Id,
+                        admin.Username,
+                        payload.Password,
+                        admin.PhoneNumber,
+                        admin.SecretKey
+                        //vratiti token
+                    });
+                }
+            } else return Results.NotFound("User not found.");
+
         }).WithName("GetUserByUsernameAndPassword")
         .AllowAnonymous()
         .WithOpenApi();
@@ -62,16 +96,44 @@ public static class LoginEndpoints
             var hashedPassword = AuthService.GetSha256Hash(payload.Password);
             var user = await db.User.FirstOrDefaultAsync(u => (u.Username == payload.Username || u.PhoneNumber == payload.Username) &&
                 u.Password == hashedPassword);
-            if (user == null) return Results.NotFound("User not found.");
-            else
+            if (user != null)
             {
-                var setup2fa = TwoFactorAuthService.GenerateSetupCode(user, db);
+                var setup2fa = TwoFactorAuthService.GenerateSetupCode(db, null, null, user);
                 return Results.Ok(new
                 {
                     ManualEntryKey = setup2fa.ManualEntryKey,
                     QRCodeImageUrl = $"https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=otpauth://totp/SIWeb%20App:{Uri.EscapeDataString(user.FullName)}%3Fsecret={setup2fa.ManualEntryKey}%26issuer=SIWeb%20App"
                 });
             }
+            var admin = await db.Admin.FirstOrDefaultAsync(a => (a.Username == payload.Username || a.PhoneNumber == payload.Username) &&
+                a.Password == hashedPassword);
+            if (admin != null)
+            {
+                if (admin.IsSuperAdmin)
+                {
+                    var superAdmin = await db.SuperAdmin.FirstOrDefaultAsync(a => (a.Username == payload.Username || a.PhoneNumber == payload.Username) &&
+                a.Password == hashedPassword);
+                    if (superAdmin == null) return Results.NotFound("User not found.");
+                    else
+                    {
+                        var setup2fa = TwoFactorAuthService.GenerateSetupCode(db, null, superAdmin, null);
+                        return Results.Ok(new
+                        {
+                            ManualEntryKey = setup2fa.ManualEntryKey,
+                            QRCodeImageUrl = $"https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=otpauth://totp/SIWeb%20App:{Uri.EscapeDataString(superAdmin.Username)}%3Fsecret={setup2fa.ManualEntryKey}%26issuer=SIWeb%20App"
+                        });
+                    }
+                }
+                else
+                {
+                    var setup2fa = TwoFactorAuthService.GenerateSetupCode(db, admin, null, null);
+                    return Results.Ok(new
+                    {
+                        ManualEntryKey = setup2fa.ManualEntryKey,
+                        QRCodeImageUrl = $"https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=otpauth://totp/SIWeb%20App:{Uri.EscapeDataString(admin.Username)}%3Fsecret={setup2fa.ManualEntryKey}%26issuer=SIWeb%20App"
+                    });
+                }
+            }else return Results.NotFound("User not found.");
         }).WithName("SetupTwoFactorAuth")
         .AllowAnonymous();
 
@@ -81,8 +143,7 @@ public static class LoginEndpoints
             var hashedPassword = AuthService.GetSha256Hash(payload.Password);
             var user = await db.User.FirstOrDefaultAsync(u => (u.Username == payload.Username || u.PhoneNumber == payload.Username) &&
                 u.Password == hashedPassword);
-            if (user == null) return Results.NotFound("User not found.");
-            else
+            if (user != null)
             {
                 AuthService.ExtendJwtTokenExpirationTime(httpContext, issuer, key);
                 bool isValidToken = TwoFactorAuthService.ValidateToken(user.SecretKey, code);
@@ -92,6 +153,33 @@ public static class LoginEndpoints
                     return Results.Ok();
                 }
             }
+            var admin = await db.Admin.FirstOrDefaultAsync(a => (a.Username == payload.Username || a.PhoneNumber == payload.Username) &&
+                a.Password == hashedPassword);
+            if (admin != null)
+            {
+                if (admin.IsSuperAdmin)
+                {
+                    var superAdmin = await db.SuperAdmin.FirstOrDefaultAsync(a => (a.Username == payload.Username || a.PhoneNumber == payload.Username) &&
+                a.Password == hashedPassword);
+                    if (superAdmin == null) return Results.NotFound("User not found.");
+                    else
+                    {
+                        AuthService.ExtendJwtTokenExpirationTime(httpContext, issuer, key);
+                        bool isValidToken = TwoFactorAuthService.ValidateToken(superAdmin.SecretKey, code);
+                        if (!isValidToken) return Results.BadRequest("Invalid code. Please try again.");
+                        else return Results.Ok();
+                    }
+                }
+                else
+                {
+                    AuthService.ExtendJwtTokenExpirationTime(httpContext, issuer, key);
+                    bool isValidToken = TwoFactorAuthService.ValidateToken(admin.SecretKey, code);
+                    if (!isValidToken) return Results.BadRequest("Invalid code. Please try again.");
+                    else return Results.Ok();
+                }
+
+            }
+            else return Results.NotFound("User not found.");
         }).WithName("AuthorizeToken");
 
 
