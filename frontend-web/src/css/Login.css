@@ -1,0 +1,168 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: hsla(205, 41%, 16%, 0.286);
+}
+
+.main {
+  width: 100%;
+  height: 95vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Poppins", sans-serif;
+}
+
+.cover-frame {
+  width: 800px;
+  height: 450px;
+  background-image: url("https://wallpapercave.com/wp/wp4313180.jpg");
+  background-size: cover;
+  border-radius: 30px;
+}
+
+button {
+  height: 40px;
+  width: 270px;
+  cursor: pointer;
+  padding: 10px 20px;
+  margin-top: 23px;
+  border: none;
+  border-radius: 18px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+h2 {
+  margin: 0;
+  font-weight: 500;
+  color: white;
+}
+
+#linkToRegister {
+  margin-left: 8px;
+  color: #ffee80;
+  text-decoration: none;
+}
+
+button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.login-frame {
+  height: 100%;
+  width: 50%;
+  background-color: hsla(205, 41%, 16%, 0.743);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 25px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.inputs {
+  width: 250px;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ffffff;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  display: block;
+  border-radius: 0;
+  background-color: transparent !important;
+  color: white;
+}
+::-ms-reveal {
+  filter: invert(100%);
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.519);
+}
+
+input:focus {
+  outline: none;
+  border-color: #007bff;
+  background-color: transparent !important;
+}
+
+.microsoft-button img {
+  width: 30px;
+  height: 30px;
+}
+
+.microsoft-button {
+  background-color: #d1e9ff;
+  color: #1570ef;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 275px;
+  height: 45px;
+  position: relative;
+}
+
+.microsoft-button:hover {
+  color: white;
+}
+
+.microsoft-button:hover::after {
+  content: "Recommended";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  border-radius: 5px;
+  background-color: white;
+  padding: 5px;
+  color: black;
+  font-size: 14px;
+}
+
+#redirect {
+  font-size: 13px;
+  color: white;
+}
+#errorLogin {
+  color: red;
+  font-size: 18px;
+  font-style: italic;
+}
+
+.inputs:-webkit-autofill,
+.inputs:-webkit-autofill:hover,
+.inputs:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border: 1px solid #ffffff;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  display: block;
+  -webkit-text-fill-color: #ffffff;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+@media (max-width: 600px) {
+  .login-frame {
+    width: 100%;
+  }
+}
