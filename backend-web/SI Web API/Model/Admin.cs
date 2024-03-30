@@ -13,6 +13,8 @@ namespace SI_Web_API.Model
         public string Password { get; set; }
         public string PhoneNumber { get; set; }
         public string SecretKey { get; set; }
+        [NotMapped]
+        public string Token { get; set; }
         public bool IsSuperAdmin { get; set; }
         [ForeignKey("Company")]
         public int? CompanyId { get; set; } // Nullable
