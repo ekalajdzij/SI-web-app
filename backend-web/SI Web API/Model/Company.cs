@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace SI_Web_API.Model
 {
@@ -9,8 +10,11 @@ namespace SI_Web_API.Model
         public string Name { get; set; }
 
         // Navigation property
+        [JsonIgnore]
         public ICollection<Admin> Admins { get; set; }
+        [JsonIgnore]
         public ICollection<User> Users { get; set; }
+        [JsonIgnore]
         public ICollection<Campaign> Campaigns { get; set; }
     }
 }

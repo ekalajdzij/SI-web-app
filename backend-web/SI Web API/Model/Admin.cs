@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace SI_Web_API.Model
@@ -12,11 +13,14 @@ namespace SI_Web_API.Model
         public string Password { get; set; }
         public string PhoneNumber { get; set; }
         public string SecretKey { get; set; }
+        [NotMapped]
+        public string Token { get; set; }
         public bool IsSuperAdmin { get; set; }
         [ForeignKey("Company")]
         public int? CompanyId { get; set; } // Nullable
 
         // Navigation property
+        [JsonIgnore]
         public Company Company { get; set; }
     }
 }
