@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.OpenApi;
 using Microsoft.AspNetCore.Http.HttpResults;
 using SI_Web_API.Model;
 using SI_Web_API.Services;
+using Microsoft.AspNetCore.Mvc;
 namespace SI_Web_API.Controller
 {
     public static class CompanyEndpoints
@@ -34,14 +35,13 @@ namespace SI_Web_API.Controller
             .RequireAuthorization()
             .WithOpenApi();
 
-            group.MapPut("/{id}", async Task<Results<Ok, NotFound>> (HttpContext context, int id, Company company, SI_Web_APIContext db) =>
+            group.MapPut("/{id}", async Task<Results<Ok, NotFound>> (HttpContext context, int id, [FromBody] string name, SI_Web_APIContext db) =>
             {
                 AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
                 var affected = await db.Company
                     .Where(model => model.Id == id)
                     .ExecuteUpdateAsync(setters => setters
-                      .SetProperty(m => m.Id, company.Id)
-                      .SetProperty(m => m.Name, company.Name)
+                      .SetProperty(m => m.Name, name)
                       );
                 return affected == 1 ? TypedResults.Ok() : TypedResults.NotFound();
             })
@@ -49,7 +49,7 @@ namespace SI_Web_API.Controller
             .RequireAuthorization()
             .WithOpenApi();
 
-            group.MapPost("/", async (HttpContext context, Company company, SI_Web_APIContext db) =>
+            group.MapPost("/", async (HttpContext context, [FromBody] Company company, SI_Web_APIContext db) =>
             {
                 AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
                 db.Company.Add(company);
