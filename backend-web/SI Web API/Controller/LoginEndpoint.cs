@@ -54,13 +54,14 @@ public static class LoginEndpoints
                 a.Password == hashedPassword);
             if (admin != null)
             {
-                //dodati generisanje tokena
+                admin.Token = AuthService.GenerateJwtToken(issuer, key);
                 return Results.Ok(new
                 {
                     admin.Id,
                     admin.Username,
                     payload.Password,
                     admin.PhoneNumber,
+                    admin.Token,
                     admin.IsSuperAdmin,
                     admin.SecretKey
                     //vratiti token
