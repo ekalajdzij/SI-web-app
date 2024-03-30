@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace SI_Web_API.Model
 {
@@ -15,7 +16,9 @@ namespace SI_Web_API.Model
         public string Status { get; set; }
 
         // Navigation properties
+        [JsonIgnore]
         public User User { get; set; }
+        [JsonIgnore]
         public Campaign Campaign { get; set; }
     }
 }

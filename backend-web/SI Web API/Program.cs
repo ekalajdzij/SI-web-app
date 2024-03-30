@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Abstractions;
 using Microsoft.Identity.Web;
@@ -86,6 +86,8 @@ app.UseAuthorization();
 app.MapDesignatedLocationEndpoints(jwtIssuer, jwtKey);
 
 app.MapLoginEndpoints(jwtIssuer, jwtKey);
+
+app.MapCompanyEndpoints();
 
 app.Run();
 public partial class Program { }

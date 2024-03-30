@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace SI_Web_API.Model
@@ -17,6 +18,7 @@ namespace SI_Web_API.Model
         public int? CompanyId { get; set; } // Nullable
 
         // Navigation property
+        [JsonIgnore]
         public Company Company { get; set; }
     }
 }
