@@ -22,7 +22,7 @@ public class TwoFactorAuthService
         return new string(secretKey);
     }
 
-    public static SetupCode GenerateSetupCode(SI_Web_APIContext db, Admin admin = null, SuperAdmin superAdmin = null, User user = null)
+    public static SetupCode GenerateSetupCode(SI_Web_APIContext db, Admin admin = null, User user = null)
     {
         if (admin != null)
         {
@@ -35,18 +35,6 @@ public class TwoFactorAuthService
 
             var authenticator = new TwoFactorAuthenticator();
             return authenticator.GenerateSetupCode("SIWeb App", admin.Username, ConvertSecretToBytes(admin.SecretKey, false), 300);
-        }
-        else if (superAdmin != null)
-        {
-            if (string.IsNullOrEmpty(superAdmin.SecretKey))
-            {
-                string secretKey = GenerateRandomSecretKey();
-                superAdmin.SecretKey = secretKey;
-                db.SaveChanges();
-            }
-
-            var authenticator = new TwoFactorAuthenticator();
-            return authenticator.GenerateSetupCode("SIWeb App", superAdmin.Username, ConvertSecretToBytes(superAdmin.SecretKey, false), 300);
         }
         else
         {
