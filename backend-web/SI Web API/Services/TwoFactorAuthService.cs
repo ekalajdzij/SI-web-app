@@ -22,17 +22,32 @@ public class TwoFactorAuthService
         return new string(secretKey);
     }
 
-    public static SetupCode GenerateSetupCode(User user, SI_Web_APIContext db)
+    public static SetupCode GenerateSetupCode(SI_Web_APIContext db, Admin admin = null, User user = null)
     {
-        if (string.IsNullOrEmpty(user.SecretKey))
+        if (admin != null)
         {
-            string secretKey = GenerateRandomSecretKey();
-            user.SecretKey = secretKey;
-            db.SaveChanges();
-        }
+            if (string.IsNullOrEmpty(admin.SecretKey))
+            {
+                string secretKey = GenerateRandomSecretKey();
+                admin.SecretKey = secretKey;
+                db.SaveChanges();
+            }
 
-        var authenticator = new TwoFactorAuthenticator();
-        return authenticator.GenerateSetupCode("SIWeb App", user.FullName, ConvertSecretToBytes(user.SecretKey, false), 300);
+            var authenticator = new TwoFactorAuthenticator();
+            return authenticator.GenerateSetupCode("SIWeb App", admin.Username, ConvertSecretToBytes(admin.SecretKey, false), 300);
+        }
+        else
+        {
+            if (string.IsNullOrEmpty(user.SecretKey))
+            {
+                string secretKey = GenerateRandomSecretKey();
+                user.SecretKey = secretKey;
+                db.SaveChanges();
+            }
+
+            var authenticator = new TwoFactorAuthenticator();
+            return authenticator.GenerateSetupCode("SIWeb App", user.FullName, ConvertSecretToBytes(user.SecretKey, false), 300);
+        }
     }
 
     public static bool ValidateToken(string secretKey, string code)
