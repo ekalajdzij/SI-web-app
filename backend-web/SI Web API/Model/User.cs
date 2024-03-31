@@ -18,7 +18,6 @@ namespace SI_Web_API.Model
         public int CompanyId { get; set; }
         [NotMapped]
         public string Token { get; set; }
-        public string Role { get; set; }
         public string SecretKey { get; set; }
 
         // Navigation property
