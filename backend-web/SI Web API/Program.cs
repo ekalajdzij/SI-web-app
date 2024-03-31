@@ -89,6 +89,8 @@ app.MapLoginEndpoints(jwtIssuer, jwtKey);
 
 app.MapCompanyEndpoints(jwtIssuer, jwtKey);
 
+app.MapUserEndpoints(jwtIssuer, jwtKey);
+
 app.MapUserCampaignEndpoints(jwtIssuer, jwtKey);
 
 app.MapCampaignEndpoints(jwtIssuer, jwtKey);
