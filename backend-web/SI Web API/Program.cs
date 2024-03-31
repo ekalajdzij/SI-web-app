@@ -89,5 +89,7 @@ app.MapLoginEndpoints(jwtIssuer, jwtKey);
 
 app.MapCompanyEndpoints(jwtIssuer, jwtKey);
 
+app.MapAdminEndpoints(jwtIssuer, jwtKey);
+
 app.Run();
 public partial class Program { }
