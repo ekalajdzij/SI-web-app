@@ -49,11 +49,14 @@ namespace SI_Web_API.Controller
                 {
                     return Results.NotFound("User campaign not found.");
                 }
+                if (payload.Status != "accepted" && payload.Status != "declined" && payload.Status != "none") return Results.BadRequest("Invalid status.");
+                else
+                {
+                    userCampaign.Status = payload.Status;
+                    await db.SaveChangesAsync();
 
-                userCampaign.Status = payload.Status;
-                await db.SaveChangesAsync();
-
-                return TypedResults.Ok(new { status = "OK" });
+                    return TypedResults.Ok(new { status = "OK" });
+                }
             })
             .WithName("UpdateCampaignStatus")
             .RequireAuthorization()
