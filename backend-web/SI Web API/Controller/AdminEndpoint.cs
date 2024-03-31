@@ -40,11 +40,29 @@ namespace SI_Web_API.Controller
             group.MapGet("/", async (HttpContext context, SI_Web_APIContext db) =>
             {
                 AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
-                return await db.Admin.ToListAsync();
+                var admins = await db.Admin
+                                    .Include(a => a.Company)
+                                    .ToListAsync();
+
+                // Mapiranje admina na novi oblik koji uključuje naziv kompanije umjesto companyId
+                var adminsWithCompanyName = admins.Select(a => new
+                {
+                    Id = a.Id,
+                    Username = a.Username,
+                    Password = a.Password,
+                    PhoneNumber = a.PhoneNumber,
+                    SecretKey = a.SecretKey,
+                    Token = a.Token,
+                    IsSuperAdmin = a.IsSuperAdmin,
+                    Company = a.Company != null ? a.Company.Name : null  // Koristenje naziva kompanije umjesto companyId
+                });
+
+                return adminsWithCompanyName;
             })
             .WithName("GetAllAdmins")
             .RequireAuthorization()
             .WithOpenApi();
+
 
             // Ruta GET /api/admin/{id} vraca admina sa atributima na osnovu id
             group.MapGet("/{id}", async Task<Results<Ok<Admin>, NotFound>> (HttpContext context, int id, SI_Web_APIContext db) =>
