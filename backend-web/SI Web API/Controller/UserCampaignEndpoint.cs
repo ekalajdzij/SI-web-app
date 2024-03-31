@@ -39,7 +39,7 @@ namespace SI_Web_API.Controller
             .RequireAuthorization()
             .WithOpenApi();
 
-            group.MapPut("/", async (HttpContext context, SI_Web_APIContext db, [FromBody] UpdateRequest payload) =>
+            group.MapPut("/", async (HttpContext context, SI_Web_APIContext db, [FromBody] UpdateUserCampaignRequest payload) =>
             {
                 AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
                 var userCampaign = await db.UserCampaign

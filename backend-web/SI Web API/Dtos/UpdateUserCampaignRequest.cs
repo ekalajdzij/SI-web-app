@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 namespace SI_Web_API.Dtos
 {
-    public class UpdateRequest
+    public class UpdateUserCampaignRequest
     {
         [Required]
         public int? UserId { get; set; }
