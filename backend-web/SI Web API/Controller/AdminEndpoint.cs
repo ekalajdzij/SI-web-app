@@ -16,6 +16,9 @@ Nakon slanja body-a sa username i password u response-u se dobija token.
 Taj token iz response-a stavljate u Authorization -> Bearer Token (Postman)
 
 Nakon toga pravite pozive za admin endpoint.
+
+Ova ruta sluzi za kreiranje obicnih admina. 
+SuperAdmin se ne moze dodati putem ovih ruta.
  */
 namespace SI_Web_API.Controller
 {
@@ -34,7 +37,7 @@ namespace SI_Web_API.Controller
                 "secretKey": "string",
                 "token": null,
                 "isSuperAdmin": bool,
-                "companyId": null
+                "company": null/naziv kompanije
             }
             */
             group.MapGet("/", async (HttpContext context, SI_Web_APIContext db) =>
@@ -90,16 +93,25 @@ namespace SI_Web_API.Controller
             }
             U slucaju da treba da companyId bude null, onda se on izostavlja iz body-a
             */
-            group.MapPut("/{id}", async Task<Results<Ok, NotFound>> (HttpContext context, int id, Admin admin, SI_Web_APIContext db) =>
+            group.MapPut("/{id}", async Task<Results<Ok, NotFound>> (HttpContext context, int id, [FromBody] Admin admin, SI_Web_APIContext db) =>
             {
                 AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+
+                // Postavljanje isSuperAdmin na false
+                admin.IsSuperAdmin = false;
+
+                // Postavljanje stanja objekta na Modified
                 db.Entry(admin).State = EntityState.Modified;
+
+                // Spremanje promjena u bazu podataka
                 await db.SaveChangesAsync();
+
                 return TypedResults.Ok();
             })
             .WithName("UpdateAdmin")
             .RequireAuthorization()
             .WithOpenApi();
+
 
             /* Ruta POST /api/admin/ dodaje admina sa atributima u body-u:
             {
@@ -107,21 +119,27 @@ namespace SI_Web_API.Controller
               "password": "password123",
               "phoneNumber": "123456789",
               "secretKey": "", -> prazan string!
-              "isSuperAdmin": true,
               "companyId": 1
             }
             U slucaju da treba da companyId bude null, onda se on izostavlja iz body-a
             */
-            group.MapPost("/", async (HttpContext context, Admin admin, SI_Web_APIContext db) =>
+            group.MapPost("/", async (HttpContext context, [FromBody] Admin admin, SI_Web_APIContext db) =>
             {
                 AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+
+                // Postavljanje isSuperAdmin na false po default-u
+                admin.IsSuperAdmin = false;
+
+                // Dodavanje admina u bazu podataka
                 db.Admin.Add(admin);
                 await db.SaveChangesAsync();
+
                 return TypedResults.Created($"/api/admin/{admin.Id}", admin);
             })
             .WithName("CreateAdmin")
             .RequireAuthorization()
             .WithOpenApi();
+
 
             // Ruta DELETE /api/admin/{id} brise admina na osnovu id
             group.MapDelete("/{id}", async Task<Results<Ok, NotFound>> (HttpContext context, int id, SI_Web_APIContext db) =>
