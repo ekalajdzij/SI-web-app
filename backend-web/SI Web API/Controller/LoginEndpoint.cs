@@ -63,8 +63,8 @@ public static class LoginEndpoints
                     admin.PhoneNumber,
                     admin.Token,
                     admin.IsSuperAdmin,
-                    admin.SecretKey
-                    //vratiti token
+                    admin.SecretKey,
+                    admin.CompanyId
                 });
             }
             else return Results.NotFound("User not found.");
