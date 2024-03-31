@@ -37,6 +37,7 @@ public static class LoginEndpoints
                 u.Password == hashedPassword);
             if (user != null) { 
                 user.Token = AuthService.GenerateJwtToken(issuer, key);
+                var company = await db.Company.FirstOrDefaultAsync(c => c.Id == user.CompanyId);
                 return Results.Ok(new
                 {
                     user.Id,
@@ -46,8 +47,10 @@ public static class LoginEndpoints
                     user.FullName,
                     user.Token,
                     user.Mail,
-                    user.Role,
-                    user.SecretKey
+                    user.SecretKey,
+                    user.CompanyId,
+                    company?.Name
+                    
                 });
             }
             var admin = await db.Admin.FirstOrDefaultAsync(a => (a.Username == payload.Username || a.PhoneNumber == payload.Username) &&
@@ -55,6 +58,7 @@ public static class LoginEndpoints
             if (admin != null)
             {
                 admin.Token = AuthService.GenerateJwtToken(issuer, key);
+                var company = await db.Company.FirstOrDefaultAsync(c => c.Id == admin.CompanyId);
                 return Results.Ok(new
                 {
                     admin.Id,
@@ -63,8 +67,9 @@ public static class LoginEndpoints
                     admin.PhoneNumber,
                     admin.Token,
                     admin.IsSuperAdmin,
-                    admin.SecretKey
-                    //vratiti token
+                    admin.SecretKey,
+                    admin.CompanyId,
+                    company?.Name
                 });
             }
             else return Results.NotFound("User not found.");

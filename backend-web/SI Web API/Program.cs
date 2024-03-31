@@ -91,5 +91,11 @@ app.MapCompanyEndpoints(jwtIssuer, jwtKey);
 
 app.MapUserEndpoints(jwtIssuer, jwtKey);
 
+app.MapUserCampaignEndpoints(jwtIssuer, jwtKey);
+
+app.MapCampaignEndpoints(jwtIssuer, jwtKey);
+
+app.MapAdminEndpoints(jwtIssuer, jwtKey);
+
 app.Run();
 public partial class Program { }
