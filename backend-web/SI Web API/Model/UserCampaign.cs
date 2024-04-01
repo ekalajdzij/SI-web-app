@@ -6,6 +6,7 @@ namespace SI_Web_API.Model
 {
     public class UserCampaign
     {
+        [JsonIgnore]
         [Key]
         public int Id { get; set; }
 
@@ -14,6 +15,7 @@ namespace SI_Web_API.Model
         [ForeignKey("Campaign")]
         public int CampaignId { get; set; }
         public string Status { get; set; }
+        [JsonIgnore]
         [ForeignKey("Location")]
         public int? LocationId {  get; set; }
 

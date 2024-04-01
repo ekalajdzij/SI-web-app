@@ -6,6 +6,7 @@ namespace SI_Web_API.Model
 {
     public class Campaign
     {
+        [JsonIgnore]
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }

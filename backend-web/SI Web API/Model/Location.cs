@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace SI_Web_API.Model
 {
     public class Location
     {
+        [JsonIgnore]
         [Key]
         public int Id { get; set; }
         public string TypeOfLocation { get; set; }
@@ -18,7 +20,9 @@ namespace SI_Web_API.Model
         public int? UserId { get; set; }
 
         // Navigation property
+        [JsonIgnore]
         public Campaign Campaign { get; set; }
+        [JsonIgnore]
         public ICollection<UserCampaign> UserCampaigns { get; set; }
     }
 }
