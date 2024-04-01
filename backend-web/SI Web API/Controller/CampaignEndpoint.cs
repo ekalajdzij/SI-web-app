@@ -26,6 +26,7 @@ namespace SI_Web_API.Controller
                     .Where(l => l.CampaignId == campaignId)
                     .Select(l => new
                     {
+                        l.Id,
                         l.TypeOfLocation,
                         l.Address,
                         l.ContactNumber,
