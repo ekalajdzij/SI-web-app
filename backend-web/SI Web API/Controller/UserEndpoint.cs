@@ -89,7 +89,6 @@ namespace SI_Web_API.Controller
                     FullName = adminInput.FullName,
                     Mail = adminInput.Mail,
                     CompanyId = adminInput.CompanyId,
-                    Role = "user", 
                     SecretKey = "", 
                     Token = null 
                 };

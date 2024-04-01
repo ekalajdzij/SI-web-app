@@ -88,7 +88,7 @@ public static class LoginEndpoints
                 return Results.Ok(new
                 {
                     ManualEntryKey = setup2fa.ManualEntryKey,
-                    QRCodeImageUrl = $"https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=otpauth://totp/SIWeb%20App:{Uri.EscapeDataString(user.FullName)}%3Fsecret={setup2fa.ManualEntryKey}%26issuer=SIWeb%20App"
+                    QRCodeImageUrl = $"https://image-charts.com/chart?cht=qr&chs=200x200&chl=otpauth://totp/SIWeb%20App:{Uri.EscapeDataString(user.Username)}%3Fsecret={setup2fa.ManualEntryKey}%26issuer=SIWeb%20App"
                 });
             }
             var admin = await db.Admin.FirstOrDefaultAsync(a => (a.Username == payload.Username || a.PhoneNumber == payload.Username) &&
@@ -99,7 +99,7 @@ public static class LoginEndpoints
                 return Results.Ok(new
                 {
                     ManualEntryKey = setup2fa.ManualEntryKey,
-                    QRCodeImageUrl = $"https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=otpauth://totp/SIWeb%20App:{Uri.EscapeDataString(admin.Username)}%3Fsecret={setup2fa.ManualEntryKey}%26issuer=SIWeb%20App"
+                    QRCodeImageUrl = $"https://image-charts.com/chart?cht=qr&chs=200x200&chl=otpauth://totp/SIWeb%20App:{Uri.EscapeDataString(admin.Username)}%3Fsecret={setup2fa.ManualEntryKey}%26issuer=SIWeb%20App"
                 });
             }
             else return Results.NotFound("User not found.");
