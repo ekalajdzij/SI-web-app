@@ -62,6 +62,16 @@ namespace SI_Web_API.Controller
             .RequireAuthorization()
             .WithOpenApi();
 
+            group.MapPost("/", async (HttpContext context, [FromBody] UserCampaign userCampaign, SI_Web_APIContext db) =>
+            {
+                AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+                db.UserCampaign.Add(userCampaign);
+                await db.SaveChangesAsync();
+                return TypedResults.Ok(userCampaign);
+            })
+            .WithName("CreateCampaignForUser")
+            .RequireAuthorization()
+            .WithOpenApi();
         }
     }
 }

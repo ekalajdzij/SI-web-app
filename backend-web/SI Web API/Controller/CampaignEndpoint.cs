@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using SI_Web_API.Data;
 using SI_Web_API.Model;
 using SI_Web_API.Services;
+using System.ComponentModel.Design;
+using static SI_Web_API.Controller.UserEndpoints;
 
 namespace SI_Web_API.Controller
 {
@@ -50,6 +52,42 @@ namespace SI_Web_API.Controller
             .RequireAuthorization()
             .WithOpenApi();
 
+            group.MapGet("/company/{companyId}", async (HttpContext context, int companyId, SI_Web_APIContext db) =>
+            {
+                AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+                var campaigns = await db.Campaign
+                    .Where(campaign => campaign.CompanyId == companyId)
+                    .ToListAsync();
+
+                if (campaigns == null)
+                {
+                    return Results.NotFound("Campaign not found.");
+                }
+
+                return TypedResults.Ok(campaigns);
+            })
+            .WithName("GetCampaignsWithCompanyId")
+            .RequireAuthorization()
+            .WithOpenApi();
+
+            group.MapPost("/", async (HttpContext context, [FromBody] Campaign campaignRequest, SI_Web_APIContext db) =>
+            {
+                var campaign = new Campaign
+                {
+                    Name = campaignRequest.Name,
+                    Description = campaignRequest.Description,
+                    CompanyId = campaignRequest.CompanyId,
+                    StartDate = campaignRequest.StartDate,
+                    EndDate = campaignRequest.EndDate
+                };
+                AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+                db.Campaign.Add(campaign);
+                await db.SaveChangesAsync();
+                return TypedResults.Created($"/api/campaigns/{campaign.Id}", campaign);
+            })
+            .WithName("CreateCampaign")
+            .RequireAuthorization()
+            .WithOpenApi();
         }
     }
 }
