@@ -70,6 +70,21 @@ namespace SI_Web_API.Controller
                     existingUser.CompanyId = adminInput.CompanyId;
                 }
 
+                if (!string.IsNullOrEmpty(adminInput.Password))
+                {
+                    existingUser.Password = adminInput.Password;
+                }
+
+                if (!string.IsNullOrEmpty(adminInput.Username))
+                {
+                    existingUser.Username = adminInput.Username;
+                }
+
+                if (!string.IsNullOrEmpty(adminInput.FullName))
+                {
+                    existingUser.FullName = adminInput.FullName;
+                }
+
                 await db.SaveChangesAsync();
 
                 return TypedResults.Ok();
