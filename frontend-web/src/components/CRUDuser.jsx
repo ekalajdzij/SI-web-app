@@ -37,7 +37,9 @@ function CRUDuser() {
       });
 
       if (response.ok) {
-        setUserData(prevUserData => prevUserData.filter(user => user.id !== id));
+        const updatedUsers = userData.filter(user => user.id !== id)
+      setUserData(updatedUsers);
+      localStorage.setItem('userData', JSON.stringify(updatedUsers));
       }
     } catch (error) {
       console.error('Error deleting user:', error);
@@ -80,8 +82,11 @@ function CRUDuser() {
        
         const addedUser = await response.json();
         console.log(addedUser);
+        let currentUserData = JSON.parse(localStorage.getItem('userData')) || [];
+
         setUserData(prevUserData => [...prevUserData, addedUser]);
-        localStorage.setItem('userData',JSON.stringify(userData))
+        currentUserData.push(addedUser);
+        localStorage.setItem('userData',JSON.stringify(currentUserData))
         setIsAddingUser(false);
         setNewUser({
           Username: '',
