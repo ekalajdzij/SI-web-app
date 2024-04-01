@@ -48,6 +48,14 @@
   border-radius: 5px;
   font-size: 16px;
 }
+.modal input[type="password"] {
+  width: calc(100% - 22px); 
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
 
 .modal button {
   padding: 10px 20px;
@@ -64,7 +72,7 @@
   background-color: #5bbd45;
 }
 
-/* Add button */
+
 #addButton {
   margin-bottom: 20px;
   padding: 10px 20px;

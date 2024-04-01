@@ -11,6 +11,8 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
   const [error, setError] = useState(false);
   const [visible, setVisible] = useState(vis);
   const [isSuperAdmin, setSuperAdmin] = useState(isSuper || false);
+  const [company, setCompId] = useState(localStorage.getItem('company'));
+
 
  
 
@@ -72,7 +74,7 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
         setError(true);
       });
 
-      if(isSuper){
+      if(isSuperAdmin){
         try {
           const token = localStorage.getItem("accessToken");
           const response = await axios.get('https://fieldlogistics-control.azurewebsites.net/api/company', {
@@ -102,10 +104,30 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
             },
           });
     
-          console.log(response);
+          //console.log(response);
           const data = response.data;
           localStorage.setItem('userData', JSON.stringify(data));
-          console.log(data);
+          //console.log(data);
+          
+    
+    
+        } catch (error) {
+          console.error('There was a problem with fetching company data:', error);
+        }
+
+
+        try {
+          const token = localStorage.getItem("accessToken");
+          const response = await axios.get(`https://fieldlogistics-control.azurewebsites.net/api/campaigns/company/${company}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+    
+         // console.log(response);
+          const data1 = response.data;
+          localStorage.setItem('campaignData', JSON.stringify(data1));
+          console.log(data1);
           
     
     

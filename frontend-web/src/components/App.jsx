@@ -10,6 +10,8 @@ import TwoFactorPortal from "./TwoFactorPortal";
 import "../css/App.css";
 import CRUDadmin from "./CRUDadmin";
 import CRUDuser from "./CRUDuser";
+import CampaignView from "./CampaignView";
+
 
 // Komponenta za kontrolu prikaza Navbar-a
 function ControlNavbar({signed,isSuperAdmin}) {
@@ -69,6 +71,9 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/admin" element={(isSuperAdmin && signedIn) ? <CRUDadmin /> : <Error />} />
           <Route path="/users" element={(!isSuperAdmin && signedIn) ? <CRUDuser /> : <Error />} />
+          <Route path="/campaign" element={(!isSuperAdmin && signedIn) ? <CampaignView /> : <Error />} />
+
+
 
           <Route path="/company" element={(isSuperAdmin && signedIn) ? <Company /> : <Error />} />
           <Route path="/twofactor" element={<TwoFactorPortal qrcode={qr} vis={visible} signed={signed} isSuper={isSuperAdmin} />} />

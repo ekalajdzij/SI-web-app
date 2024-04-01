@@ -137,6 +137,14 @@ function Navbar({ signed, isSuperAdmin }) {
                 CRUD User
               </RouterLink>
             </li>}
+            { !isSuper && flag && <li className='nav-item'>
+              <RouterLink to='/campaign'
+                className='nav-links'
+                onClick={closeMobileMenu}
+              >
+                Campaigns
+              </RouterLink>
+            </li>}
 
             <li>
               <RouterLink

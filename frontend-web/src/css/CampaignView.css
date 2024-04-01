@@ -1,0 +1,56 @@
+.destinacije {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 400px);
+    gap: 20px;
+    padding-top: 20px;
+    padding-left:20px; 
+
+  }
+  .wrapper {
+    padding: 20px; 
+  }
+  .komponenta {
+    border: 1px solid #ccc;
+    padding: 20px; 
+    border-radius: 10px; 
+    text-align: center; 
+    background-color: rgb(208, 95, 95);
+
+
+
+  }
+
+  #titleC{
+    color:black;
+  }
+  #lokacija{
+    color:black;
+  }
+  
+  .komponenta h2 {
+    margin-top: 0;
+  }
+  
+
+
+  .detalji{
+    font-weight: 500;
+    font-style: italic;
+  }
+  .komponenta button {
+    margin-top: 20px; 
+    padding: 10px 20px; 
+    border-radius: 5px; 
+    background-color: #007bff; 
+    color: white; 
+    border: none; 
+    cursor: pointer; 
+    transition: background-color 0.3s; 
+  }
+  
+  .komponenta button:hover {
+    background-color: #0056b3; 
+  }
+  #user{
+    color:black;
+  }

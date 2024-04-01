@@ -158,7 +158,7 @@ function CRUDadmin() {
                   <input
                     type="text"
                     name="username"
-                    value={editedData[admin.id]?.username || admin.username}
+                    value={editedData[admin.id]?.username ?? admin.username}
                     onChange={(e) => handleInputChange(e, 'username', admin.id)}
                   />
                 ) : (
@@ -170,7 +170,7 @@ function CRUDadmin() {
                   <input
                     type="password"
                     name="password"
-                    value={editedData[admin.id]?.password || "XXXXXX"}
+                    value={editedData[admin.id]?.password ?? "XXXXXX"}
                     onChange={(e) => handleInputChange(e, 'password', admin.id)}
                   />
                 ) : (
@@ -182,7 +182,7 @@ function CRUDadmin() {
                   <input
                     type="text"
                     name="phoneNumber"
-                    value={editedData[admin.id]?.phoneNumber || admin.phoneNumber}
+                    value={editedData[admin.id]?.phoneNumber ?? admin.phoneNumber}
                     onChange={(e) => handleInputChange(e, 'phoneNumber', admin.id)}
                   />
                 ) : (
