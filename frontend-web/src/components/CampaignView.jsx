@@ -68,6 +68,7 @@ function CampaignView() {
             });
             
             setModalOpenAssign(false);
+            setSelectedUser('');
         }
         catch (error) {
             console.error('Error creating destination:', error);
@@ -122,6 +123,11 @@ function CampaignView() {
                     localStorage.setItem('campaignData', JSON.stringify(currentUserData))
                 }
                 setModalOpenD(false);
+                setNovaDestinacija( {name: '',
+                description: '',
+                startDate: '',
+                endDate: ''})
+                
             }
         } catch (error) {
             console.error('Error creating destination:', error);
@@ -134,6 +140,14 @@ function CampaignView() {
             const response = await axios.post('https://fieldlogistics-control.azurewebsites.net/api/location', novaLokacija);
 
             setModalOpen(false);
+            setNovaLokacija({
+                TypeOfLocation: '',
+                Address: '',
+                ContactNumber: '',
+                Description: '',
+                CampaignId: '',
+                UserId: null
+            });
 
         } catch (error) {
             console.error('Error creating location:', error);
@@ -147,7 +161,7 @@ function CampaignView() {
             {modalOpenD && (
                 <div className='modal'>
                     <div className='modal-content'>
-                        <span className='close' onClick={() => setModalOpen(false)}>&times;</span>
+                        <span className='close' onClick={() => setModalOpenD(false)}>&times;</span>
                         <h2>Add Campaign</h2>
                         <input type='text' name='name' placeholder='Name' value={novaDestinacija.name} onChange={handleChange} />
                         <input type='text' name='description' placeholder='Description' value={novaDestinacija.description} onChange={handleChange} />
@@ -178,8 +192,8 @@ function CampaignView() {
                     <div className='modal-content'>
                         <span className='close' onClick={() => setModalOpen(false)}>&times;</span>
                         <h3 id='lokacija'>Add location for {name}</h3>
-                        <input type='text' name='TypeOfLocation' placeholder='Type Of Location' value={novaLokacija.TypeOfLocation} onChange={handleChangeLokacija} />
-                        <input type='text' name='Address' placeholder='Address' value={novaLokacija.Address} onChange={handleChangeLokacija} />
+                        <input type='text' name='TypeOfLocation' placeholder='Type Of Location' value={novaLokacija.TypeOfLocation} onChange={handleChangeLokacija} required/>
+                        <input type='text' name='Address' placeholder='Address' value={novaLokacija.Address} onChange={handleChangeLokacija} required/>
                         <input type='text' name='ContactNumber' placeholder='Contact Number' value={novaLokacija.ContactNumber} onChange={handleChangeLokacija} />
                         <input type='text' name='Description' placeholder='Description' value={novaLokacija.Description} onChange={handleChangeLokacija} />
                         <button onClick={handleSubmitLokacija}>Create</button>
