@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import { useMsal } from '@azure/msal-react';
 import { useNavigate } from 'react-router-dom';
 import '../css/Home.css'
@@ -9,8 +9,15 @@ function Home() {
   let navigate = useNavigate();
 
   const [ime,setIme]=useState(localStorage.getItem('ime') || null);
+  const [flag, setFlag] = useState(JSON.parse(localStorage.getItem('isLoggedInVia2fa'))||false);
+//console.log(flag);
+useEffect(() => {
+  localStorage.setItem('isLoggedInVia2fa', JSON.stringify(flag));
+  localStorage.setItem('ime', ime);
+}, [flag, ime]);
 
-  const handleLogout = () => {
+
+ /* const handleLogout = () => {
     if(JSON.parse(localStorage.getItem('isLoggedInVia2fa'))== true){
       localStorage.setItem('isLoggedIn', 'false');
       localStorage.removeItem('accessToken'); 
@@ -34,17 +41,13 @@ function Home() {
     })}
     
 
-};
+};*/
 
 
 
   return (
-    <div className='home'> {ime}
-    {JSON.parse(localStorage.getItem('isLoggedIn')) ?
-    <button className='loginout' onClick={handleLogout}>Odjava</button> : 
-    <button className='loginout'  onClick={()=>{navigate('/')}}>Prijava</button>
-    
-    }    
+    <div className='home'> {flag ? ime : "neautoriznnovano"}
+      
 
     </div>
     

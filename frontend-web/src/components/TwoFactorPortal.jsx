@@ -3,13 +3,16 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../css/TwoFactorPortal.css";
 
-function TwoFactorPortal({ qrcode, vis }) {
+function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
   let navigate = useNavigate();
   const [slika, setSlika] = useState(qrcode);
   const [digits, setDigits] = useState(["", "", "", "", "", ""]);
   const [click, setClick] = useState(false);
   const [error, setError] = useState(false);
   const [visible, setVisible] = useState(vis);
+  const [isSuperAdmin, setSuperAdmin] = useState(isSuper || false);
+
+ 
 
   const pin = digits.join("");
 
@@ -27,6 +30,7 @@ function TwoFactorPortal({ qrcode, vis }) {
   useEffect(() => {
     setSlika(localStorage.getItem("QR"));
     setVisible(JSON.parse(localStorage.getItem("logged")));
+    setSuperAdmin(JSON.parse(localStorage.getItem('isSuperAdmin')) || false)
   }, []);
 
   useEffect(() => {
@@ -35,7 +39,7 @@ function TwoFactorPortal({ qrcode, vis }) {
     }
   }, [pin]);
   //<button onClick={handleLog2fa} type="submit">Verify</button>
-  const handleLog2fa = () => {
+  const handleLog2fa = async () => {
     axios
       .post(
         `https://fieldlogistics-control.azurewebsites.net/api/login/authenticate/2fa?code=${pin}`,
@@ -51,13 +55,15 @@ function TwoFactorPortal({ qrcode, vis }) {
         }
       )
       .then((response) => {
-        console.log(response.headers.authorization);
-        localStorage.setItem("accessToken", response.headers.authorization);
+        if(response.headers.authorization)
+        {console.log(response.headers.authorization);
+        localStorage.setItem("accessToken", response.headers.authorization);}
 
         localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("isLoggedInVia2fa", "true");
+        localStorage.setItem("isLoggedInVia2fa", true);
         localStorage.setItem("logged", false);
         setVisible(false);
+        signed(true);
 
         navigate("/home");
       })
@@ -65,6 +71,52 @@ function TwoFactorPortal({ qrcode, vis }) {
         console.error("Error during login:", error);
         setError(true);
       });
+
+      if(isSuper){
+        try {
+          const token = localStorage.getItem("accessToken");
+          const response = await axios.get('https://fieldlogistics-control.azurewebsites.net/api/company', {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+    
+          console.log(response);
+          const data = response.data;
+          localStorage.setItem('companyData', JSON.stringify(data));
+          console.log(data);
+          
+    
+    
+        } catch (error) {
+          console.error('There was a problem with fetching company data:', error);
+        }
+      }
+      else{
+
+        try {
+          const token = localStorage.getItem("accessToken");
+          const response = await axios.get('https://fieldlogistics-control.azurewebsites.net/api/user', {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+    
+          console.log(response);
+          const data = response.data;
+          localStorage.setItem('userData', JSON.stringify(data));
+          console.log(data);
+          
+    
+    
+        } catch (error) {
+          console.error('There was a problem with fetching company data:', error);
+        }
+
+      }
+
+
+      
   };
   return (
     <div className="main-container">

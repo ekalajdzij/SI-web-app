@@ -1,0 +1,82 @@
+/* Company table */
+.companyTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.companyTable th, .companyTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.companyTable th {
+  background-color: #f2f2f2;
+}
+
+.companyTable tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.companyTable tr:hover {
+  background-color: #ddd;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  width:300px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+#inputAdd::placeholder
+ {
+    color: #806d6d; 
+}
+
+.modal input[type="text"] {
+  width: calc(100% - 22px); /* Adjust width to fit inside the modal */
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.modal button {
+  padding: 10px 20px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  width:300px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal button:hover {
+  background-color: #5bbd45;
+}
+
+/* Add button */
+#addButton {
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#addButton:hover {
+  background-color: #0056b3;
+}
