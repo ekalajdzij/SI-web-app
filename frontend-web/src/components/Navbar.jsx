@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import '../css/Navbar.css';
-import { useMsal } from '@azure/msal-react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import "../css/Navbar.css";
+import { useMsal } from "@azure/msal-react";
+import axios from "axios";
 
-
-import { Link, ScrollLink } from 'react-scroll';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link, ScrollLink } from "react-scroll";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 function Navbar({ signed, isSuperAdmin }) {
-
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
   const [isSuper, setIsSuper] = useState(isSuperAdmin || false);
@@ -17,49 +15,46 @@ function Navbar({ signed, isSuperAdmin }) {
   const { instance } = useMsal();
   let navigate = useNavigate();
 
-  const [flag, setFlag] = useState(JSON.parse(localStorage.getItem('isLoggedInVia2fa')));
-
-
+  const [flag, setFlag] = useState(
+    JSON.parse(localStorage.getItem("isLoggedInVia2fa"))
+  );
 
   const handleLogout = () => {
-    if (JSON.parse(localStorage.getItem('isLoggedInVia2fa')) == true) {
-      localStorage.setItem('isLoggedIn', 'false');
-      localStorage.removeItem('accessToken');
-      localStorage.setItem('isLoggedInVia2fa', false);
-      localStorage.setItem('ime', "neautorizovano");
+    if (JSON.parse(localStorage.getItem("isLoggedInVia2fa")) == true) {
+      localStorage.setItem("isLoggedIn", "false");
+      localStorage.removeItem("accessToken");
+      localStorage.setItem("isLoggedInVia2fa", false);
+      localStorage.setItem("ime", "neautorizovano");
       localStorage.setItem("user", "");
       signed(false);
-      navigate('/');
-
-    }
-    else {
-      instance.logoutPopup().then(r => {
-
-        localStorage.setItem('isLoggedIn', 'false');
-        localStorage.removeItem('accessToken');
-        localStorage.setItem('isLoggedIn', 'false');
-        localStorage.setItem('ime', "neautorizovano");
+      navigate("/");
+    } else {
+      instance.logoutPopup().then((r) => {
+        localStorage.setItem("isLoggedIn", "false");
+        localStorage.removeItem("accessToken");
+        localStorage.setItem("isLoggedIn", "false");
+        localStorage.setItem("ime", "neautorizovano");
         localStorage.setItem("user", "");
 
-        navigate('/');
-
-      })
+        navigate("/");
+      });
     }
-
   };
 
   async function fetchAdminData() {
     try {
-
       const token = localStorage.getItem("accessToken");
 
-      const response = await fetch('https://fieldlogistics-control.azurewebsites.net/api/admin', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+      const response = await fetch(
+        "https://fieldlogistics-control.azurewebsites.net/api/admin",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
-      });
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -67,19 +62,14 @@ function Navbar({ signed, isSuperAdmin }) {
       const data = await response.json();
 
       //console.log(data);
-      localStorage.setItem('adminData', JSON.stringify(data));
+      localStorage.setItem("adminData", JSON.stringify(data));
 
-      console.log('Podaci su uspješno dohvaćeni i pohranjeni.');
-      navigate('/admin'); 
-      
+      console.log("Podaci su uspješno dohvaćeni i pohranjeni.");
+      navigate("/admin");
     } catch (error) {
-      console.error('Došlo je do greške pri dohvaćanju podataka:', error);
+      console.error("Došlo je do greške pri dohvaćanju podataka:", error);
     }
   }
-
-
-
-
 
   const showButton = () => {
     if (window.innerWidth <= 960) {
@@ -90,78 +80,100 @@ function Navbar({ signed, isSuperAdmin }) {
   };
 
   useEffect(() => {
-
-    setFlag(JSON.parse(localStorage.getItem('isLoggedInVia2fa')));
-    setIsSuper(JSON.parse(localStorage.getItem('isSuperAdmin')) || false);
+    setFlag(JSON.parse(localStorage.getItem("isLoggedInVia2fa")));
+    setIsSuper(JSON.parse(localStorage.getItem("isSuperAdmin")) || false);
     showButton();
   }, []);
 
-
-  window.addEventListener('resize', showButton);
+  window.addEventListener("resize", showButton);
 
   return (
     <>
-      <nav className='navbar'>
-        <div className='navbar-container'>
-
-
-          <i className='fas fa-map-marker-alt' style={{ color: 'white' }} />
-
-          <div className='menu-icon' onClick={handleClick}>
-            <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
+      <nav className="navbar">
+        <div className="navbar-container">
+          <i className="fas fa-map-marker-alt" style={{ color: "white" }} />
+          <p id="nav-title">Field Logistic Control</p>
+          <div className="menu-icon" onClick={handleClick}>
+            <i className={click ? "fas fa-times" : "fas fa-bars"} />
           </div>
-          <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-            {flag && <li className='nav-item'>
-              <RouterLink to='/home' className='nav-links' onClick={closeMobileMenu}>
-                Home
-              </RouterLink>
-            </li>}
-            {isSuper && flag && <li className='nav-item'>
-              <RouterLink to='/company' className='nav-links' onClick={closeMobileMenu}>
-                Companies
-              </RouterLink>
-            </li>}
-            {isSuper && flag && <li className='nav-item'>
-              <RouterLink
-                className='nav-links'
-                onClick={fetchAdminData}
-              >
-                CRUD Admin
-              </RouterLink>
-            </li>}
-            { !isSuper && flag && <li className='nav-item'>
-              <RouterLink to='/users'
-                className='nav-links'
-                onClick={closeMobileMenu}
-              >
-                CRUD User
-              </RouterLink>
-            </li>}
-            { !isSuper && flag && <li className='nav-item'>
-              <RouterLink to='/campaign'
-                className='nav-links'
-                onClick={closeMobileMenu}
-              >
-                Campaigns
-              </RouterLink>
-            </li>}
+          <ul className={click ? "nav-menu active" : "nav-menu"}>
+            {flag && (
+              <li className="nav-item">
+                <RouterLink
+                  to="/home"
+                  className="nav-links"
+                  onClick={closeMobileMenu}
+                >
+                  Home
+                </RouterLink>
+              </li>
+            )}
+            {isSuper && flag && (
+              <li className="nav-item">
+                <RouterLink
+                  to="/company"
+                  className="nav-links"
+                  onClick={closeMobileMenu}
+                >
+                  Companies
+                </RouterLink>
+              </li>
+            )}
+            {isSuper && flag && (
+              <li className="nav-item">
+                <RouterLink className="nav-links" onClick={fetchAdminData}>
+                  Admins
+                </RouterLink>
+              </li>
+            )}
+            {!isSuper && flag && (
+              <li className="nav-item">
+                <RouterLink
+                  to="/users"
+                  className="nav-links"
+                  onClick={closeMobileMenu}
+                >
+                  Users
+                </RouterLink>
+              </li>
+            )}
+            {!isSuper && flag && (
+              <li className="nav-item">
+                <RouterLink
+                  to="/campaign"
+                  className="nav-links"
+                  onClick={closeMobileMenu}
+                >
+                  Campaigns
+                </RouterLink>
+              </li>
+            )}
 
             <li>
               <RouterLink
-                to='/'
-                className='nav-links-mobile'
-                onClick={flag ? handleLogout : () => navigate('/')}
+                to="/"
+                className="nav-links-mobile"
+                onClick={flag ? handleLogout : () => navigate("/")}
               >
                 {flag ? "SIGN OUT" : "SIGN IN"}
               </RouterLink>
             </li>
           </ul>
-          {button && (
-            flag ?
-              <button className='loginout' onClick={handleLogout}>SIGN OUT</button> :
-              <button className='loginout' onClick={() => { navigate('/') }}>SIGN IN</button>
-          )}
-
+          {button &&
+            (flag ? (
+              <button className="loginout" onClick={handleLogout}>
+                SIGN OUT
+              </button>
+            ) : (
+              <button
+                className="loginout"
+                onClick={() => {
+                  navigate("/");
+                }}
+              >
+                SIGN IN
+              </button>
+            ))}
         </div>
       </nav>
     </>

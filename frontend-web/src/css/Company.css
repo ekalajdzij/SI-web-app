@@ -1,43 +1,39 @@
-/* Company table */
-.companyTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+body {
+  background: linear-gradient(
+      hsla(204, 100%, 99%, 0.8),
+      hsla(204, 100%, 99%, 0.8)
+    ),
+    url("https://wallpapercave.com/wp/wp4313180.jpg");
 }
 
-.companyTable th, .companyTable td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
+.companyUpdateIcon,
+.companyDeleteIcon {
+  cursor: pointer;
 }
 
-.companyTable th {
-  background-color: #f2f2f2;
-}
-
-.companyTable tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-.companyTable tr:hover {
-  background-color: #ddd;
+.companyDeleteIcon {
+  margin-left: 30px;
+  color: #ff6347;
 }
 
 /* Modal */
 .modal {
   position: fixed;
-  width:300px;
+  width: 300px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.3),
+    5px 8px 16px rgba(0, 0, 0, 0.2), -5px -8px 16px rgba(0, 0, 0, 0.1);
 }
-#inputAdd::placeholder
- {
-    color: #806d6d; 
+#inputAdd::placeholder {
+  color: #806d6d;
 }
 
 .modal input[type="text"] {
@@ -49,7 +45,7 @@
   font-size: 16px;
 }
 .modal input[type="password"] {
-  width: calc(100% - 22px); 
+  width: calc(100% - 22px);
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid #ccc;
@@ -63,15 +59,10 @@
   border: none;
   border-radius: 5px;
   font-size: 16px;
-  width:300px;
+  width: 300px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-
-.modal button:hover {
-  background-color: #5bbd45;
-}
-
 
 #addButton {
   margin-bottom: 20px;
@@ -87,4 +78,35 @@
 
 #addButton:hover {
   background-color: #0056b3;
+}
+
+#title {
+  color: #2d3658;
+  margin-top: 20px;
+  font-size: 30px;
+  font-family: "Poppins", sans-serif;
+}
+
+#addCompanyButton {
+  margin-left: 20px;
+}
+
+#main {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10%;
+  margin-bottom: 20px;
+}
+
+#createCompanyButton:hover {
+  background-color: #0056b3;
+}
+
+#cancelCompanyButton {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+#cancelCompanyButton:hover {
+  background-color: #bd2130;
 }

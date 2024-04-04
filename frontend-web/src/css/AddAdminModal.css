@@ -1,76 +1,77 @@
 #add-admin-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 300px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.3),
+    5px 8px 16px rgba(0, 0, 0, 0.2), -5px -8px 16px rgba(0, 0, 0, 0.1);
 }
 #add-admin-modal input::placeholder,
 #add-admin-modal select::placeholder {
-    color: #806d6d; 
+  color: #806d6d;
 }
 
 #add-admin-modal form {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 #add-admin-modal input,
 #add-admin-modal select {
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
 }
 
 #add-admin-modal button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 #add-admin-modal .submit-btn {
-    background-color: #007bff;
-    color: #fff;
+  background-color: #007bff;
+  color: #fff;
 }
 
 #add-admin-modal .submit-btn:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 #add-admin-modal .cancel-btn {
-    background-color: #dc3545;
-    color: #fff;
+  background-color: #dc3545;
+  color: #fff;
 }
 
 #add-admin-modal .cancel-btn:hover {
-    background-color: #bd2130;
+  background-color: #bd2130;
 }
 
 #add-admin-modal option {
-    font-size: 16px;
+  font-size: 16px;
 }
 
 /* Dodavanje animacija */
 #add-admin-modal {
-    animation: fadeIn 0.3s ease;
+  animation: fadeIn 0.3s ease;
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -60%);
-    }
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%);
-    }
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
 }
