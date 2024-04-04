@@ -59,7 +59,7 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
       .then((response) => {
         if(response.headers.authorization)
         {console.log(response.headers.authorization);
-        localStorage.setItem("accessToken", response.headers.authorization);}
+        /*localStorage.setItem("accessToken", response.headers.authorization);*/}
 
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("isLoggedInVia2fa", true);

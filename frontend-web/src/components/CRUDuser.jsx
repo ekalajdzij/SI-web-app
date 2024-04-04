@@ -209,7 +209,7 @@ function CRUDuser() {
             onChange={handleInputChangeAdd}
             placeholder="Mail"
           />
-          <button onClick={handleAddUser}>Create</button>
+          <button onClick={handleAddUser} data-testid={`confirm`}>Create</button>
           <button onClick={() => setIsAddingUser(false)}>Cancel</button>
         </div>
       )}
