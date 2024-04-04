@@ -10,17 +10,17 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
   const [click, setClick] = useState(false);
   const [error, setError] = useState(false);
   const [visible, setVisible] = useState(vis);
-  const [isSuperAdmin, setSuperAdmin] = useState(isSuper || false);
+  //const [isSuperAdmin, setSuperAdmin] = useState(isSuper || false);
   const [company, setCompId] = useState(localStorage.getItem("company"));
 
   const pin = digits.join("");
 
   const handleDigitChange = (digit, index) => {
     const newDigits = [...digits];
-    newDigits[index] = digit.slice(-1); // Take the last character to ensure only one digit per input
+    newDigits[index] = digit.slice(-1); 
     setDigits(newDigits);
 
-    // Automatically move to the next input field if not the last one
+    
     if (digit && index < 5) {
       document.getElementById(`digit-${index + 1}`).focus();
     }
@@ -29,7 +29,7 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
   useEffect(() => {
     setSlika(localStorage.getItem("QR"));
     setVisible(JSON.parse(localStorage.getItem("logged")));
-    setSuperAdmin(JSON.parse(localStorage.getItem("isSuperAdmin")) || false);
+    //setSuperAdmin(JSON.parse(localStorage.getItem("isSuperAdmin")) || false);
   }, []);
 
   useEffect(() => {
@@ -37,9 +37,9 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
       handleLog2fa();
     }
   }, [pin]);
-  //<button onClick={handleLog2fa} type="submit">Verify</button>
+  
   const handleLog2fa = async () => {
-    axios
+   await axios
       .post(
         `https://fieldlogistics-control.azurewebsites.net/api/login/authenticate/2fa?code=${pin}`,
         {
@@ -54,7 +54,7 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
       )
       .then((response) => {
         if (response.headers.authorization) {
-          console.log(response.headers.authorization);
+          //console.log(response.headers.authorization);
           localStorage.setItem("accessToken", response.headers.authorization);
         }
 
@@ -71,14 +71,14 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
         setError(true);
       });
 
-    if (isSuperAdmin) {
+    if (isSuper) {
       try {
         const token = localStorage.getItem("accessToken");
         const response = await axios.get(
           "https://fieldlogistics-control.azurewebsites.net/api/company",
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `${token}`,
             },
           }
         );
@@ -97,7 +97,7 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
           "https://fieldlogistics-control.azurewebsites.net/api/user",
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `${token}`,
             },
           }
         );
@@ -116,7 +116,7 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
           `https://fieldlogistics-control.azurewebsites.net/api/campaigns/company/${company}`,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `${token}`,
             },
           }
         );

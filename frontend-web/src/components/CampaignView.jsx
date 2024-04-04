@@ -65,15 +65,17 @@ function CampaignView() {
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Authorization: `${localStorage.getItem("accessToken")}`,
           },
         }
       );
+      localStorage.setItem("accessToken", response.headers.authorization);
 
       setModalOpenAssign(false);
       setSelectedUser("");
     } catch (error) {
       console.error("Error creating destination:", error);
+      alert("You have to choose some user");
     }
   };
   const makeLocation = (id) => {
@@ -115,10 +117,11 @@ function CampaignView() {
           },
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              Authorization: `${localStorage.getItem("accessToken")}`,
             },
           }
         );
+        localStorage.setItem("accessToken", response.headers.authorization);
         if (response.data) {
           let currentUserData =
             JSON.parse(localStorage.getItem("campaignData")) || [];
@@ -136,6 +139,7 @@ function CampaignView() {
       }
     } catch (error) {
       console.error("Error creating destination:", error);
+      alert("All fields have to be filled");
     }
   };
 
@@ -146,6 +150,8 @@ function CampaignView() {
         "https://fieldlogistics-control.azurewebsites.net/api/location",
         novaLokacija
       );
+      if(response.headers.authorization)
+      localStorage.setItem("accessToken", response.headers.authorization);
 
       setModalOpen(false);
       setNovaLokacija({

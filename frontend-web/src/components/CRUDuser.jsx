@@ -40,11 +40,11 @@ function CRUDuser() {
         {
           method: "DELETE",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `${token}`,
           },
         }
       );
-
+      localStorage.setItem("accessToken", [...response.headers][0][1]);
       if (response.ok) {
         const updatedUsers = userData.filter((user) => user.id !== id);
         setUserData(updatedUsers);
@@ -95,12 +95,14 @@ function CRUDuser() {
         {
           method: "PUT",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(userToUpdate),
         }
       );
+
+      localStorage.setItem("accessToken", [...response.headers][0][1]);
 
       if (!response.ok) {
         throw new Error("Problem sa ažuriranjem korisnika");
@@ -148,7 +150,7 @@ function CRUDuser() {
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
@@ -160,6 +162,7 @@ function CRUDuser() {
           }),
         }
       );
+      localStorage.setItem("accessToken", [...response.headers][0][1]);
 
       if (response.ok) {
         const addedUser = await response.json();

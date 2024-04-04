@@ -50,12 +50,12 @@ function Navbar({ signed, isSuperAdmin }) {
         {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `${token}`,
             "Content-Type": "application/json",
           },
         }
       );
-
+      localStorage.setItem("accessToken", [...response.headers][0][1]);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

@@ -37,7 +37,7 @@ function AddAdminModal({ closeModal, companyData, setAdminData }) {
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
@@ -49,7 +49,7 @@ function AddAdminModal({ closeModal, companyData, setAdminData }) {
           }),
         }
       );
-
+      localStorage.setItem("accessToken", [...response.headers][0][1]);
       if (!response.ok) {
         throw new Error("Problem pri dodavanju novog admina");
       }
@@ -63,12 +63,12 @@ function AddAdminModal({ closeModal, companyData, setAdminData }) {
           {
             method: "GET",
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `${token}`,
               "Content-Type": "application/json",
             },
           }
         );
-
+        localStorage.setItem("accessToken", [...response.headers][0][1]);
         if (!response.ok) {
           throw new Error("Problem pri dohvaćanju podataka o kompaniji");
         }
@@ -80,6 +80,7 @@ function AddAdminModal({ closeModal, companyData, setAdminData }) {
           "Greška prilikom dohvaćanja podataka o kompaniji:",
           error
         );
+        alert("Invalid data");
       }
 
       currentAdminData.push(newAdmin);

@@ -153,13 +153,13 @@ function Login({ QR, visib, supe}) {
     }
   };
 
-  const handleLog = (e) => {
+  const handleLog = async (e) => {
     e.preventDefault();
 
     localStorage.setItem("user", user);
     localStorage.setItem("pass", pass);
 
-    axios
+    await axios
       .post("https://fieldlogistics-control.azurewebsites.net/api/login", {
         Username: user,
         Password: pass,

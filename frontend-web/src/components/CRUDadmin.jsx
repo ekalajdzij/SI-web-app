@@ -28,8 +28,8 @@ function CRUDadmin() {
     const foundCompany = companyData.find(
       (comp) => comp.name == foundAdmin.company
     );
-    console.log(foundCompany);
-    console.log(foundAdmin);
+    //console.log(foundCompany);
+    //console.log(foundAdmin);
     setEditableRow(id);
     setEditedData({
       ...editedData,
@@ -65,11 +65,11 @@ function CRUDadmin() {
         {
           method: "DELETE",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `${token}`,
           },
         }
       );
-
+      localStorage.setItem("accessToken", [...response.headers][0][1]);
       if (!response.ok) {
         throw new Error("Problem sa brisanjem admina");
       }
@@ -82,10 +82,10 @@ function CRUDadmin() {
   };
   const handleConfirmEdit = async (id) => {
     try {
-      console.log(editedData[id]);
+      //console.log(editedData[id]);
       if (editedData[id].password) {
         editedData[id].password = await hashPassword(editedData[id].password);
-        console.log(editedData[id].password);
+        //console.log(editedData[id].password);
       }
       const token = localStorage.getItem("accessToken");
       const response = await fetch(
@@ -93,13 +93,13 @@ function CRUDadmin() {
         {
           method: "PUT",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(editedData[id]),
         }
       );
-
+      localStorage.setItem("accessToken", [...response.headers][0][1]);
       if (!response.ok) {
         throw new Error("Problem sa ažuriranjem admina");
       }
@@ -111,7 +111,7 @@ function CRUDadmin() {
         const companyName = companyData.find(
           (company) => company.id == editedData[id].companyId
         );
-        console.log(companyName);
+        //console.log(companyName);
 
         const updatedAdmins = adminData.map((admin) =>
           admin.id === id

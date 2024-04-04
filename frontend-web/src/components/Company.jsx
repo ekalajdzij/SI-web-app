@@ -25,10 +25,13 @@ function Company() {
         `https://fieldlogistics-control.azurewebsites.net/api/company/${id}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `${token}`,
           },
         }
-      );
+      ).then(response=>{
+        localStorage.setItem("accessToken", response.headers.authorization);
+
+      });
       const updatedCompanies = companies.filter((company) => company.id !== id);
       setCompanies(updatedCompanies);
       localStorage.setItem("companyData", JSON.stringify(updatedCompanies));
@@ -49,11 +52,12 @@ function Company() {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `${token}`,
           },
           body: JSON.stringify(newCompanyName),
         }
       );
+      localStorage.setItem("accessToken", [...response.headers][0][1]);
 
       if (!response.ok) {
         const errorResponse = await response.text();
@@ -84,10 +88,11 @@ function Company() {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `${token}`,
           },
         }
       );
+      localStorage.setItem("accessToken", [...response.headers][0][1]);
 
       if (response.status === 201) {
         const addedCompany = response.data;

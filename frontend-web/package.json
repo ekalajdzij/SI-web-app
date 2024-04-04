@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "vite",
     "test": "jest --env=jsdom --verbose",
-    "build": "CI=false && vite build",
+    "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
