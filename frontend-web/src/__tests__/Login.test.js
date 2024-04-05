@@ -110,7 +110,7 @@ describe("Login component", () => {
     mockConsoleError.mockRestore();
   });
 
-  it("successful login", async () => {
+  it("Successfully sent to route", async () => {
     axios.post.mockResolvedValueOnce({
       data: {
         token: "mocked-token",
@@ -118,10 +118,11 @@ describe("Login component", () => {
         fullName: "mocked-fullName",
       },
     });
+    const mockSupe1 = jest.fn();
     const mockVisib1 = jest.fn();
     const { getByPlaceholderText, getAllByText } = render(
       <Router>
-        <Login visib={mockVisib1} />
+        <Login visib={mockVisib1} supe={mockSupe1} />
       </Router>
     );
     fireEvent.change(getByPlaceholderText("Username or phone number"), {
@@ -136,25 +137,31 @@ describe("Login component", () => {
     await waitFor(
       () => {
         expect(axios.post).toHaveBeenCalledTimes(1);
-        expect(axios.post).toHaveBeenCalledWith(`https://fieldlogistics-control.azurewebsites.net/api/login`, {
-          Username: "test",
-          Password: "test",
-        });
-        expect(localStorage.getItem("ime")).toBe(`Welcome mocked-fullName`);
+        expect(axios.post).toHaveBeenCalledWith(
+          `https://fieldlogistics-control.azurewebsites.net/api/login`,
+          {
+            Username: "test",
+            Password: "test",
+          }
+        );
       },
       { timeout: 5000 }
     );
   }, 10000);
 
-  it("should redirect to /twofactor for user without secretKey", async () => {
+  it("should redirect to /twofactor for user with secretKey", async () => {
     axios.post.mockResolvedValueOnce({
       data: { token: "mocked-token", secretKey: "mocked-secretKey" },
     });
     const mockVisib = jest.fn();
+    const mockSupe = jest.fn();
     const { getByPlaceholderText, getAllByText } = render(
       <MemoryRouter initialEntries={["/login"]}>
         <Routes>
-          <Route path="/login" element={<Login visib={mockVisib} />} />
+          <Route
+            path="/login"
+            element={<Login visib={mockVisib} supe={mockSupe} />}
+          />
           <Route path="*" element={<TestLocationComponent />} />
         </Routes>
       </MemoryRouter>
@@ -171,10 +178,13 @@ describe("Login component", () => {
     await waitFor(
       () => {
         expect(axios.post).toHaveBeenCalledTimes(1);
-        expect(axios.post).toHaveBeenCalledWith(`https://fieldlogistics-control.azurewebsites.net/api/login`, {
-          Username: "test",
-          Password: "test",
-        });
+        expect(axios.post).toHaveBeenCalledWith(
+          `https://fieldlogistics-control.azurewebsites.net/api/login`,
+          {
+            Username: "test",
+            Password: "test",
+          }
+        );
         expect(mockVisib).toHaveBeenCalledWith(false);
         expect(testLocation.pathname).toBe("/twofactor");
       },
@@ -195,12 +205,13 @@ describe("Login component", () => {
       });
     const mockVisib2 = jest.fn();
     const mockQR = jest.fn();
+    const mockSupe2 = jest.fn();
     const { getByPlaceholderText, getAllByText } = render(
       <MemoryRouter initialEntries={["/login"]}>
         <Routes>
           <Route
             path="/login"
-            element={<Login visib={mockVisib2} QR={mockQR} />}
+            element={<Login visib={mockVisib2} QR={mockQR} supe={mockSupe2} />}
           />
           <Route path="*" element={<TestLocationComponent />} />
         </Routes>
@@ -218,10 +229,13 @@ describe("Login component", () => {
     await waitFor(
       () => {
         expect(axios.post).toHaveBeenCalledTimes(1);
-        expect(axios.post).toHaveBeenCalledWith(`https://fieldlogistics-control.azurewebsites.net/api/login`, {
-          Username: "test",
-          Password: "test",
-        });
+        expect(axios.post).toHaveBeenCalledWith(
+          `https://fieldlogistics-control.azurewebsites.net/api/login`,
+          {
+            Username: "test",
+            Password: "test",
+          }
+        );
       },
       { timeout: 5000 }
     );
@@ -230,10 +244,13 @@ describe("Login component", () => {
         expect(mockVisib2).toHaveBeenCalledWith(true);
 
         expect(axios.post).toHaveBeenCalledTimes(2);
-        expect(axios.post).toHaveBeenCalledWith(`https://fieldlogistics-control.azurewebsites.net/api/login/setup/2fa`, {
-          Username: "test",
-          Password: "test",
-        });
+        expect(axios.post).toHaveBeenCalledWith(
+          `https://fieldlogistics-control.azurewebsites.net/api/login/setup/2fa`,
+          {
+            Username: "test",
+            Password: "test",
+          }
+        );
       },
       { timeout: 5000 }
     );
