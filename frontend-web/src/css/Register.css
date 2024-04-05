@@ -88,8 +88,8 @@ input:focus {
   align-items: center;
 }
 
-input::placeholder {
-  color: rgba(255, 255, 255, 0.519);
+.inputs::placeholder {
+  color: rgba(67, 53, 53, 0.519);
 }
 
 #redirect {
@@ -100,7 +100,7 @@ input::placeholder {
 .inputs:optional,
 .inputs:-webkit-autofill,
 .inputs:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
+.inputs:-webkit-autofill:focus,
 textarea:-webkit-autofill,
 textarea:-webkit-autofill:hover,
 textarea:-webkit-autofill:focus,

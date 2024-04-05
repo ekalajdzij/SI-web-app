@@ -1,0 +1,105 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+.destinacije {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 400px);
+  gap: 20px;
+  padding: 20px;
+  justify-content: space-around;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+.wrapper {
+  padding: 20px;
+}
+.komponenta {
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  background-color: #226dbd3e;
+  box-shadow: 0px 5px 7px -1px rgba(0, 0, 0, 0.3),
+    0px -2px 3px -2px rgba(0, 0, 0, 0.2), 3px 5px 7px -1px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s;
+}
+
+.komponenta:hover {
+  background-color: #226dbd15;
+}
+
+.komponenta h2 {
+  color: black;
+}
+
+#titleC {
+  color: black;
+}
+#lokacija {
+  color: black;
+}
+
+.komponenta h2 {
+  margin-top: 0;
+}
+
+.detalji {
+  font-weight: 500;
+  font-style: italic;
+}
+.komponenta button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.komponenta button:hover {
+  background-color: #0056b3;
+}
+#user {
+  color: black;
+}
+
+input[type="date"] {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+input[type="date"]:focus {
+  box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.1);
+  outline: none;
+}
+
+.date-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 5px;
+  font-family: "Poppins", sans-serif;
+}
+
+.dropdown::placeholder {
+  color: #806d6d;
+}
+.dropdown {
+  display: block;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  margin: auto;
+}
+
+.modal {
+  font-family: "Poppins", sans-serif;
+}
