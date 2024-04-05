@@ -84,7 +84,7 @@ function Company() {
       const response = await axios.post(
         "https://fieldlogistics-control.azurewebsites.net/api/company",
         {
-          Name: newCompany, // Ensure this matches your backend expected field
+          Name: newCompany, 
         },
         {
           headers: {

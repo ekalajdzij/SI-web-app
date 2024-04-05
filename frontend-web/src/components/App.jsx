@@ -36,7 +36,7 @@ function App() {
   const [signedIn, setSigned] = useState(JSON.parse(localStorage.getItem('isLoggedInVia2fa')) || false);
   const navigate = useNavigate();
   const location = useLocation(); 
-  const [isSuperAdmin, setSuperAdmin] = useState(JSON.parse(localStorage.getItem('isSuperAdmin')) || false);
+  const [isSuperAdmin, setSuperAdmin] = useState(JSON.parse(localStorage.getItem('isSuperAdmin') ?? "false") || false);
 
   const setSuperfunction = (x) => {
     setSuperAdmin(x);

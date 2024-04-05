@@ -234,7 +234,7 @@ function CampaignView() {
             <p className="detalji">
               End Date: {formatirajDatum(destinacija.endDate)}{" "}
             </p>
-            <button onClick={() => AssignUser(destinacija.id)}>
+            <button  onClick={() => AssignUser(destinacija.id)}>
               Assign user
             </button>
             <button onClick={() => makeLocation(destinacija.id)}>
