@@ -107,29 +107,37 @@ function CampaignView() {
         try {
             if (novaDestinacija.endDate < novaDestinacija.startDate) {
                 throw ("Neispravni podaci");
-            } else {
-                const response = await axios.post('https://fieldlogistics-control.azurewebsites.net/api/campaigns', {
+            }
+            else
+            {
+                const response = await axios.post('https://fieldlogistics-control.azurewebsites.net/api/campaigns', 
+                {
                     ...novaDestinacija,
                     companyId: localStorage.getItem('company')
-                }, {
+                },
+                {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                     },
                 });
+
                 if (response.data) {
                     let currentUserData = JSON.parse(localStorage.getItem('campaignData')) || [];
                     setDestinacije(prevUserData => [...prevUserData, response.data]);
                     currentUserData.push(response.data);
                     localStorage.setItem('campaignData', JSON.stringify(currentUserData))
                 }
+
                 setModalOpenD(false);
-                setNovaDestinacija( {name: '',
-                description: '',
-                startDate: '',
-                endDate: ''})
-                
-            }
-        } catch (error) {
+                setNovaDestinacija( 
+                    {name: '',
+                    description: '',
+                    startDate: '',
+                    endDate: ''})
+                }
+
+        } 
+        catch (error) {
             console.error('Error creating destination:', error);
         }
     };
@@ -155,24 +163,37 @@ function CampaignView() {
     };
 
     return (
-        <div className='wrapper'>
+        <div className='wrapper' data-testid="ID1">
             <h2 id='titleC'>Campaigns for {companyName}</h2>
+
             <button onClick={() => setModalOpenD(true)}>Add Campaign</button>
-            {modalOpenD && (
-                <div className='modal'>
+
+
+            {
+            modalOpenD && (
+                <div className='modal' data-testid="formForAddingCampaign">
                     <div className='modal-content'>
                         <span className='close' onClick={() => setModalOpenD(false)}>&times;</span>
+                        
                         <h2>Add Campaign</h2>
                         <input type='text' name='name' placeholder='Name' value={novaDestinacija.name} onChange={handleChange} />
                         <input type='text' name='description' placeholder='Description' value={novaDestinacija.description} onChange={handleChange} />
                         <input type='date' name='startDate' placeholder='Start Date' value={novaDestinacija.startDate} onChange={handleChange} />
                         <input type='date' name='endDate' placeholder='End Date' value={novaDestinacija.endDate} onChange={handleChange} />
-                        <button onClick={handleSubmitDestinacija}>Create</button>
+                        
+                        <button data-testid="submitCampaignForm" onClick={handleSubmitDestinacija}>Create</button>
                     </div>
                 </div>
-            )}
-            <div className='destinacije'>
-                {destinacije.map((destinacija) => (
+            )
+            }
+
+
+
+        
+    
+            <div className='destinacije' data-testid="listOfDestinations">
+            {/*
+                destinacije.map((destinacija) => (
                     <div className='komponenta' key={destinacija.id}>
                         <h2>{destinacija.name}</h2>
                         <p className='detalji'>Description: {destinacija.description} </p>
@@ -185,10 +206,15 @@ function CampaignView() {
                             Create location
                         </button>
                     </div>
-                ))}
+                ))
+                */
+            }
             </div>
+        
+
+
             {modalOpen && (
-                <div className='modal'>
+                <div className='modal' data-testid="formForAddingLocation" >
                     <div className='modal-content'>
                         <span className='close' onClick={() => setModalOpen(false)}>&times;</span>
                         <h3 id='lokacija'>Add location for {name}</h3>
@@ -200,8 +226,10 @@ function CampaignView() {
                     </div>
                 </div>
             )}
+
+            
             {modalOpenAssign && (
-                <div className='modal' id='m'>
+                <div className='modal' id='m' data-testid="formForAssigneLocationToUser">
                     <div className='modal-content'>
                         <span className='close' onClick={() => setModalOpenAssign(false)}>&times;</span>
                         <h4 id='user'>Select User for {name}</h4>
