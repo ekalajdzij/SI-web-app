@@ -2,12 +2,20 @@ import React, { useEffect, useState } from "react";
 import "../css/CampaignView.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FaTrash, FaEdit, FaCheck } from "react-icons/fa";
+
 
 function CampaignView() {
   const navigate = useNavigate();
   const [destinacije, setDestinacije] = useState(
-    JSON.parse(localStorage.getItem("campaignData"))
+    localStorage.getItem('campaignData')?
+    JSON.parse(localStorage.getItem("campaignData")) : []
   );
+  const [editableRow, setEditableRow] = useState(null);
+  const [clickTimeout, setClickTimeout] = useState(null);
+
+  const [editedData, setEditedData] = useState({});
+
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpenAssign, setModalOpenAssign] = useState(false);
   const [selectedUser, setSelectedUser] = useState("");
@@ -40,6 +48,18 @@ function CampaignView() {
     UserId: null,
   });
 
+  const onChangeEdit = (id, field, e) => {
+    const value = e.target.value;
+    setEditedData((prev) => ({
+      ...prev,
+      [id]: {
+        ...prev[id],
+        [field]: value,
+      },
+    }));
+  };
+
+
   const formatirajDatum = (datum) => {
     const dateObj = new Date(datum);
     const dan = dateObj.getDate();
@@ -47,6 +67,23 @@ function CampaignView() {
     const godina = dateObj.getFullYear();
     return `${dan}.${mjesec}.${godina}`;
   };
+
+  const handleEditClick = (id) => {
+    const foundDest = destinacije.find((dest) => dest.id === id);
+    setEditableRow(id);
+    setEditedData({
+      ...editedData,
+      [id]: {
+        id:foundDest.id,
+        name: foundDest.name,
+        description: foundDest.description,
+        companyId: company,
+        startDate: new Date(foundDest.startDate).toISOString().split('T')[0],
+        endDate: new Date(foundDest.endDate).toISOString().split('T')[0]
+      },
+    });
+  };
+
   const AssignUser = (id) => {
     console.log(id);
     setId(id);
@@ -96,6 +133,22 @@ function CampaignView() {
     }));
   };
 
+  const handleCombinedClick = () => {
+    if (clickTimeout != null) {
+      console.log("double");
+      clearTimeout(clickTimeout);
+      setClickTimeout(null);
+    }
+    else {
+      const newTimeout = setTimeout(() => {
+        console.log("jednom")
+        setClickTimeout(null);
+      }, 500);
+      setClickTimeout(newTimeout);
+    }
+
+  }
+
   const handleChangeLokacija = (e) => {
     const { name, value } = e.target;
     setNovaLokacija((prevState) => ({
@@ -106,7 +159,7 @@ function CampaignView() {
 
   const handleSubmitDestinacija = async () => {
     try {
-      if (novaDestinacija.endDate < novaDestinacija.startDate) {
+      if (novaDestinacija.endDate < novaDestinacija.startDate ) {
         throw "Neispravni podaci";
       } else {
         const response = await axios.post(
@@ -142,16 +195,46 @@ function CampaignView() {
       alert("All fields have to be filled");
     }
   };
+  const handleConfirm = async (id) => {
+    //console.log(editedData[id]);
+    //console.log(destinacije[0]);
+    if(editedData[id].startDate < editedData[id].endDate && editedData[id].startDate!='' && editedData[id].startDate!='' && editedData[id].name!=''){
+    const token = localStorage.getItem("accessToken");
+    const response = await fetch(
+      `https://fieldlogistics-control.azurewebsites.net/api/campaigns/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editedData[id]),
+      }
+    );
+    localStorage.setItem("accessToken", [...response.headers][0][1]);
+    const updatedDest = destinacije.map((d) =>
+        d.id === id ? editedData[id] : d
+      );
+      setDestinacije(updatedDest);
+      localStorage.setItem("campaignData", JSON.stringify(updatedDest));
+      setEditableRow(null);
+    if (!response.ok) {
+      throw new Error("Problem sa ažuriranjem admina");
+    }}
+    else{
+      alert('Neispravni podaci');
+    }
+  }
 
   const handleSubmitLokacija = async () => {
     try {
-      console.log(novaLokacija);
+      //console.log(novaLokacija);
       const response = await axios.post(
         "https://fieldlogistics-control.azurewebsites.net/api/location",
         novaLokacija
       );
-      if(response.headers.authorization)
-      localStorage.setItem("accessToken", response.headers.authorization);
+      if (response.headers.authorization)
+        localStorage.setItem("accessToken", response.headers.authorization);
 
       setModalOpen(false);
       setNovaLokacija({
@@ -164,6 +247,29 @@ function CampaignView() {
       });
     } catch (error) {
       console.error("Error creating location:", error);
+    }
+  };
+  const handleDeleteCampaign = async (id) => {
+    try {
+      const token = localStorage.getItem("accessToken");
+
+      const response = await fetch(
+        `https://fieldlogistics-control.azurewebsites.net/api/campaigns/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      );
+      localStorage.setItem("accessToken", [...response.headers][0][1]);
+      if (response.ok) {
+        const updatedDest = destinacije.filter((d) => d.id !== id);
+        setDestinacije(updatedDest);
+        localStorage.setItem("campaignData", JSON.stringify(updatedDest));
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
     }
   };
 
@@ -225,24 +331,86 @@ function CampaignView() {
       )}
       <div className="destinacije">
         {destinacije.map((destinacija) => (
-          <div className="komponenta" key={destinacija.id}>
-            <h2>{destinacija.name}</h2>
-            <p className="detalji">Description: {destinacija.description} </p>
-            <p className="detalji">
-              Start Date: {formatirajDatum(destinacija.startDate)}{" "}
-            </p>
-            <p className="detalji">
-              End Date: {formatirajDatum(destinacija.endDate)}{" "}
-            </p>
-            <button  onClick={() => AssignUser(destinacija.id)}>
-              Assign user
-            </button>
-            <button onClick={() => makeLocation(destinacija.id)}>
-              Create location
-            </button>
+          <div className="komponenta" key={destinacija.id} onClick={handleCombinedClick}>
+            {editableRow === destinacija.id ? (
+              <div className="input-polje" onClick={(e)=>e.stopPropagation()} style={{ display: 'flex', flexDirection: 'column' } }>
+                <input
+                  onClick={(e) => { e.stopPropagation }}
+                  type="text"
+                  className="detalji"
+                  value={editedData[destinacija.id]?.name ?? destinacija.name}
+                  onChange={(e) => onChangeEdit(destinacija.id, "name", e)}
+                  style={{ marginBottom: '20px', padding: '8px', borderRadius: '5px', border: '1px solid #ccc' }}
+
+                />
+                <input
+                  onClick={(e) => { e.stopPropagation }}
+
+                  type="text"
+                  className="detalji"
+                  value={editedData[destinacija.id]?.description ?? destinacija.description}
+                  onChange={(e) => onChangeEdit(destinacija.id, "description", e)}
+                  style={{ marginBottom: '20px', padding: '8px', borderRadius: '5px', border: '1px solid #ccc' }}
+
+                />
+                <input
+                  onClick={(e) => { e.stopPropagation }}
+
+                  type="date"
+                  className="detalji"
+                  value={editedData[destinacija.id]?.startDate ?? formatirajDatum(destinacija.startDate)}
+                  onChange={(e) => onChangeEdit(destinacija.id, "startDate", e)}
+                  style={{ marginBottom: '20px', padding: '8px', borderRadius: '5px', border: '1px solid #ccc' }}
+
+                />
+                <input
+                  onClick={(e) => { e.stopPropagation }}
+
+                  type="date"
+                  className="detalji"
+                  value={editedData[destinacija.id]?.endDate ?? formatirajDatum(destinacija.endDate)}
+                  onChange={(e) => {e.stopPropagation(); onChangeEdit(destinacija.id, "endDate", e)}}
+                  style={{ marginBottom: '20px', padding: '8px', borderRadius: '5px', border: '1px solid #ccc' }}
+
+                />
+                <button onClick={(e) => { e.stopPropagation(); handleConfirm(destinacija.id) }}>Confirm</button>
+              </div>
+            ) : (
+              <div>
+                <h2>{destinacija.name}</h2>
+                <p className="detalji">Description: {destinacija.description} </p>
+                <p className="detalji">
+                  Start Date: {formatirajDatum(destinacija.startDate)}{" "}
+                </p>
+                <p className="detalji">
+                  End Date: {formatirajDatum(destinacija.endDate)}{" "}
+                </p>
+                <button onClick={(e) => { e.stopPropagation(); AssignUser(destinacija.id) }}>
+                  Assign user
+                </button>
+                <button onClick={(e) => { e.stopPropagation(); makeLocation(destinacija.id) }}>
+                  Create location
+                </button>
+                <button onClick={(e) => { e.stopPropagation(); handleEditClick(destinacija.id) }}>Update</button>
+                <FaTrash
+                  style={{
+                    position: 'absolute',
+                    bottom: "5px",
+                    right: "5px",
+                    fontSize: '32px',
+                    cursor: "default",
+                    color: "red"
+                  }}
+                  onClick={(e) => {e.stopPropagation(); handleDeleteCampaign(destinacija.id);
+                    
+                  }}
+                /> </div>
+
+            )}
           </div>
         ))}
       </div>
+
       {modalOpen && (
         <div className="modal">
           <div className="modal-content">
