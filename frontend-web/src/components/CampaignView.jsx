@@ -8,8 +8,8 @@ import { FaTrash, FaEdit, FaCheck } from "react-icons/fa";
 function CampaignView() {
   const navigate = useNavigate();
   const [destinacije, setDestinacije] = useState(
-    localStorage.getItem('campaignData')?
-    JSON.parse(localStorage.getItem("campaignData")) : []
+    localStorage.getItem('campaignData') ?
+      JSON.parse(localStorage.getItem("campaignData")) : []
   );
   const [editableRow, setEditableRow] = useState(null);
   const [clickTimeout, setClickTimeout] = useState(null);
@@ -24,7 +24,8 @@ function CampaignView() {
   const [id, setId] = useState();
 
   const [users, setUsers] = useState(
-    JSON.parse(localStorage.getItem("userData")) || []
+    localStorage.getItem('userData') ?
+      JSON.parse(localStorage.getItem("userData")) : []
   );
 
   const [company, setCompId] = useState(localStorage.getItem("company"));
@@ -74,7 +75,7 @@ function CampaignView() {
     setEditedData({
       ...editedData,
       [id]: {
-        id:foundDest.id,
+        id: foundDest.id,
         name: foundDest.name,
         description: foundDest.description,
         companyId: company,
@@ -133,15 +134,24 @@ function CampaignView() {
     }));
   };
 
-  const handleCombinedClick = () => {
+  const handleDoubleClick = (id) => {
+
+  }
+
+  const handleOneClick = (id) => {
+   console.log("jednom"); //ovdje pišete kod za lokacije
+  }
+
+
+  const handleCombinedClick = (id) => {
     if (clickTimeout != null) {
-      console.log("double");
+      handleDoubleClick(id);
       clearTimeout(clickTimeout);
       setClickTimeout(null);
     }
     else {
       const newTimeout = setTimeout(() => {
-        console.log("jednom")
+        handleOneClick(id);
         setClickTimeout(null);
       }, 500);
       setClickTimeout(newTimeout);
@@ -159,7 +169,7 @@ function CampaignView() {
 
   const handleSubmitDestinacija = async () => {
     try {
-      if (novaDestinacija.endDate < novaDestinacija.startDate ) {
+      if (novaDestinacija.endDate < novaDestinacija.startDate) {
         throw "Neispravni podaci";
       } else {
         const response = await axios.post(
@@ -198,30 +208,31 @@ function CampaignView() {
   const handleConfirm = async (id) => {
     //console.log(editedData[id]);
     //console.log(destinacije[0]);
-    if(editedData[id].startDate < editedData[id].endDate && editedData[id].startDate!='' && editedData[id].startDate!='' && editedData[id].name!=''){
-    const token = localStorage.getItem("accessToken");
-    const response = await fetch(
-      `https://fieldlogistics-control.azurewebsites.net/api/campaigns/${id}`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(editedData[id]),
-      }
-    );
-    localStorage.setItem("accessToken", [...response.headers][0][1]);
-    const updatedDest = destinacije.map((d) =>
+    if (editedData[id].startDate < editedData[id].endDate && editedData[id].startDate != '' && editedData[id].startDate != '' && editedData[id].name != '') {
+      const token = localStorage.getItem("accessToken");
+      const response = await fetch(
+        `https://fieldlogistics-control.azurewebsites.net/api/campaigns/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(editedData[id]),
+        }
+      );
+      localStorage.setItem("accessToken", [...response.headers][0][1]);
+      const updatedDest = destinacije.map((d) =>
         d.id === id ? editedData[id] : d
       );
       setDestinacije(updatedDest);
       localStorage.setItem("campaignData", JSON.stringify(updatedDest));
       setEditableRow(null);
-    if (!response.ok) {
-      throw new Error("Problem sa ažuriranjem admina");
-    }}
-    else{
+      if (!response.ok) {
+        throw new Error("Problem sa ažuriranjem admina");
+      }
+    }
+    else {
       alert('Neispravni podaci');
     }
   }
@@ -331,9 +342,9 @@ function CampaignView() {
       )}
       <div className="destinacije">
         {destinacije.map((destinacija) => (
-          <div className="komponenta" key={destinacija.id} onClick={handleCombinedClick}>
+          <div className="komponenta" key={destinacija.id} onClick={()=>handleCombinedClick(id)}>
             {editableRow === destinacija.id ? (
-              <div className="input-polje" onClick={(e)=>e.stopPropagation()} style={{ display: 'flex', flexDirection: 'column' } }>
+              <div className="input-polje" onClick={(e) => e.stopPropagation()} style={{ display: 'flex', flexDirection: 'column' }}>
                 <input
                   onClick={(e) => { e.stopPropagation }}
                   type="text"
@@ -369,7 +380,7 @@ function CampaignView() {
                   type="date"
                   className="detalji"
                   value={editedData[destinacija.id]?.endDate ?? formatirajDatum(destinacija.endDate)}
-                  onChange={(e) => {e.stopPropagation(); onChangeEdit(destinacija.id, "endDate", e)}}
+                  onChange={(e) => { e.stopPropagation(); onChangeEdit(destinacija.id, "endDate", e) }}
                   style={{ marginBottom: '20px', padding: '8px', borderRadius: '5px', border: '1px solid #ccc' }}
 
                 />
@@ -401,8 +412,9 @@ function CampaignView() {
                     cursor: "default",
                     color: "red"
                   }}
-                  onClick={(e) => {e.stopPropagation(); handleDeleteCampaign(destinacija.id);
-                    
+                  onClick={(e) => {
+                    e.stopPropagation(); handleDeleteCampaign(destinacija.id);
+
                   }}
                 /> </div>
 
