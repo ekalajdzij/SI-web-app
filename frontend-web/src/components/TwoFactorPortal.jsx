@@ -124,7 +124,7 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
         // console.log(response);
         const data1 = response.data;
         localStorage.setItem("campaignData", JSON.stringify(data1));
-        console.log(data1);
+        //console.log(data1);
       } catch (error) {
         console.error("There was a problem with fetching company data:", error);
       }
