@@ -134,12 +134,46 @@ function CampaignView() {
     }));
   };
 
-  const handleDoubleClick = (id) => {
+  const handleDoubleClick = async (id) => {
+    console.log(id);
+    try {
+        const token = localStorage.getItem("accessToken");
+        const response = await axios.get(
+            `https://fieldlogistics-control.azurewebsites.net/api/user/campaigns/${id}`,
+            {
+                headers: {
+                    Authorization: `${token}`,
+                },
+            }
+        );
 
-  }
+        if (response.headers.authorization) {
+            localStorage.setItem("accessToken", response.headers.authorization);
+        }
+        localStorage.setItem('userForCampaign',JSON.stringify(response.data));      
+
+        const userIds = response.data.map(u=>u.userId);
+        console.log(response.data); 
+        //console.log(userIds);
+        if(localStorage.getItem('company')){
+
+        const filteredUsers=users.filter(u=>u.companyId==localStorage.getItem('company'));
+        const finalFilteredUsers = filteredUsers.filter(user => !userIds.includes(user.id));
+        localStorage.setItem('selectList',JSON.stringify(finalFilteredUsers));
+        localStorage.setItem('campId',id)
+        navigate('/usercamp');
+
+      }
+      
+    } catch (error) {
+        console.error("There was a problem with fetching company data:", error);
+    }
+}
+
 
   const handleOneClick = (id) => {
-   console.log("jednom"); //ovdje pišete kod za lokacije
+   console.log("jednom"); 
+   console.log(id);
   }
 
 
@@ -342,7 +376,7 @@ function CampaignView() {
       )}
       <div className="destinacije">
         {destinacije.map((destinacija) => (
-          <div className="komponenta" key={destinacija.id} onClick={()=>handleCombinedClick(id)}>
+          <div className="komponenta" key={destinacija.id} onClick={()=>handleCombinedClick(destinacija.id)}>
             {editableRow === destinacija.id ? (
               <div className="input-polje" onClick={(e) => e.stopPropagation()} style={{ display: 'flex', flexDirection: 'column' }}>
                 <input

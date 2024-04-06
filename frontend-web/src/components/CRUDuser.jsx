@@ -24,6 +24,7 @@ function CRUDuser() {
   });
 
   useEffect(() => {
+    //console.log(userData)
     const userDataFromStorage = localStorage.getItem("userData");
     if (userDataFromStorage) {
       const parsedUserData = JSON.parse(userDataFromStorage);

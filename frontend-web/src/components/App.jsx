@@ -11,6 +11,7 @@ import "../css/App.css";
 import CRUDadmin from "./CRUDadmin";
 import CRUDuser from "./CRUDuser";
 import CampaignView from "./CampaignView";
+import UserCampaignCRUD from "./UserCampaignCRUD";
 
 
 // Komponenta za kontrolu prikaza Navbar-a
@@ -77,8 +78,7 @@ function App() {
           <Route path="/admin" element={(isSuperAdmin && signedIn) ? <CRUDadmin /> : <Error />} />
           <Route path="/users" element={(!isSuperAdmin && signedIn) ? <CRUDuser /> : <Error />} />
           <Route path="/campaign" element={(!isSuperAdmin && signedIn) ? <CampaignView /> : <Error />} />
-
-
+          <Route path="/usercamp" element={(!isSuperAdmin && signedIn) ? <UserCampaignCRUD /> : <Error />} />
 
           <Route path="/company" element={(isSuperAdmin && signedIn) ? <Company /> : <Error />} />
           <Route path="/twofactor" element={<TwoFactorPortal qrcode={qr} vis={visible} signed={signed} isSuper={isSuperAdmin} />} />
