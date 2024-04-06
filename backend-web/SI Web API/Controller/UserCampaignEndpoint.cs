@@ -5,6 +5,7 @@ using SI_Web_API.Data;
 using SI_Web_API.Dtos;
 using SI_Web_API.Model;
 using SI_Web_API.Services;
+using System.ComponentModel.Design;
 
 namespace SI_Web_API.Controller
 {
@@ -39,6 +40,31 @@ namespace SI_Web_API.Controller
             .RequireAuthorization()
             .WithOpenApi();
 
+            group.MapGet("/{campaignId}", async (HttpContext context, SI_Web_APIContext db, int campaignId) =>
+            {
+                AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+                var result = await db.UserCampaign
+                .Where(uc => uc.CampaignId == campaignId && 
+                    (uc.Status == "none" || uc.Status == "accepted"))
+                .Join(db.User,
+                    uc => uc.UserId,
+                    u => u.Id,
+                    (uc, u) => new
+                    {
+                        uc.Id,
+                        uc.CampaignId,
+                        uc.UserId,
+                        u.Username,
+                        uc.Status
+                    })
+                .ToListAsync();
+
+                return TypedResults.Ok(result);
+            })
+            .WithName("GetAllUsersForCampaign")
+            .RequireAuthorization()
+            .WithOpenApi();
+
             group.MapPut("/", async (HttpContext context, SI_Web_APIContext db, [FromBody] UpdateUserCampaignRequest payload) =>
             {
                 AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
@@ -70,6 +96,23 @@ namespace SI_Web_API.Controller
                 return TypedResults.Ok(userCampaign);
             })
             .WithName("CreateCampaignForUser")
+            .RequireAuthorization()
+            .WithOpenApi();
+
+            group.MapDelete("/{userCampaignId}", async (HttpContext context, int userCampaignId, SI_Web_APIContext db) =>
+            {
+                AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+                var userCampaign = await db.Campaign.FindAsync(userCampaignId);
+                if (userCampaign == null)
+                {
+                    return Results.NotFound("User-Campaign mapping not found.");
+                }
+
+                db.Campaign.Remove(userCampaign);
+                await db.SaveChangesAsync();
+                return Results.Ok();
+            })
+            .WithName("DeleteUserCampaign")
             .RequireAuthorization()
             .WithOpenApi();
         }

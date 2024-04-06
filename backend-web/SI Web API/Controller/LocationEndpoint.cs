@@ -21,6 +21,7 @@ public static class LocationEndpoints
                     : TypedResults.NotFound();
         })
         .WithName("GetLocationById")
+        .RequireAuthorization()
         .WithOpenApi();
 
         group.MapPost("/", async ([FromBody] Location location, SI_Web_APIContext db) =>
@@ -30,6 +31,7 @@ public static class LocationEndpoints
             return TypedResults.Created($"/api/Location/{location.Id}",location);
         })
         .WithName("CreateLocation")
+        .RequireAuthorization()
         .WithOpenApi();
     }
 }}
