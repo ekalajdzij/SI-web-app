@@ -102,13 +102,13 @@ namespace SI_Web_API.Controller
             group.MapDelete("/{userCampaignId}", async (HttpContext context, int userCampaignId, SI_Web_APIContext db) =>
             {
                 AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
-                var userCampaign = await db.Campaign.FindAsync(userCampaignId);
+                var userCampaign = await db.UserCampaign.FindAsync(userCampaignId);
                 if (userCampaign == null)
                 {
                     return Results.NotFound("User-Campaign mapping not found.");
                 }
 
-                db.Campaign.Remove(userCampaign);
+                db.UserCampaign.Remove(userCampaign);
                 await db.SaveChangesAsync();
                 return Results.Ok();
             })
