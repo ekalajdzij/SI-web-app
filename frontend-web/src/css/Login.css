@@ -90,11 +90,11 @@ button:hover {
   filter: invert(100%);
 }
 
-input::placeholder {
-  color: rgba(255, 255, 255, 0.519);
+.inputs::placeholder {
+  color: rgba(248, 248, 248, 0.918);
 }
 
-input:focus {
+.inputs:focus {
   outline: none;
   border-color: #007bff;
   background-color: transparent !important;

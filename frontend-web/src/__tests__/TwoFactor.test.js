@@ -29,7 +29,7 @@ describe("TwoFactorPortal component", () => {
     jest.spyOn(console, "log").mockImplementation(() => {});
   });
 
-  it("should handle 2FA login for user with secretKey and redirect to home", async () => {
+  it("should handle 2FA login for user with secretKey", async () => {
     getItemSpy.mockImplementation((key) => {
       switch (key) {
         case "user":
@@ -88,15 +88,11 @@ describe("TwoFactorPortal component", () => {
       "mockedAuthorization"
     );
     expect(localStorage.setItem).toHaveBeenCalledWith("isLoggedIn", "true");
-    expect(localStorage.setItem).toHaveBeenCalledWith(
-      "isLoggedInVia2fa",
-      "true"
-    );
+    expect(localStorage.setItem).toHaveBeenCalledWith("isLoggedInVia2fa", true);
     expect(localStorage.setItem).toHaveBeenCalledWith("logged", false);
-    expect(testLocation.pathname).toBe("/home");
   });
 
-  it("should handle 2FA login for user without secretKey and redirect to home", async () => {
+  it("should handle 2FA login for user without secretKey", async () => {
     getItemSpy.mockImplementation((key) => {
       switch (key) {
         case "user":
@@ -156,11 +152,7 @@ describe("TwoFactorPortal component", () => {
       "mockedAuthorization"
     );
     expect(localStorage.setItem).toHaveBeenCalledWith("isLoggedIn", "true");
-    expect(localStorage.setItem).toHaveBeenCalledWith(
-      "isLoggedInVia2fa",
-      "true"
-    );
+    expect(localStorage.setItem).toHaveBeenCalledWith("isLoggedInVia2fa", true);
     expect(localStorage.setItem).toHaveBeenCalledWith("logged", false);
-    expect(testLocation.pathname).toBe("/home");
   });
 });

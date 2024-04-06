@@ -5,7 +5,7 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
-function Login({ QR, visib }) {
+function Login({ QR, visib, supe}) {
   const { instance } = useMsal();
   const [user, setUser] = useState("");
   const [pass, setPass] = useState("");
@@ -25,22 +25,22 @@ function Login({ QR, visib }) {
 
   useEffect(() => {
     setAccessToken(localStorage.getItem("accessToken") || null);
-    setFlag(JSON.parse(localStorage.getItem("isLoggedIn")) || null);
+    setFlag(JSON.parse(localStorage.getItem("isLoggedIn")) || false);
     setIme(localStorage.getItem("ime") || null);
     const numberOfActiveAccounts = instance.getAllAccounts().length;
-
+     if(flag)
     if (!numberOfActiveAccounts) {
-      localStorage.setItem("ime", "neautorizovano");
+      localStorage.setItem("imee", "neautorizovanno");
       localStorage.setItem("isLoggedIn", "false");
-      localStorage.removeItem("accessToken");
+      //localStorage.removeItem("accessToken");
       localStorage.removeItem("decodedToken");
       setFlag(false);
     }
 
     if (!flag) {
-      localStorage.removeItem("accessToken");
+      //localStorage.removeItem("accessToken");
       localStorage.removeItem("decodedToken");
-      setAccessToken(null);
+      //setAccessToken(null);
     }
 
     if (accessToken) {
@@ -48,7 +48,7 @@ function Login({ QR, visib }) {
     }
   }, []);
 
-  useEffect(() => {
+  /*useEffect(() => {
     setAccessToken(localStorage.getItem("accessToken") || null);
     setFlag(JSON.parse(localStorage.getItem("isLoggedIn")) || null);
     setIme(localStorage.getItem("ime") || null);
@@ -85,7 +85,7 @@ function Login({ QR, visib }) {
     };
 
     checkLoginStatus();
-  }, [instance]);
+  }, [instance]);*/
 
   const getAccessToken = () => {
     return new Promise((resolve, reject) => {
@@ -153,22 +153,26 @@ function Login({ QR, visib }) {
     }
   };
 
-  const handleLog = (e) => {
+  const handleLog = async (e) => {
     e.preventDefault();
 
     localStorage.setItem("user", user);
     localStorage.setItem("pass", pass);
 
-    axios
-      .post(`https://fieldlogistics-control.azurewebsites.net/api/login`, {
+    await axios
+      .post("https://fieldlogistics-control.azurewebsites.net/api/login", {
         Username: user,
         Password: pass,
       })
       .then((response) => {
-        localStorage.setItem("ime", `Welcome ${response.data.fullName}`);
+        console.log(response)
+        localStorage.setItem("company", response.data.companyId);
+        localStorage.setItem("companyName", response.data.name);
+        localStorage.setItem("ime", `Welcome ${response.data.username}`);
         localStorage.setItem("accessToken", response.data.token);
+        localStorage.setItem("isSuperAdmin",response.data.isSuperAdmin)
+        supe(response.data.isSuperAdmin)
         console.log("Token na loginu:", response.data.token);
-
         if (
           response.data.secretKey == "" ||
           response.data.secretKey == "default" ||
@@ -176,12 +180,13 @@ function Login({ QR, visib }) {
         ) {
           visib(true);
           localStorage.setItem("logged", true);
-
           axios
-            .post(`https://fieldlogistics-control.azurewebsites.net/api/login/setup/2fa`, {
+            .post("https://fieldlogistics-control.azurewebsites.net/api/login/setup/2fa", {
               Username: user,
               Password: pass,
-            })
+            }
+              
+            )
             .then((response) => {
               localStorage.setItem("QR", response.data.qrCodeImageUrl);
               localStorage.setItem("key", response.data.manualEntryKey);
@@ -248,6 +253,7 @@ function Login({ QR, visib }) {
               {warning && <p id="errorLogin">Invalid login data</p>}
 
               <button
+                id="loginButton"
                 onClick={(e) => {
                   handleLog(e);
                 }}

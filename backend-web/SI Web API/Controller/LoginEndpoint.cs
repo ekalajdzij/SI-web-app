@@ -35,11 +35,9 @@ public static class LoginEndpoints
             var hashedPassword = AuthService.GetSha256Hash(payload.Password);
             var user = await db.User.FirstOrDefaultAsync(u => (u.Username == payload.Username || u.PhoneNumber == payload.Username) &&
                 u.Password == hashedPassword);
-
-            if (user == null) return Results.NotFound("User not found.");
-            else
-            {
+            if (user != null) { 
                 user.Token = AuthService.GenerateJwtToken(issuer, key);
+                var company = await db.Company.FirstOrDefaultAsync(c => c.Id == user.CompanyId);
                 return Results.Ok(new
                 {
                     user.Id,
@@ -49,10 +47,32 @@ public static class LoginEndpoints
                     user.FullName,
                     user.Token,
                     user.Mail,
-                    user.Role,
-                    user.SecretKey
+                    user.SecretKey,
+                    user.CompanyId,
+                    company?.Name
+                    
                 });
             }
+            var admin = await db.Admin.FirstOrDefaultAsync(a => (a.Username == payload.Username || a.PhoneNumber == payload.Username) &&
+                a.Password == hashedPassword);
+            if (admin != null)
+            {
+                admin.Token = AuthService.GenerateJwtToken(issuer, key);
+                var company = await db.Company.FirstOrDefaultAsync(c => c.Id == admin.CompanyId);
+                return Results.Ok(new
+                {
+                    admin.Id,
+                    admin.Username,
+                    payload.Password,
+                    admin.PhoneNumber,
+                    admin.Token,
+                    admin.IsSuperAdmin,
+                    admin.SecretKey,
+                    admin.CompanyId,
+                    company?.Name
+                });
+            }
+            else return Results.NotFound("User not found.");
         }).WithName("GetUserByUsernameAndPassword")
         .AllowAnonymous()
         .WithOpenApi();
@@ -62,16 +82,27 @@ public static class LoginEndpoints
             var hashedPassword = AuthService.GetSha256Hash(payload.Password);
             var user = await db.User.FirstOrDefaultAsync(u => (u.Username == payload.Username || u.PhoneNumber == payload.Username) &&
                 u.Password == hashedPassword);
-            if (user == null) return Results.NotFound("User not found.");
-            else
+            if (user != null)
             {
-                var setup2fa = TwoFactorAuthService.GenerateSetupCode(user, db);
+                var setup2fa = TwoFactorAuthService.GenerateSetupCode(db, null, user);
                 return Results.Ok(new
                 {
                     ManualEntryKey = setup2fa.ManualEntryKey,
-                    QRCodeImageUrl = $"https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=otpauth://totp/SIWeb%20App:{Uri.EscapeDataString(user.FullName)}%3Fsecret={setup2fa.ManualEntryKey}%26issuer=SIWeb%20App"
+                    QRCodeImageUrl = $"https://image-charts.com/chart?cht=qr&chs=200x200&chl=otpauth://totp/SIWeb%20App:{Uri.EscapeDataString(user.Username)}%3Fsecret={setup2fa.ManualEntryKey}%26issuer=SIWeb%20App"
                 });
             }
+            var admin = await db.Admin.FirstOrDefaultAsync(a => (a.Username == payload.Username || a.PhoneNumber == payload.Username) &&
+                a.Password == hashedPassword);
+            if (admin != null)
+            {
+                var setup2fa = TwoFactorAuthService.GenerateSetupCode(db, admin, null);
+                return Results.Ok(new
+                {
+                    ManualEntryKey = setup2fa.ManualEntryKey,
+                    QRCodeImageUrl = $"https://image-charts.com/chart?cht=qr&chs=200x200&chl=otpauth://totp/SIWeb%20App:{Uri.EscapeDataString(admin.Username)}%3Fsecret={setup2fa.ManualEntryKey}%26issuer=SIWeb%20App"
+                });
+            }
+            else return Results.NotFound("User not found.");
         }).WithName("SetupTwoFactorAuth")
         .AllowAnonymous();
 
@@ -81,8 +112,7 @@ public static class LoginEndpoints
             var hashedPassword = AuthService.GetSha256Hash(payload.Password);
             var user = await db.User.FirstOrDefaultAsync(u => (u.Username == payload.Username || u.PhoneNumber == payload.Username) &&
                 u.Password == hashedPassword);
-            if (user == null) return Results.NotFound("User not found.");
-            else
+            if (user != null)
             {
                 AuthService.ExtendJwtTokenExpirationTime(httpContext, issuer, key);
                 bool isValidToken = TwoFactorAuthService.ValidateToken(user.SecretKey, code);
@@ -92,6 +122,17 @@ public static class LoginEndpoints
                     return Results.Ok();
                 }
             }
+            var admin = await db.Admin.FirstOrDefaultAsync(a => (a.Username == payload.Username || a.PhoneNumber == payload.Username) &&
+                a.Password == hashedPassword);
+            if (admin != null)
+            {
+                AuthService.ExtendJwtTokenExpirationTime(httpContext, issuer, key);
+                bool isValidToken = TwoFactorAuthService.ValidateToken(admin.SecretKey, code);
+                if (!isValidToken) return Results.BadRequest("Invalid code. Please try again.");
+                else return Results.Ok();
+
+            }
+            else return Results.NotFound("User not found.");
         }).WithName("AuthorizeToken");
 
 

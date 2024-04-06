@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Abstractions;
 using Microsoft.Identity.Web;
@@ -12,6 +12,7 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Any;
 using Microsoft.Extensions.FileProviders;
+using FluentAssertions.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<SI_Web_APIContext>(options =>
@@ -36,6 +37,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
      };
  });
 builder.Services.AddAuthorization();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", buildOptions =>
+    {
+        buildOptions.AllowAnyHeader()
+               .AllowAnyMethod()
+               .AllowAnyOrigin()
+               .WithExposedHeaders("Authorization");
+    });
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -77,6 +89,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowAll");
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
@@ -86,6 +100,18 @@ app.UseAuthorization();
 app.MapDesignatedLocationEndpoints(jwtIssuer, jwtKey);
 
 app.MapLoginEndpoints(jwtIssuer, jwtKey);
+
+app.MapCompanyEndpoints(jwtIssuer, jwtKey);
+
+app.MapUserEndpoints(jwtIssuer, jwtKey);
+
+app.MapUserCampaignEndpoints(jwtIssuer, jwtKey);
+
+app.MapCampaignEndpoints(jwtIssuer, jwtKey);
+
+app.MapAdminEndpoints(jwtIssuer, jwtKey);
+
+app.MapLocationEndpoints();
 
 app.Run();
 public partial class Program { }
