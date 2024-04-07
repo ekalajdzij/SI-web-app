@@ -26,16 +26,17 @@ public static class LocationEndpoints
             .RequireAuthorization()
             .WithOpenApi();
 
-            group.MapGet("/", async Task<IEnumerable<Location>> (SI_Web_APIContext db) =>
+            group.MapGet("/", async Task<IEnumerable<Location>> (HttpContext context, SI_Web_APIContext db) =>
             {
+                AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
                 return await db.Location.AsNoTracking().ToListAsync();
             }).WithName("GetAllLocations")
             .RequireAuthorization()
             .WithOpenApi();
 
-            group.MapPut("/{id}", async Task<Results<Ok<Location>, NotFound>> (int id, [FromBody] Location location, SI_Web_APIContext db) =>
+            group.MapPut("/{id}", async Task<Results<Ok<Location>, NotFound>> (HttpContext context, int id, [FromBody] Location location, SI_Web_APIContext db) =>
             {
-                
+                AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
                 var existingLocation = await db.Location.FindAsync(id);
                 if (existingLocation == null) return TypedResults.NotFound();
 
@@ -68,8 +69,9 @@ public static class LocationEndpoints
             .RequireAuthorization()
             .WithOpenApi();
 
-            group.MapDelete("/{id}", async Task<Results<Ok, NotFound>> (int id, SI_Web_APIContext db) =>
+            group.MapDelete("/{id}", async Task<Results<Ok, NotFound>> (HttpContext context, int id, SI_Web_APIContext db) =>
             {
+                AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
                 var location = await db.Location.FindAsync(id);
                 if (location == null) return TypedResults.NotFound();
 
@@ -80,29 +82,27 @@ public static class LocationEndpoints
             }).WithName("DeleteLocation")
             .RequireAuthorization()
             .WithOpenApi();
-        }
-    }
-}
-        group.MapPost("/", async (HttpContext context, [FromBody] Location location, SI_Web_APIContext db) =>
-        {
-            AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
-            db.Location.Add(location);
-            await db.SaveChangesAsync();
-            return TypedResults.Created($"/api/Location/{location.Id}",location);
-        })
-        .WithName("CreateLocation")
-        .RequireAuthorization()
-        .WithOpenApi();
+        
+            group.MapPost("/", async (HttpContext context, [FromBody] Location location, SI_Web_APIContext db) =>
+            {
+                AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+                db.Location.Add(location);
+                await db.SaveChangesAsync();
+                return TypedResults.Created($"/api/Location/{location.Id}",location);
+            })
+            .WithName("CreateLocation")
+            .RequireAuthorization()
+            .WithOpenApi();
 
-        group.MapPost("/record/", async (HttpContext context, [FromBody] Record recordData, SI_Web_APIContext db) =>
-        {
-            AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
-            db.Record.Add(recordData);
-            await db.SaveChangesAsync();
-            return TypedResults.Ok(recordData);
-        })
-        .WithName("CreateRecord")
-        .RequireAuthorization()
-        .WithOpenApi();
-        }
+            group.MapPost("/record/", async (HttpContext context, [FromBody] Record recordData, SI_Web_APIContext db) =>
+            {
+                AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+                db.Record.Add(recordData);
+                await db.SaveChangesAsync();
+                return TypedResults.Ok(recordData);
+            })
+            .WithName("CreateRecord")
+            .RequireAuthorization()
+            .WithOpenApi();
+    }
 }}
