@@ -9,5 +9,6 @@ namespace SI_Web_API.Dtos
         public int? CampaignId { get; set; }
         [Required]
         public string? Status { get; set; }
+        public string? WorkingStatus { get; set; }
     }
 }
