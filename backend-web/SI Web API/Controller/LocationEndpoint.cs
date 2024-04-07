@@ -4,16 +4,18 @@ using Microsoft.AspNetCore.OpenApi;
 using Microsoft.AspNetCore.Http.HttpResults;
 using SI_Web_API.Model;
 using Microsoft.AspNetCore.Mvc;
+using SI_Web_API.Services;
 namespace SI_Web_API.Controller
 {
-    public static class LocationEndpoints
+public static class LocationEndpoints
+{
+	public static void MapLocationEndpoints (this IEndpointRouteBuilder routes, string issuer, string key)
     {
-        public static void MapLocationEndpoints(this IEndpointRouteBuilder routes)
-        {
-            var group = routes.MapGroup("/api/location").WithTags(nameof(Location));
+        var group = routes.MapGroup("/api/location").WithTags(nameof(Location));
 
-            group.MapGet("/{id}", async Task<Results<Ok<Location>, NotFound>> (int id, SI_Web_APIContext db) =>
+            group.MapGet("/{id}", async Task<Results<Ok<Location>, NotFound>> (HttpContext context, int id, SI_Web_APIContext db) =>
             {
+                AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
                 return await db.Location.AsNoTracking()
                     .FirstOrDefaultAsync(model => model.Id == id)
                     is Location model
@@ -21,16 +23,6 @@ namespace SI_Web_API.Controller
                         : TypedResults.NotFound();
             })
             .WithName("GetLocationById")
-            .RequireAuthorization()
-            .WithOpenApi();
-
-            group.MapPost("/", async ([FromBody] Location location, SI_Web_APIContext db) =>
-            {
-                db.Location.Add(location);
-                await db.SaveChangesAsync();
-                return TypedResults.Created($"/api/Location/{location.Id}", location);
-            })
-            .WithName("CreateLocation")
             .RequireAuthorization()
             .WithOpenApi();
 
@@ -91,3 +83,26 @@ namespace SI_Web_API.Controller
         }
     }
 }
+        group.MapPost("/", async (HttpContext context, [FromBody] Location location, SI_Web_APIContext db) =>
+        {
+            AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+            db.Location.Add(location);
+            await db.SaveChangesAsync();
+            return TypedResults.Created($"/api/Location/{location.Id}",location);
+        })
+        .WithName("CreateLocation")
+        .RequireAuthorization()
+        .WithOpenApi();
+
+        group.MapPost("/record/", async (HttpContext context, [FromBody] Record recordData, SI_Web_APIContext db) =>
+        {
+            AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+            db.Record.Add(recordData);
+            await db.SaveChangesAsync();
+            return TypedResults.Ok(recordData);
+        })
+        .WithName("CreateRecord")
+        .RequireAuthorization()
+        .WithOpenApi();
+        }
+}}
