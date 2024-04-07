@@ -111,7 +111,7 @@ app.MapCampaignEndpoints(jwtIssuer, jwtKey);
 
 app.MapAdminEndpoints(jwtIssuer, jwtKey);
 
-app.MapLocationEndpoints(jwtIssuer, jwtKey);
+app.MapLocationEndpoints();
 
 app.Run();
 public partial class Program { }

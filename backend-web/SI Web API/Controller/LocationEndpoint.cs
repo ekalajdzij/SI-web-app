@@ -4,94 +4,90 @@ using Microsoft.AspNetCore.OpenApi;
 using Microsoft.AspNetCore.Http.HttpResults;
 using SI_Web_API.Model;
 using Microsoft.AspNetCore.Mvc;
-using HandlebarsDotNet;
-using SI_Web_API.Services;
 namespace SI_Web_API.Controller
 {
-public static class LocationEndpoints
-{
-	public static void MapLocationEndpoints (this IEndpointRouteBuilder routes, string issuer, string key)
+    public static class LocationEndpoints
     {
-        var group = routes.MapGroup("/api/location").WithTags(nameof(Location));
-
-        group.MapGet("/{id}", async Task<Results<Ok<Location>, NotFound>> (int id, HttpContext context, SI_Web_APIContext db) =>
+        public static void MapLocationEndpoints(this IEndpointRouteBuilder routes)
         {
-            AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
-            return await db.Location.AsNoTracking()
-                .FirstOrDefaultAsync(model => model.Id == id)
-                is Location model
-                    ? TypedResults.Ok(model)
-                    : TypedResults.NotFound();
-        })
-        .WithName("GetLocationById")
-        .WithOpenApi();
+            var group = routes.MapGroup("/api/location").WithTags(nameof(Location));
 
-        group.MapPost("/", async ([FromBody] Location location, HttpContext context, SI_Web_APIContext db) =>
-        {
-            AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
-            db.Location.Add(location);
-            await db.SaveChangesAsync();
-            return TypedResults.Created($"/api/Location/{location.Id}",location);
-        })
-        .WithName("CreateLocation")
-        .WithOpenApi();
-
-        group.MapGet("/", async (HttpContext context, SI_Web_APIContext db) =>
-        {
-            AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
-            return await db.Location.AsNoTracking().ToListAsync();
-        })
-        .WithName("GetAllLocations")
-        .WithOpenApi();
-
-        group.MapPut("/{id}", async (int id, [FromBody] Location location, HttpContext context, SI_Web_APIContext db) =>
-        {
-            AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
-            var existingLocation = await db.Location.FirstOrDefaultAsync(l => l.Id == id);
-            if (existingLocation == null)
-                return TypedResults.NotFound();
-
-            if (location.TypeOfLocation != null)
+            group.MapGet("/{id}", async Task<Results<Ok<Location>, NotFound>> (int id, SI_Web_APIContext db) =>
             {
-                existingLocation.TypeOfLocation = location.TypeOfLocation;
-            }
+                return await db.Location.AsNoTracking()
+                    .FirstOrDefaultAsync(model => model.Id == id)
+                    is Location model
+                        ? TypedResults.Ok(model)
+                        : TypedResults.NotFound();
+            })
+            .WithName("GetLocationById")
+            .RequireAuthorization()
+            .WithOpenApi();
 
-            if (location.Address != null)
+            group.MapPost("/", async ([FromBody] Location location, SI_Web_APIContext db) =>
             {
-                existingLocation.Address = location.Address;
-            }
+                db.Location.Add(location);
+                await db.SaveChangesAsync();
+                return TypedResults.Created($"/api/Location/{location.Id}", location);
+            })
+            .WithName("CreateLocation")
+            .RequireAuthorization()
+            .WithOpenApi();
 
-            if (location.ContactNumber != null)
+            group.MapGet("/", async Task<IEnumerable<Location>> (SI_Web_APIContext db) =>
             {
-                existingLocation.ContactNumber = location.ContactNumber;
-            }
+                return await db.Location.AsNoTracking().ToListAsync();
+            }).WithName("GetAllLocations")
+            .RequireAuthorization()
+            .WithOpenApi();
 
-            if (location.Description != null)
+            group.MapPut("/{id}", async Task<Results<Ok<Location>, NotFound>> (int id, [FromBody] Location location, SI_Web_APIContext db) =>
             {
-                existingLocation.Description = location.Description;
-            }
+                
+                var existingLocation = await db.Location.FindAsync(id);
+                if (existingLocation == null) return TypedResults.NotFound();
 
-            db.Location.Update(existingLocation);
-             await db.SaveChangesAsync();
+                if (location.TypeOfLocation != null)
+                {
+                    existingLocation.TypeOfLocation = location.TypeOfLocation;
+                }
 
-             return Results.Ok(existingLocation);
-        }).WithName("UpdateLocation")
-          .WithOpenApi();
+                if (location.Address != null)
+                {
+                    existingLocation.Address = location.Address;
+                }
 
+                if (location.ContactNumber != null)
+                {
+                    existingLocation.ContactNumber = location.ContactNumber;
+                }
 
-        group.MapDelete("/{id}", async (int id, HttpContext context,SI_Web_APIContext db) =>
-        {
-            AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
-            var existingLocation = await db.Location.FirstOrDefaultAsync(c => c.Id == id);
-             if (existingLocation == null)
-                return TypedResults.NotFound("Location not Found.");
+                if (location.Description != null)
+                {
+                    existingLocation.Description = location.Description;
+                }
 
-             db.Location.Remove(existingLocation);
-             await db.SaveChangesAsync();
+                db.Location.Update(existingLocation);
+                await db.SaveChangesAsync();
 
-             return Results.Ok();
-        }).WithName("DeleteLocation")
-          .RequireAuthorization()
-          .WithOpenApi();
+                return TypedResults.Ok(existingLocation);
+
+            }).WithName("UpdateLocation")
+            .RequireAuthorization()
+            .WithOpenApi();
+
+            group.MapDelete("/{id}", async Task<Results<Ok, NotFound>> (int id, SI_Web_APIContext db) =>
+            {
+                var location = await db.Location.FindAsync(id);
+                if (location == null) return TypedResults.NotFound();
+
+                db.Location.Remove(location);
+                await db.SaveChangesAsync();
+
+                return TypedResults.Ok();
+            }).WithName("DeleteLocation")
+            .RequireAuthorization()
+            .WithOpenApi();
+        }
     }
-}}
+}
