@@ -3,6 +3,8 @@ import { FaTrash, FaEdit, FaCheck, FaTimes } from "react-icons/fa";
 import axios from 'axios';
 function UserCampaignCRUD() {
     const [userData, setUserData] = useState([]);
+    const [selectedList, setSelect] = useState([]);
+
     const [name, setName] = useState("");
     const [editableRow, setEditableRow] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
@@ -18,6 +20,9 @@ function UserCampaignCRUD() {
             if (localStorage.getItem('campaignData') && localStorage.getItem('campId'))
 
                 setName(JSON.parse(localStorage.getItem('campaignData')).find((destinacija) => destinacija.id == localStorage.getItem('campId'))?.name);
+        }
+        if(localStorage.getItem('selectList')){
+            setSelect(JSON.parse(localStorage.getItem('selectList')))
         }
 
     }, []);
@@ -50,28 +55,35 @@ function UserCampaignCRUD() {
         }
     };
 
-    const handleSave = (id) => {
-        console.log(localStorage.getItem('campId'))
-        console.log(selectedUser);
+    const handleSave = async (id) => {
+      //  console.log(localStorage.getItem('campId'))
+       // console.log(selectedUser);
         let x = selectedUser;
+        //console.log(selectedList);
+       
+        
         if (x == '') {
             //console.log("uslo");
-            console.log(userData[0].userId);
-            x = JSON.stringify(userData[0].userId);
+            //console.log(selectedList[0].id);
+            x = JSON.stringify(selectedList[0].id);
         }
+        let newUsername=selectedList.find(user=>user.id==x);
+      
 
         const objectToUpdate = {
-            Id: id,
-            UserId: x,
-            CampaignId: localStorage.getItem('campId'),
-            Status: "none",
-            LocationId: null
+            userId: x,
+            campaignId: localStorage.getItem('campId'),
+            status: "none",
+            workingStatus:"none"
 
         }
-        console.log(objectToUpdate)
+        
+       
+
+        //console.log(objectToUpdate)
         try {
             const token = localStorage.getItem("accessToken");
-            const response = fetch(`https://fieldlogistics-control.azurewebsites.net/api/user/campaigns/`, {
+            const response = await fetch(`https://fieldlogistics-control.azurewebsites.net/api/user/campaigns/${editableRow}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -80,12 +92,58 @@ function UserCampaignCRUD() {
                 body: JSON.stringify(objectToUpdate
                 )
             });
-            console.log(response);
+            //console.log(response);
+            localStorage.setItem("accessToken", [...response.headers][0][1]);
+            const updatedList=userData.map(user=>{
+                if(user.id==editableRow){
+                    return{...user, userId:newUsername.id, username:newUsername.username}
+                }
+                return user;
+            })
+            setUserData(updatedList);
+            localStorage.setItem('userForCampaign',JSON.stringify(updatedList));
 
+           
+           
 
         } catch (error) {
             console.error('Error updating campaign status:', error.message);
             throw error;
+        }
+
+        try {
+            const id=parseInt(localStorage.getItem('campId'))
+            const token = localStorage.getItem("accessToken");
+            const response = await axios.get(
+                `https://fieldlogistics-control.azurewebsites.net/api/user/campaigns/${id}`,
+                {
+                    headers: {
+                        Authorization: `${token}`,
+                    },
+                }
+            );
+    
+            if (response.headers.authorization) {
+                localStorage.setItem("accessToken", response.headers.authorization);
+            }
+            localStorage.setItem('userForCampaign',JSON.stringify(response.data)); 
+            setUserData(response.data);     
+    
+            const userIds = response.data.map(u=>u.userId);
+            //console.log(response.data); 
+            //console.log(userIds);
+            if(localStorage.getItem('company')){
+    
+            const filteredUsers=JSON.parse(localStorage.getItem('userData')).filter(u=>u.companyId==localStorage.getItem('company'));
+            const finalFilteredUsers = filteredUsers.filter(user => !userIds.includes(user.id));
+            localStorage.setItem('selectList',JSON.stringify(finalFilteredUsers));
+            setSelect(finalFilteredUsers);
+            localStorage.setItem('campId',id)
+    
+          }
+          
+        } catch (error) {
+            console.error("There was a problem with fetching company data:", error);
         }
 
         setIsEditing(false);
@@ -113,7 +171,7 @@ function UserCampaignCRUD() {
                             <td>
                                 {editableRow === user.id && isEditing ? (
                                     <select value={selectedUser ?? "Select user"} onChange={handleSelectChange}>
-                                        {JSON.parse(localStorage.getItem('selectList')).map((item) => (
+                                        {selectedList.map((item) => (
                                             <option key={item.id} value={item.id}>{item.username}</option>
                                         ))}
                                     </select>

@@ -88,22 +88,26 @@ function CampaignView() {
   const AssignUser = (id) => {
     console.log(id);
     setId(id);
+    localStorage.setItem("id-i",id);
     setModalOpenAssign(true);
     setName(destinacije.find((destinacija) => destinacija.id === id)?.name);
   };
   const JAssignUser = async () => {
     try {
+      const token = localStorage.getItem("accessToken");
+
       const response = await axios.post(
         "https://fieldlogistics-control.azurewebsites.net/api/user/campaigns",
         {
-          UserId: selectedUser,
-          CampaignId: id,
-          Status: "none",
-          LocationId: null,
+          userId: selectedUser,
+          campaignId: localStorage.getItem('id-i'),
+          status: "none",
+          locationId: null,
+          workingStatus:"none"
         },
         {
           headers: {
-            Authorization: `${localStorage.getItem("accessToken")}`,
+            Authorization: `${token}`,
           },
         }
       );
@@ -137,43 +141,53 @@ function CampaignView() {
   const handleDoubleClick = async (id) => {
     console.log(id);
     try {
-        const token = localStorage.getItem("accessToken");
-        const response = await axios.get(
-            `https://fieldlogistics-control.azurewebsites.net/api/user/campaigns/${id}`,
-            {
-                headers: {
-                    Authorization: `${token}`,
-                },
-            }
-        );
-
-        if (response.headers.authorization) {
-            localStorage.setItem("accessToken", response.headers.authorization);
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.get(
+        `https://fieldlogistics-control.azurewebsites.net/api/user/campaigns/${id}`,
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
         }
-        localStorage.setItem('userForCampaign',JSON.stringify(response.data));      
+      );
 
-        const userIds = response.data.map(u=>u.userId);
-        console.log(response.data); 
-        //console.log(userIds);
-        if(localStorage.getItem('company')){
+      if (response.headers.authorization) {
+        localStorage.setItem("accessToken", response.headers.authorization);
+      }
+      localStorage.setItem('userForCampaign', JSON.stringify(response.data));
 
-        const filteredUsers=users.filter(u=>u.companyId==localStorage.getItem('company'));
+      const userIds = response.data.map(u => u.userId);
+      console.log(response.data);
+      //console.log(userIds);
+      if (localStorage.getItem('company')) {
+
+        const filteredUsers = users.filter(u => u.companyId == localStorage.getItem('company'));
         const finalFilteredUsers = filteredUsers.filter(user => !userIds.includes(user.id));
-        localStorage.setItem('selectList',JSON.stringify(finalFilteredUsers));
-        localStorage.setItem('campId',id)
+        localStorage.setItem('selectList', JSON.stringify(finalFilteredUsers));
+        localStorage.setItem('campId', id)
         navigate('/usercamp');
 
       }
-      
+
     } catch (error) {
-        console.error("There was a problem with fetching company data:", error);
+      console.error("There was a problem with fetching company data:", error);
     }
-}
+  }
 
 
   const handleOneClick = (id) => {
-   console.log("jednom"); 
-   console.log(id);
+    /*
+    console.log("jednom");
+    console.log(id);
+    Ovdje pišete svoj kod za lokacije, najbolje da ovdje fetch rutu koja dobavlja lokacije po campaignId, a campaignId je ovaj parametar ove metode (id),
+    napravio sam ja html dakle samo ovdje fetch rutu, pokupite podatke, stavite u localStorage, i onda navigate('/location'), tu preuzmite te podatke i prikazite ih4
+
+    Napravljeno je tako da se na jednostruki klik na kampanju prikazuju lokacije te kampanje, a na dvostruki klik se prikazuju useri te kampanje,
+    create za lokacije je vec napravljen ostaje jos read update i delete za sve kampanje po campaignId
+    
+    
+    
+    */
   }
 
 
@@ -187,7 +201,7 @@ function CampaignView() {
       const newTimeout = setTimeout(() => {
         handleOneClick(id);
         setClickTimeout(null);
-      }, 500);
+      }, 700);
       setClickTimeout(newTimeout);
     }
 
@@ -273,10 +287,14 @@ function CampaignView() {
 
   const handleSubmitLokacija = async () => {
     try {
-      //console.log(novaLokacija);
+      const token = localStorage.getItem("accessToken");
       const response = await axios.post(
         "https://fieldlogistics-control.azurewebsites.net/api/location",
-        novaLokacija
+        novaLokacija, {
+        headers: {
+          Authorization: `${token}`,
+        },
+      }
       );
       if (response.headers.authorization)
         localStorage.setItem("accessToken", response.headers.authorization);
@@ -376,7 +394,7 @@ function CampaignView() {
       )}
       <div className="destinacije">
         {destinacije.map((destinacija) => (
-          <div className="komponenta" key={destinacija.id} onClick={()=>handleCombinedClick(destinacija.id)}>
+          <div className="komponenta" key={destinacija.id} onClick={() => handleCombinedClick(destinacija.id)}>
             {editableRow === destinacija.id ? (
               <div className="input-polje" onClick={(e) => e.stopPropagation()} style={{ display: 'flex', flexDirection: 'column' }}>
                 <input
