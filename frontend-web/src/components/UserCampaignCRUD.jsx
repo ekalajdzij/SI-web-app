@@ -132,7 +132,7 @@ function UserCampaignCRUD() {
             const userIds = response.data.map(u=>u.userId);
             //console.log(response.data); 
             //console.log(userIds);
-            if(localStorage.getItem('company')){
+            if(localStorage.getItem('company') && localStorage.getItem('userData')){
     
             const filteredUsers=JSON.parse(localStorage.getItem('userData')).filter(u=>u.companyId==localStorage.getItem('company'));
             const finalFilteredUsers = filteredUsers.filter(user => !userIds.includes(user.id));
