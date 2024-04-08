@@ -169,7 +169,7 @@ namespace SI_Web_API.Controller
             .RequireAuthorization()
             .WithOpenApi();
 
-            group.MapGet("/workstatus/{userId}/{campaignId}", async (HttpContext context, SI_Web_APIContext db, int userId, int campaignId) =>
+            group.MapGet("/workStatus/{userId}/{campaignId}", async (HttpContext context, SI_Web_APIContext db, int userId, int campaignId) =>
             {
                 AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
                 var userCampaigns = await db.UserCampaign
