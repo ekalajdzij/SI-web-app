@@ -6,6 +6,8 @@ import { FaTrash, FaEdit, FaCheck } from "react-icons/fa";
 
 
 function CampaignView() {
+  const [selectedList, setSelect] = useState([]);
+
   const navigate = useNavigate();
   const [destinacije, setDestinacije] = useState(
     localStorage.getItem('campaignData') ?
@@ -85,12 +87,49 @@ function CampaignView() {
     });
   };
 
-  const AssignUser = (id) => {
+  const AssignUser = async (id) => {
     console.log(id);
     setId(id);
-    localStorage.setItem("id-i",id);
-    setModalOpenAssign(true);
-    setName(destinacije.find((destinacija) => destinacija.id === id)?.name);
+    localStorage.setItem("id-i", id);
+   
+    try {
+      //const id = parseInt(localStorage.getItem('campId'))
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.get(
+        `https://fieldlogistics-control.azurewebsites.net/api/user/campaigns/${id}`,
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      );
+
+      if (response.headers.authorization) {
+        localStorage.setItem("accessToken", response.headers.authorization);
+      }
+      /*localStorage.setItem('userForCampaign', JSON.stringify(response.data));
+      setUserData(response.data);*/
+
+      const userIds = response.data.map(u => u.userId);
+      //console.log(response.data); 
+      //console.log(userIds);
+      if (localStorage.getItem('company') && localStorage.getItem('userData')) {
+
+        const filteredUsers = JSON.parse(localStorage.getItem('userData')).filter(u => u.companyId == localStorage.getItem('company'));
+        const finalFilteredUsers = filteredUsers.filter(user => !userIds.includes(user.id));
+        //localStorage.setItem('selectList', JSON.stringify(finalFilteredUsers));
+        setSelect(finalFilteredUsers);
+        console.log(finalFilteredUsers)
+        //localStorage.setItem('campId', id)
+        setModalOpenAssign(true);
+        setName(destinacije.find((destinacija) => destinacija.id === id)?.name);
+
+      }
+
+    } catch (error) {
+      console.error("There was a problem with fetching company data:", error);
+    }
+
   };
   const JAssignUser = async () => {
     try {
@@ -103,7 +142,7 @@ function CampaignView() {
           campaignId: localStorage.getItem('id-i'),
           status: "none",
           locationId: null,
-          workingStatus:"none"
+          workingStatus: "none"
         },
         {
           headers: {
@@ -120,6 +159,8 @@ function CampaignView() {
       alert("You have to choose some user");
     }
   };
+
+
   const makeLocation = (id) => {
     //console.log(id);
     setNovaLokacija((prevState) => ({
@@ -188,6 +229,7 @@ function CampaignView() {
     
     
     */
+   navigate('/location')
   }
 
 
@@ -385,7 +427,7 @@ function CampaignView() {
             <button onClick={handleSubmitDestinacija}>Create</button>
             <button
               className="cancelButton"
-              onClick={() => setModalOpenD(false)}
+              onClick={(e) => {e.stopPropagation(); setModalOpenD(false)}}
             >
               Cancel
             </button>
@@ -512,7 +554,7 @@ function CampaignView() {
             <button onClick={handleSubmitLokacija}>Create</button>
             <button
               className="cancelButton"
-              onClick={() => setModalOpen(false)}
+              onClick={(e) => {e.stopPropagation(); setModalOpen(false)}}
             >
               Cancel
             </button>
@@ -523,15 +565,14 @@ function CampaignView() {
         <div className="modal" id="m">
           <div className="modal-content">
             <h4 id="user">Select User for {name}</h4>
-            <select
+            <select 
               className="dropdown"
               value={selectedUser}
               onChange={(e) => setSelectedUser(e.target.value)}
               style={{ color: "black" }}
             >
               <option value="">Select user</option>
-              {users
-                .filter((user) => user.companyId == company)
+              {selectedList
                 .map((user) => (
                   <option key={user.id} value={user.id}>
                     {user.username}
@@ -541,7 +582,7 @@ function CampaignView() {
             <button onClick={JAssignUser}>Assign</button>
             <button
               className="cancelButton"
-              onClick={() => setModalOpenAssign(false)}
+              onClick={(e) => {e.stopPropagation();setModalOpenAssign(false)}}
             >
               Cancel{" "}
             </button>
