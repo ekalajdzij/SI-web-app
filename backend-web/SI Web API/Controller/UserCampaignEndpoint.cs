@@ -168,6 +168,45 @@ namespace SI_Web_API.Controller
             .WithName("UpdateUserCampaign")
             .RequireAuthorization()
             .WithOpenApi();
+
+            group.MapGet("/workstatus/{userId}/{campaignId}", async (HttpContext context, SI_Web_APIContext db, int userId, int campaignId) =>
+            {
+                AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+                var userCampaigns = await db.UserCampaign
+                    .Where(uc => uc.UserId == userId && uc.CampaignId == campaignId)
+                    .Select(uc => uc.WorkingStatus)
+                    .FirstOrDefaultAsync();
+
+                return TypedResults.Ok(userCampaigns);
+            })
+            .WithName("GetWorkingStatusForCampaignAndUser")
+            .RequireAuthorization()
+            .WithOpenApi();
+
+            group.MapPut("/workStatus/", async (HttpContext context, SI_Web_APIContext db, [FromBody] UpdateUserCampaignRequest payload) =>
+            {
+                AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+                var userCampaign = await db.UserCampaign
+                    .FirstOrDefaultAsync(uc => uc.UserId == payload.UserId && uc.CampaignId == payload.CampaignId);
+
+                if (userCampaign == null)
+                {
+                    return Results.NotFound("User campaign not found.");
+                }
+                if(userCampaign.Status != "accepted") return Results.BadRequest("User has not accepted the campaign.");
+
+                if (payload.WorkingStatus != "done" && payload.WorkingStatus != "working on it" && payload.WorkingStatus != "not started") return Results.BadRequest("Invalid status.");
+                else
+                {
+                    userCampaign.WorkingStatus = payload.WorkingStatus;
+                    await db.SaveChangesAsync();
+
+                    return TypedResults.Ok(new { status = "OK" });
+                }
+            })
+            .WithName("UpdateCampaignWorkingStatus")
+            .RequireAuthorization()
+            .WithOpenApi();
         }
     }
 }
