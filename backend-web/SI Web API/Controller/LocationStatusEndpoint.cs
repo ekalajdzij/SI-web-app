@@ -35,5 +35,24 @@ public static class LocationStatusEndpoints
             }).WithName("UpdateLocationStatus")
             .RequireAuthorization()
             .WithOpenApi();
+
+
+            group.MapGet("/{UserId}/{status}", async (HttpContext context, int UserId, string status, SI_Web_APIContext db) =>
+            {
+                AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+                var locStatus = await db.LocationStatus
+                               .Where(ls => ls.UserId == UserId && ls.Status == status)
+                               .Select(ls => new
+                               {
+                                   ls.LocationId,
+                               })
+                               .ToListAsync();
+
+                return Results.Ok(locStatus);
+
+            }).WithName("GetLocationId")
+            .RequireAuthorization()
+            .WithOpenApi();
         }
-}}
+    }
+}

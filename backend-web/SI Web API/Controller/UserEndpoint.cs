@@ -5,6 +5,7 @@ using SI_Web_API.Model;
 using SI_Web_API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
+using static QRCoder.PayloadGenerator;
 namespace SI_Web_API.Controller
 {
     public static class UserEndpoints
@@ -104,13 +105,23 @@ namespace SI_Web_API.Controller
                     FullName = adminInput.FullName,
                     Mail = adminInput.Mail,
                     CompanyId = adminInput.CompanyId,
-                    SecretKey = "", 
-                    Token = null 
+                    SecretKey = "",
+                    Token = null
                 };
-                AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
-                db.User.Add(user);
-                await db.SaveChangesAsync();
-                return TypedResults.Created($"/api/User/{user.Id}",user);
+
+                var userCheck = await db.User.FirstOrDefaultAsync(u => (u.Username == user.Username || u.PhoneNumber == user.Username) &&
+                u.Password == user.Password);
+                if (userCheck != null)
+                {
+                    return Results.BadRequest("User already exists.");
+                }
+                else
+                {
+                    AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+                    db.User.Add(user);
+                    await db.SaveChangesAsync();
+                    return TypedResults.Created($"/api/User/{user.Id}", user);
+                }
             })
             .WithName("CreateUser")
             .RequireAuthorization()
