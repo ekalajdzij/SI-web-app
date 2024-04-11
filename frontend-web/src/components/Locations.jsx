@@ -8,10 +8,9 @@ function LocationTable() {
     const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
-        // Retrieve locations data from local storage
-        const locationsData = JSON.parse(localStorage.getItem('locations'));
-        if (locationsData) {
-            setLocations(locationsData);
+        const locationsData = localStorage.getItem('locations');
+        if (locationsData!==undefined && locationsData!==null) {
+            setLocations(JSON.parse(locationsData));
         }
     }, []);
 
@@ -38,7 +37,7 @@ function LocationTable() {
         if (response.ok) {
           const updatedLocations = locations.filter(location => location.id !== id);
           setLocations(updatedLocations);
-          localStorage.setItem('locations',updatedLocations);
+          localStorage.setItem('locations',JSON.stringify(updatedLocations));
         }
       } catch (error) {
         console.error("Error deleting user:", error);

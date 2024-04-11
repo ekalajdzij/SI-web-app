@@ -49,7 +49,6 @@ function App() {
     localStorage.getItem('isSuperAdmin') !== null &&
     (localStorage.getItem('isSuperAdmin') === "true" || localStorage.getItem('isSuperAdmin') === 'true' || localStorage.getItem('isSuperAdmin') === true)
   ) {
-    //console.log("Opp")
     setSuperAdmin(true);
   } else {
     setSuperAdmin(false);
@@ -61,7 +60,6 @@ function App() {
     localStorage.getItem('isLoggedInVia2fa') !== null &&
     (localStorage.getItem('isLoggedInVia2fa') === "true" || localStorage.getItem('isLoggedInVia2fa') === 'true' || localStorage.getItem('isLoggedInVia2fa') === true)
   ) {
-    //console.log("Opp")
     setSigned(true);
   } else {
     setSigned(false);
