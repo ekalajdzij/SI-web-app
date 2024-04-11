@@ -44,10 +44,28 @@ function App() {
     setSuperAdmin(x);
   }
  useEffect(()=>{
-  if(localStorage.getItem('isSuperAdmin')){
-    setSuperAdmin(JSON.parse(localStorage.getItem('isSuperAdmin')));
+  if (
+    localStorage.getItem('isSuperAdmin') !== undefined &&
+    localStorage.getItem('isSuperAdmin') !== null &&
+    (localStorage.getItem('isSuperAdmin') === "true" || localStorage.getItem('isSuperAdmin') === 'true' || localStorage.getItem('isSuperAdmin') === true)
+  ) {
+    //console.log("Opp")
+    setSuperAdmin(true);
+  } else {
+    setSuperAdmin(false);
   }
-  else setSuperAdmin(false);
+
+
+  if (
+    localStorage.getItem('isLoggedInVia2fa') !== undefined &&
+    localStorage.getItem('isLoggedInVia2fa') !== null &&
+    (localStorage.getItem('isLoggedInVia2fa') === "true" || localStorage.getItem('isLoggedInVia2fa') === 'true' || localStorage.getItem('isLoggedInVia2fa') === true)
+  ) {
+    //console.log("Opp")
+    setSigned(true);
+  } else {
+    setSigned(false);
+  }
  },[])
 
 
