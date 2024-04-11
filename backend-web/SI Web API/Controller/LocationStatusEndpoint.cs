@@ -19,7 +19,18 @@ namespace SI_Web_API.Controller
                 AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
                 var existingLocationStatus = await db.LocationStatus.FirstOrDefaultAsync(ls =>
                     ls.UserId == request.UserId && ls.LocationId == request.LocationId);
-                if (existingLocationStatus == null) return TypedResults.NotFound();
+                if (existingLocationStatus == null)
+                {
+                    var model = new LocationStatus
+                    {
+                        LocationId = request.LocationId,
+                        UserId = request.UserId,
+                        Status = request.Status
+                    };
+                    db.LocationStatus.Add(model);
+                    await db.SaveChangesAsync();
+                    return TypedResults.Ok(model);
+                }
 
                 existingLocationStatus.Status = request.Status;
 
