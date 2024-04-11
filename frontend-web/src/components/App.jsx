@@ -35,7 +35,7 @@ function AppWrapper() {
 function App() {
   const [qr, setQR] = useState("default");
   const [visible, setVisible] = useState(false);
-  const [signedIn, setSigned] = useState(JSON.parse(localStorage.getItem('isLoggedInVia2fa')) || false);
+  const [signedIn, setSigned] = useState(false);
   const navigate = useNavigate();
   const location = useLocation(); 
   const [isSuperAdmin, setSuperAdmin] = useState(false);
@@ -43,12 +43,33 @@ function App() {
   const setSuperfunction = (x) => {
     setSuperAdmin(x);
   }
- useEffect(()=>{
-  if(localStorage.getItem('isSuperAdmin')){
-    setSuperAdmin(JSON.parse(localStorage.getItem('isSuperAdmin')));
-  }
-  else setSuperAdmin(false);
- },[])
+  useEffect(() => {
+    if (
+      localStorage.getItem('isSuperAdmin') !== undefined &&
+      localStorage.getItem('isSuperAdmin') !== null &&
+      (localStorage.getItem('isSuperAdmin') === "true" || localStorage.getItem('isSuperAdmin') === 'true' || localStorage.getItem('isSuperAdmin') === true)
+    ) {
+      //console.log("Opp")
+      setSuperAdmin(true);
+    } else {
+      setSuperAdmin(false);
+    }
+
+
+    if (
+      localStorage.getItem('isLoggedInVia2fa') !== undefined &&
+      localStorage.getItem('isLoggedInVia2fa') !== null &&
+      (localStorage.getItem('isLoggedInVia2fa') === "true" || localStorage.getItem('isLoggedInVia2fa') === 'true' || localStorage.getItem('isLoggedInVia2fa') === true)
+    ) {
+      //console.log("Opp")
+      setSigned(true);
+    } else {
+      setSigned(false);
+    }
+
+    
+  }, []);
+  
 
 
  /* useEffect(() => {
@@ -56,7 +77,7 @@ function App() {
     if (signedIn && location.pathname === "/") {
       navigate("/home");
     } 
-  }, [signedIn, location.pathname]);*/
+  }, [signedIn, location.pathname]); */
 
   const setVisfunction = (x) => {
     setVisible(x);

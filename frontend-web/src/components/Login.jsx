@@ -170,7 +170,7 @@ function Login({ QR, visib, supe}) {
         localStorage.setItem("companyName", response.data.name);
         localStorage.setItem("ime", `Welcome ${response.data.username}`);
         localStorage.setItem("accessToken", response.data.token);
-        localStorage.setItem("isSuperAdmin",response.data.isSuperAdmin)
+        localStorage.setItem("isSuperAdmin", response.data.isSuperAdmin)
         supe(response.data.isSuperAdmin)
         console.log("Token na loginu:", response.data.token);
         if (
