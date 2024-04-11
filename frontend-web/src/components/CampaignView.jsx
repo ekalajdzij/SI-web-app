@@ -216,20 +216,35 @@ function CampaignView() {
   }
 
 
-  const handleOneClick = (id) => {
-    /*
-    console.log("jednom");
+  const handleOneClick = async (id) => {
     console.log(id);
-    Ovdje pišete svoj kod za lokacije, najbolje da ovdje fetch rutu koja dobavlja lokacije po campaignId, a campaignId je ovaj parametar ove metode (id),
-    napravio sam ja html dakle samo ovdje fetch rutu, pokupite podatke, stavite u localStorage, i onda navigate('/location'), tu preuzmite te podatke i prikazite ih4
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.get(
+        `https://fieldlogistics-control.azurewebsites.net/api/campaigns/${id}`,
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      );
 
-    Napravljeno je tako da se na jednostruki klik na kampanju prikazuju lokacije te kampanje, a na dvostruki klik se prikazuju useri te kampanje,
-    create za lokacije je vec napravljen ostaje jos read update i delete za sve kampanje po campaignId
-    
-    
-    
-    */
-   navigate('/location')
+      if (response.headers.authorization) {
+        localStorage.setItem("accessToken", response.headers.authorization);
+      }
+      if (localStorage.getItem('company')) {
+      
+        localStorage.setItem('locations', JSON.stringify(response.data.locations));
+        console.log(localStorage.getItem('locations'));
+        localStorage.setItem('campId', id);
+        navigate('/location');
+      }
+        
+
+
+    } catch (error) {
+      console.error("There was a problem with fetching company data:", error);
+    }
   }
 
 
