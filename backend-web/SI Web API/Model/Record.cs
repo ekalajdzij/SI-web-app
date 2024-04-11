@@ -14,6 +14,8 @@ namespace SI_Web_API.Model
         public string GPSCoordinates { get; set; }
         public string FullAddress { get; set; }
         public string PhotoUrl { get; set; }
+        public DateTime? CreatedAt { get; set; }
+
         [ForeignKey("Location")]
         public int? LocationId { get; set; }
         [ForeignKey("User")]
