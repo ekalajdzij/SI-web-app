@@ -166,10 +166,12 @@ function Company() {
                   <FaCheck
                     className="companyUpdateIcon"
                     onClick={() => handleConfirm(company.id)}
+                    data-testid={`confirm${company.id}`}
                   />
                 ) : (
                   <FaEdit
                     className="companyUpdateIcon"
+                    data-testid={`edit${company.id}`}
                     onClick={() => {
                       setEditableRow(company.id);
                       setNewCompanyName(company.name);
@@ -179,6 +181,7 @@ function Company() {
                 <FaTrash
                   className="companyDeleteIcon"
                   onClick={() => handleDelete(company.id)}
+                  data-testid={`delete${company.id}`}
                 />
               </td>
             </tr>
