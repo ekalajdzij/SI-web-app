@@ -15,6 +15,7 @@ namespace SI_Web_API.Model
         public string FullAddress { get; set; }
         public string PhotoUrl { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public byte[]? PhotoBin { get; set; }
 
         [ForeignKey("Location")]
         public int? LocationId { get; set; }
