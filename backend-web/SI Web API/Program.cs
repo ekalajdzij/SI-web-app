@@ -18,7 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<SI_Web_APIContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("azuredatabase") ?? throw new InvalidOperationException("Connection string 'SI_Web_APIContext' not found.")));
 
-var azureAccKey = builder.Configuration.GetSection("AzureStorage:AzureStorageAccountKey").Get<string>();
+var azureAccKey = builder.Configuration.GetSection("AzureStorage:Key").Get<string>();
 
 //Jwt configuration
 var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
