@@ -8,7 +8,7 @@ namespace SI_Web_API.Controller
 {
     public static class LocationEndpoints
 {
-	public static void MapLocationEndpoints (this IEndpointRouteBuilder routes, string issuer, string key)
+	public static void MapLocationEndpoints (this IEndpointRouteBuilder routes, string issuer, string key, string azureAccKey)
     {
         var group = routes.MapGroup("/api/location").WithTags(nameof(Location));
 
@@ -117,5 +117,16 @@ namespace SI_Web_API.Controller
         .WithName("CreateRecord")
         .RequireAuthorization()
         .WithOpenApi();
+
+        group.MapPost("/record/hash/", async (HttpContext context, string StringToSign, SI_Web_APIContext db) =>
+        {
+           AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+           string hashString = AuthService.CalculateHmac256(StringToSign, azureAccKey);
+           return TypedResults.Ok(hashString);
+        }).WithName("HashRecordAuth")
+          .RequireAuthorization()
+          .WithOpenApi();
         }
+
+
 }}
