@@ -116,6 +116,7 @@ app.MapAdminEndpoints(jwtIssuer, jwtKey);
 app.MapLocationEndpoints(jwtIssuer, jwtKey, azureAccKey);
 
 app.MapLocationStatusEndpoints(jwtIssuer, jwtKey);
+app.MapOCREndpoints(jwtIssuer, jwtKey);
 
 app.Run();
 public partial class Program { }

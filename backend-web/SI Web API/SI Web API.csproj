@@ -38,6 +38,7 @@
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.1" />
+		<PackageReference Include="Tesseract" Version="5.2.0" />
 		<PackageReference Include="WireMock.Net" Version="1.5.51" />
 		<PackageReference Include="xunit" Version="2.7.0" />
 		<PackageReference Include="xunit.runner.visualstudio" Version="2.5.7">
