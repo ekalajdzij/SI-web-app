@@ -22,5 +22,7 @@ namespace SI_Web_API.Data
         public DbSet<SI_Web_API.Model.Location> Location { get; set; } = default!;
         public DbSet<SI_Web_API.Model.User> User { get; set; } = default!;
         public DbSet<SI_Web_API.Model.UserCampaign> UserCampaign { get; set; } = default!;
+        public DbSet<SI_Web_API.Model.Record> Record{ get; set; } = default!;
+        public DbSet<SI_Web_API.Model.LocationStatus> LocationStatus { get; set; } = default!;
     }
 }

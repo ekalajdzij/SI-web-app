@@ -11,6 +11,8 @@ import "../css/App.css";
 import CRUDadmin from "./CRUDadmin";
 import CRUDuser from "./CRUDuser";
 import CampaignView from "./CampaignView";
+import UserCampaignCRUD from "./UserCampaignCRUD";
+import Locations from "./Locations";
 
 
 // Komponenta za kontrolu prikaza Navbar-a
@@ -36,20 +38,41 @@ function App() {
   const [signedIn, setSigned] = useState(JSON.parse(localStorage.getItem('isLoggedInVia2fa')) || false);
   const navigate = useNavigate();
   const location = useLocation(); 
-  const [isSuperAdmin, setSuperAdmin] = useState(JSON.parse(localStorage.getItem('isSuperAdmin') ?? "false") || false);
+  const [isSuperAdmin, setSuperAdmin] = useState(false);
 
   const setSuperfunction = (x) => {
     setSuperAdmin(x);
   }
- 
+ useEffect(()=>{
+  if (
+    localStorage.getItem('isSuperAdmin') !== undefined &&
+    localStorage.getItem('isSuperAdmin') !== null &&
+    (localStorage.getItem('isSuperAdmin') === "true" || localStorage.getItem('isSuperAdmin') === 'true' || localStorage.getItem('isSuperAdmin') === true)
+  ) {
+    setSuperAdmin(true);
+  } else {
+    setSuperAdmin(false);
+  }
 
 
-  useEffect(() => {
+  if (
+    localStorage.getItem('isLoggedInVia2fa') !== undefined &&
+    localStorage.getItem('isLoggedInVia2fa') !== null &&
+    (localStorage.getItem('isLoggedInVia2fa') === "true" || localStorage.getItem('isLoggedInVia2fa') === 'true' || localStorage.getItem('isLoggedInVia2fa') === true)
+  ) {
+    setSigned(true);
+  } else {
+    setSigned(false);
+  }
+ },[])
+
+
+ /* useEffect(() => {
     
     if (signedIn && location.pathname === "/") {
       navigate("/home");
     } 
-  }, [signedIn, location.pathname]);
+  }, [signedIn, location.pathname]);*/
 
   const setVisfunction = (x) => {
     setVisible(x);
@@ -72,7 +95,8 @@ function App() {
           <Route path="/admin" element={(isSuperAdmin && signedIn) ? <CRUDadmin /> : <Error />} />
           <Route path="/users" element={(!isSuperAdmin && signedIn) ? <CRUDuser /> : <Error />} />
           <Route path="/campaign" element={(!isSuperAdmin && signedIn) ? <CampaignView /> : <Error />} />
-
+          <Route path="/usercamp" element={(!isSuperAdmin && signedIn) ? <UserCampaignCRUD /> : <Error />} />
+          <Route path="/location" element={(!isSuperAdmin && signedIn) ? <Locations /> : <Error />} />
 
 
           <Route path="/company" element={(isSuperAdmin && signedIn) ? <Company /> : <Error />} />

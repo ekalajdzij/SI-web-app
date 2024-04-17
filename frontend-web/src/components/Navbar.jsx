@@ -80,8 +80,10 @@ function Navbar({ signed, isSuperAdmin }) {
   };
 
   useEffect(() => {
-    setFlag(JSON.parse(localStorage.getItem("isLoggedInVia2fa")));
-    setIsSuper(JSON.parse(localStorage.getItem("isSuperAdmin")) || false);
+    if(localStorage.getItem('isLoggedInVia2fa'))
+       setFlag(JSON.parse(localStorage.getItem("isLoggedInVia2fa")));
+    if(localStorage.getItem('isSuperAdmin'))
+      setIsSuper(JSON.parse(localStorage.getItem("isSuperAdmin")) || false);
     showButton();
   }, []);
 

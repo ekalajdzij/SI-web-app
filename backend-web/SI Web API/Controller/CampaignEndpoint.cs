@@ -88,6 +88,69 @@ namespace SI_Web_API.Controller
             .WithName("CreateCampaign")
             .RequireAuthorization()
             .WithOpenApi();
+
+            group.MapGet("/", async (HttpContext context, SI_Web_APIContext db) =>
+            {
+                AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+                var campaigns = await db.Campaign.ToListAsync();
+                return TypedResults.Ok(campaigns);
+            })
+            .WithName("GetAllCampaigns")
+            .RequireAuthorization()
+            .WithOpenApi();
+
+            group.MapPut("/{campaignId}", async (HttpContext context, int campaignId, [FromBody] Campaign campaignRequest, SI_Web_APIContext db) =>
+            {
+                AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+                var campaign = await db.Campaign.FindAsync(campaignId);
+                if (campaign == null)
+                {
+                    return Results.NotFound("Campaign not found.");
+                }
+
+                if (campaignRequest.Name != null)
+                {
+                    campaign.Name = campaignRequest.Name;
+                }
+
+                if (campaignRequest.Description != null)
+                {
+                    campaign.Description = campaignRequest.Description;
+                }
+
+                if (campaignRequest.StartDate != null)
+                {
+                    campaign.StartDate = campaignRequest.StartDate;
+                }
+
+                if (campaignRequest.EndDate != null)
+                {
+                    campaign.EndDate = campaignRequest.EndDate;
+                }
+
+                await db.SaveChangesAsync();
+                return TypedResults.Ok(campaign);
+            })
+            .WithName("UpdateCampaign")
+            .RequireAuthorization()
+            .WithOpenApi();
+
+            group.MapDelete("/{campaignId}", async (HttpContext context, int campaignId, SI_Web_APIContext db) =>
+            {
+                AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+                var campaign = await db.Campaign.FindAsync(campaignId);
+                if (campaign == null)
+                {
+                    return Results.NotFound("Campaign not found.");
+                }
+
+                db.Campaign.Remove(campaign);
+                await db.SaveChangesAsync();
+                return Results.Ok();
+            })
+            .WithName("DeleteCampaign")
+            .RequireAuthorization()
+            .WithOpenApi();
         }
     }
 }

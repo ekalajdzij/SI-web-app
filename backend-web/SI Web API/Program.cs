@@ -18,6 +18,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<SI_Web_APIContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("azuredatabase") ?? throw new InvalidOperationException("Connection string 'SI_Web_APIContext' not found.")));
 
+var azureAccKey = builder.Configuration.GetSection("AzureStorage:Key").Get<string>();
+
 //Jwt configuration
 var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
 var jwtKey = builder.Configuration.GetSection("Jwt:Key").Get<string>();
@@ -111,7 +113,9 @@ app.MapCampaignEndpoints(jwtIssuer, jwtKey);
 
 app.MapAdminEndpoints(jwtIssuer, jwtKey);
 
-app.MapLocationEndpoints();
+app.MapLocationEndpoints(jwtIssuer, jwtKey, azureAccKey);
+
+app.MapLocationStatusEndpoints(jwtIssuer, jwtKey);
 
 app.Run();
 public partial class Program { }
