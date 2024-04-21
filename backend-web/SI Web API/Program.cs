@@ -24,6 +24,9 @@ var azureAccKey = builder.Configuration.GetSection("AzureStorage:Key").Get<strin
 var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
 var jwtKey = builder.Configuration.GetSection("Jwt:Key").Get<string>();
 
+
+var blobConnectionString = builder.Configuration.GetSection("AzureStorage:ConnectionString").Get<string>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
  .AddJwtBearer(options =>
  {
@@ -116,7 +119,7 @@ app.MapAdminEndpoints(jwtIssuer, jwtKey);
 app.MapLocationEndpoints(jwtIssuer, jwtKey, azureAccKey);
 
 app.MapLocationStatusEndpoints(jwtIssuer, jwtKey);
-app.MapOCREndpoints(jwtIssuer, jwtKey);
+app.MapOCREndpoints(jwtIssuer, jwtKey, blobConnectionString);
 
 app.Run();
 public partial class Program { }

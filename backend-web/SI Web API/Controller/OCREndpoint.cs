@@ -10,13 +10,14 @@ using System.IO;
 using System.Threading.Tasks;
 using Tesseract;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 
 namespace SI_Web_API.Controller
 {
     public static class OCREndpoint
     {
-        public const string trainedDataFolderName = "tessdata";
-        public static void MapOCREndpoints(this IEndpointRouteBuilder routes, string issuer, string key)
+        public static void MapOCREndpoints(this IEndpointRouteBuilder routes, string issuer, string key, string blobConnectionString)
         {
 
             var group = routes.MapGroup("/api/ocr").WithTags(nameof(Record));
@@ -24,6 +25,7 @@ namespace SI_Web_API.Controller
             group.MapPost("/", async Task<Results<Ok<String>, BadRequest>> (HttpContext context, [FromForm] OCRRequest request, SI_Web_APIContext db) =>
             {
                 AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+                string result = "";
                 string name = request.Image.FileName;
                 var image = request.Image;
                 var memoryStream = new MemoryStream();
@@ -33,13 +35,22 @@ namespace SI_Web_API.Controller
                     await image.CopyToAsync(memoryStream);
                     memoryStream.Seek(0, SeekOrigin.Begin);
                 }
-                var appPath = Path.GetDirectoryName(Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory));
-                appPath = Path.GetDirectoryName(appPath);
-                appPath = Path.GetDirectoryName(appPath);
-                var tessPath = Path.Combine(appPath, trainedDataFolderName);
-                string result = "";
+                
+                var blobServiceClient = new BlobServiceClient(blobConnectionString);
+                var blobContainerClient = blobServiceClient.GetBlobContainerClient("ocrdata");
 
-                using (var engine = new TesseractEngine(tessPath, request.DestinationLanguage, EngineMode.Default))
+              
+                var blobName = $"{request.DestinationLanguage}.traineddata";
+                var blobClient = blobContainerClient.GetBlobClient(blobName);
+                var blobStream = await blobClient.OpenReadAsync();
+
+                var filePath = Path.Combine(Path.GetTempPath(), blobName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await blobStream.CopyToAsync(fileStream);
+                }
+
+                using (var engine = new TesseractEngine(Path.GetDirectoryName(filePath), request.DestinationLanguage, EngineMode.Default))
                 {
                     using (var img = Pix.LoadFromMemory(memoryStream.ToArray()))
                     {
@@ -47,6 +58,7 @@ namespace SI_Web_API.Controller
                         result = page.GetText();
                     }
                 }
+                File.Delete(filePath);
                 return TypedResults.Ok(result);
             })
             .WithName("ReadTextFromImage")
