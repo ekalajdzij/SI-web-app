@@ -6,11 +6,15 @@ function LocationTable() {
     const [editableIndex, setEditableIndex] = useState(null);
     const [editedLocation, setEditedLocation] = useState({});
     const [isEditing, setIsEditing] = useState(false);
+    const [name,setName]=useState("");
 
     useEffect(() => {
         const locationsData = localStorage.getItem('locations');
         if (locationsData!==undefined && locationsData!==null) {
             setLocations(JSON.parse(locationsData));
+        }
+        if(localStorage.getItem('locationName')!==undefined && localStorage.getItem('locationName')!==null ){
+            setName(localStorage.getItem('locationName'))
         }
     }, []);
 
@@ -94,7 +98,7 @@ function LocationTable() {
 
     return (
         <div>
-            <h2 style={{ marginTop: '10px', textAlign: 'center', color: 'black' }}>Location Data</h2>
+            <h2 style={{ marginTop: '10px', textAlign: 'center', color: 'black' }}>Location data for {name}</h2>
             <table>
                 <thead>
                     <tr>

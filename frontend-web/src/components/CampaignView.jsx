@@ -3,6 +3,8 @@ import "../css/CampaignView.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaTrash, FaEdit, FaCheck } from "react-icons/fa";
+import moment from 'moment';
+
 
 
 function CampaignView() {
@@ -73,6 +75,7 @@ function CampaignView() {
 
   const handleEditClick = (id) => {
     const foundDest = destinacije.find((dest) => dest.id === id);
+
     setEditableRow(id);
     setEditedData({
       ...editedData,
@@ -81,8 +84,8 @@ function CampaignView() {
         name: foundDest.name,
         description: foundDest.description,
         companyId: company,
-        startDate: new Date(foundDest.startDate).toISOString().split('T')[0],
-        endDate: new Date(foundDest.endDate).toISOString().split('T')[0]
+        startDate: moment(foundDest.startDate).format('YYYY-MM-DD'),
+        endDate: moment(foundDest.endDate).format('YYYY-MM-DD')
       },
     });
   };
@@ -217,7 +220,8 @@ function CampaignView() {
 
 
   const handleOneClick = async (id) => {
-    console.log(id);
+    localStorage.setItem('locationName',destinacije.find((destinacija) => destinacija.id === id)?.name);
+
     try {
       const token = localStorage.getItem("accessToken");
       const response = await axios.get(
