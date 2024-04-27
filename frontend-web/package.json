@@ -19,6 +19,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@react-google-maps/api": "^2.19.3",
     "@testing-library/jest-dom": "^6.4.2",
     "axios": "^1.6.8",
     "dotenv": "^16.4.5",

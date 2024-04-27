@@ -217,6 +217,38 @@ function CampaignView() {
       console.error("There was a problem with fetching company data:", error);
     }
   }
+  const handleMaps = async (id) => {
+    //localStorage.setItem('locationName',destinacije.find((destinacija) => destinacija.id === id)?.name);
+    // console.log(id);
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.get(
+        `https://fieldlogistics-control.azurewebsites.net/api/location/record/coordinates/${id}`,
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      );
+
+      if (response.headers.authorization) {
+        localStorage.setItem("accessToken", response.headers.authorization);
+      }
+      
+        localStorage.setItem('records', JSON.stringify(response.data));
+        console.log(response)
+        console.log(localStorage.getItem('records'));
+        //localStorage.setItem('campId', id);
+        navigate('/map');
+      
+        
+
+
+    } catch (error) {
+      console.error("There was a problem with fetching company data:", error);
+    }
+  }
+
 
 
   const handleOneClick = async (id) => {
@@ -250,6 +282,8 @@ function CampaignView() {
       console.error("There was a problem with fetching company data:", error);
     }
   }
+
+  
 
 
   const handleCombinedClick = (id) => {
@@ -516,6 +550,8 @@ function CampaignView() {
                   Create location
                 </button>
                 <button onClick={(e) => { e.stopPropagation(); handleEditClick(destinacija.id) }}>Update</button>
+                <button onClick={(e) => { e.stopPropagation(); handleMaps(destinacija.id) }}>Locations on Maps</button>
+
                 <FaTrash
                   style={{
                     position: 'absolute',
