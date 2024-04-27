@@ -3,6 +3,7 @@ import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
 import { Autocomplete } from "@react-google-maps/api";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import "../css/map.css";
 
 
 const mapContainerStyle = {
@@ -19,7 +20,7 @@ function Map() {
   const navigate = useNavigate();
 
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: "AIzaSyAnoTrrumleEp9aG0CudXZPdHdey1Fn3R0",
+    googleMapsApiKey: "",
   });
 
   const [map, setMap] = useState(null);
