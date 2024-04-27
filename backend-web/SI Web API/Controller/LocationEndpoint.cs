@@ -1,16 +1,14 @@
 ﻿using SI_Web_API.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.OpenApi;
 using Microsoft.AspNetCore.Http.HttpResults;
 using SI_Web_API.Model;
 using Microsoft.AspNetCore.Mvc;
 using SI_Web_API.Services;
-using SI_Web_API.Dtos;
 namespace SI_Web_API.Controller
 {
-public static class LocationEndpoints
+    public static class LocationEndpoints
 {
-	public static void MapLocationEndpoints (this IEndpointRouteBuilder routes, string issuer, string key)
+	public static void MapLocationEndpoints (this IEndpointRouteBuilder routes, string issuer, string key, string azureAccKey)
     {
         var group = routes.MapGroup("/api/location").WithTags(nameof(Location));
 
@@ -76,6 +74,20 @@ public static class LocationEndpoints
             var location = await db.Location.FindAsync(id);
             if (location == null) return TypedResults.NotFound();
 
+            var locationStatus = await db.LocationStatus.Where(ls => ls.LocationId == id).ToListAsync();
+            if (locationStatus != null)
+            {
+                db.LocationStatus.RemoveRange(locationStatus);
+                await db.SaveChangesAsync();
+            }
+            
+            var record = await db.Record.Where(r => r.LocationId == id).ToListAsync();
+            if (record != null)
+            {
+                db.Record.RemoveRange(record);
+                await db.SaveChangesAsync();
+            }
+
             db.Location.Remove(location);
             await db.SaveChangesAsync();
 
@@ -105,5 +117,16 @@ public static class LocationEndpoints
         .WithName("CreateRecord")
         .RequireAuthorization()
         .WithOpenApi();
+
+        group.MapPost("/record/hash/", async (HttpContext context, string StringToSign, SI_Web_APIContext db) =>
+        {
+           AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+           string hashString = AuthService.CalculateHmac256(StringToSign, azureAccKey);
+           return TypedResults.Ok(hashString);
+        }).WithName("HashRecordAuth")
+          .RequireAuthorization()
+          .WithOpenApi();
         }
+
+
 }}

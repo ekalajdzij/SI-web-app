@@ -68,5 +68,21 @@ namespace SI_Web_API.Services
                 return builder.ToString();
             }
         }
+
+        public static string CalculateHmac256(string input, string key)
+        {
+            /*byte[] keyBytes = Convert.FromBase64String(key);
+            byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+
+            using (HMACSHA256 hmac = new HMACSHA256(keyBytes))
+            {
+                byte[] hashBytes = hmac.ComputeHash(inputBytes);
+                return Convert.ToBase64String(hashBytes);
+            }*/
+            var hmacsha256 = new System.Security.Cryptography.HMACSHA256();
+            hmacsha256.Key = Convert.FromBase64String(key);
+            var signature = hmacsha256.ComputeHash(Encoding.UTF8.GetBytes(input));
+            return Convert.ToBase64String(signature);
+        }
     }
 }
