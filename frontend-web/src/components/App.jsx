@@ -13,6 +13,11 @@ import CRUDuser from "./CRUDuser";
 import CampaignView from "./CampaignView";
 import UserCampaignCRUD from "./UserCampaignCRUD";
 import Locations from "./Locations";
+import Map from "./Map";
+import Records from "./Records";
+
+
+
 
 
 // Komponenta za kontrolu prikaza Navbar-a
@@ -97,7 +102,8 @@ function App() {
           <Route path="/campaign" element={(!isSuperAdmin && signedIn) ? <CampaignView /> : <Error />} />
           <Route path="/usercamp" element={(!isSuperAdmin && signedIn) ? <UserCampaignCRUD /> : <Error />} />
           <Route path="/location" element={(!isSuperAdmin && signedIn) ? <Locations /> : <Error />} />
-
+          <Route path="/map" element={(!isSuperAdmin && signedIn) ? <Map /> : <Error />} />
+          <Route path="/record" element={(!isSuperAdmin && signedIn) ? <Records /> : <Error />} />
 
           <Route path="/company" element={(isSuperAdmin && signedIn) ? <Company /> : <Error />} />
           <Route path="/twofactor" element={<TwoFactorPortal qrcode={qr} vis={visible} signed={signed} isSuper={isSuperAdmin} />} />
