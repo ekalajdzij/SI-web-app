@@ -25,4 +25,11 @@
     border-radius: 5px;
     background-color: #f9f9f9;
   }
-  
+  .emptyRecord{
+    display:none;
+  }
+  .noRecordMessage {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+  }

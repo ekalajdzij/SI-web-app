@@ -218,7 +218,7 @@ function CampaignView() {
     }
   }
   const handleMaps = async (id) => {
-    //localStorage.setItem('locationName',destinacije.find((destinacija) => destinacija.id === id)?.name);
+    localStorage.setItem('campaignName',destinacije.find((destinacija) => destinacija.id === id)?.name);
     // console.log(id);
     try {
       const token = localStorage.getItem("accessToken");
@@ -236,8 +236,8 @@ function CampaignView() {
       }
       
         localStorage.setItem('records', JSON.stringify(response.data));
-        console.log(response)
-        console.log(localStorage.getItem('records'));
+        //console.log(response)
+        //console.log(localStorage.getItem('records'));
         //localStorage.setItem('campId', id);
         navigate('/map');
       
@@ -252,7 +252,8 @@ function CampaignView() {
 
 
   const handleOneClick = async (id) => {
-    localStorage.setItem('locationName',destinacije.find((destinacija) => destinacija.id === id)?.name);
+    localStorage.setItem('campaignName',destinacije.find((destinacija) => destinacija.id === id)?.name);
+
 
     try {
       const token = localStorage.getItem("accessToken");

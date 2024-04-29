@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { FaEdit, FaTrash, FaCheck, FaTimes } from "react-icons/fa";
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+
 
 function LocationTable() {
+    const navigate=useNavigate();
     const [locations, setLocations] = useState([]);
     const [editableIndex, setEditableIndex] = useState(null);
     const [editedLocation, setEditedLocation] = useState({});
@@ -13,8 +17,8 @@ function LocationTable() {
         if (locationsData!==undefined && locationsData!==null) {
             setLocations(JSON.parse(locationsData));
         }
-        if(localStorage.getItem('locationName')!==undefined && localStorage.getItem('locationName')!==null ){
-            setName(localStorage.getItem('locationName'))
+        if(localStorage.getItem('campaignName')!==undefined && localStorage.getItem('campaignName')!==null ){
+            setName(localStorage.getItem('campaignName'))
         }
     }, []);
 
@@ -87,6 +91,39 @@ function LocationTable() {
         setIsEditing(false);
         setEditableIndex(null);
     };
+    const handleRecord = async (id) => {
+      localStorage.setItem('locationName',JSON.stringify(locations.find(function(location) {
+        return location.id === id;
+    })));
+      
+        try {
+          const token = localStorage.getItem("accessToken");
+          const response = await axios.get(
+            `https://fieldlogistics-control.azurewebsites.net/api/location/record/${id}`,
+            {
+              headers: {
+                Authorization: `${token}`,
+              },
+            }
+          );
+    
+          if (response.headers.authorization) {
+            localStorage.setItem("accessToken", response.headers.authorization);
+          }
+          
+            localStorage.setItem('recordData', JSON.stringify(response.data));
+            //console.log(response)
+            console.log(localStorage.getItem('recordData'));
+            navigate('/record');
+          
+            
+    
+    
+        } catch (error) {
+          console.error("There was a problem with fetching company data:", error);
+        }
+      }
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -111,21 +148,21 @@ function LocationTable() {
                 </thead>
                 <tbody>
                     {locations.map((location, index) => (
-                        <tr key={index}>
-                            <td>{index === editableIndex && isEditing ? <input type="text" name="typeOfLocation" value={editedLocation.typeOfLocation} onChange={handleChange} /> : location.typeOfLocation}</td>
-                            <td>{index === editableIndex && isEditing ? <input type="text" name="address" value={editedLocation.address} onChange={handleChange} /> : location.address}</td>
-                            <td>{index === editableIndex && isEditing ? <input type="text" name="contactNumber" value={editedLocation.contactNumber} onChange={handleChange} /> : location.contactNumber}</td>
-                            <td>{index === editableIndex && isEditing ? <input type="text" name="description" value={editedLocation.description} onChange={handleChange} /> : location.description}</td>
+                        <tr key={index} onClick={()=>handleRecord(location.id)}>
+                            <td>{index === editableIndex && isEditing ? <input type="text" name="typeOfLocation" onClick={(e)=>{e.stopPropagation()}} value={editedLocation.typeOfLocation} onChange={handleChange} /> : location.typeOfLocation}</td>
+                            <td>{index === editableIndex && isEditing ? <input type="text" name="address" onClick={(e)=>{e.stopPropagation()}}  value={editedLocation.address} onChange={handleChange} /> : location.address}</td>
+                            <td>{index === editableIndex && isEditing ? <input type="text" name="contactNumber"  onClick={(e)=>{e.stopPropagation()}} value={editedLocation.contactNumber} onChange={handleChange} /> : location.contactNumber}</td>
+                            <td>{index === editableIndex && isEditing ? <input type="text" name="description" onClick={(e)=>{e.stopPropagation()}}  value={editedLocation.description} onChange={handleChange} /> : location.description}</td>
                             <td>
                                 {index === editableIndex && isEditing ? (
                                     <>
-                                        <FaCheck className="editIcon" onClick={() => handleSave(location.id)} style={{ marginRight: '5px', cursor: 'pointer' }} />
-                                        <FaTimes className="deleteIcon" onClick={() => setIsEditing(false)} style={{ cursor: 'pointer' }} />
+                                        <FaCheck className="editIcon" onClick={(e) => {e.stopPropagation();handleSave(location.id)}} style={{ marginRight: '5px', cursor: 'pointer' }} />
+                                        <FaTimes className="deleteIcon" onClick={(e) =>{e.stopPropagation(); setIsEditing(false)}} style={{ cursor: 'pointer' }} />
                                     </>
                                 ) : (
                                     <>
-                                        <FaEdit className="editIcon" onClick={() => handleEdit(index)} style={{ marginRight: '5px', cursor: 'pointer' }} />
-                                        <FaTrash className="deleteIcon" onClick={() => handleDelete(location.id)} style={{ cursor: 'pointer', color: 'red' }} />
+                                        <FaEdit className="editIcon" onClick={(e) => {e.stopPropagation();handleEdit(index)}} style={{ marginRight: '5px', cursor: 'pointer' }} />
+                                        <FaTrash className="deleteIcon" onClick={(e) => {e.stopPropagation();handleDelete(location.id)}} style={{ cursor: 'pointer', color: 'red' }} />
                                     </>
                                 )}
                             </td>
