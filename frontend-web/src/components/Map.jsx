@@ -40,9 +40,15 @@ function Map() {
   const handleRecordData = async (id) => {
     if(localStorage.getItem('locations')!=undefined && localStorage.getItem('locations')!=null)
     {const locations = JSON.parse(localStorage.getItem("locations"));
-
+     //console.log("Opp")
+     console.log(locations);
     
-    localStorage.setItem('locationName',JSON.stringify(locations.find(location => location.id === id)));}
+    localStorage.setItem('locationName',JSON.stringify(locations.find(location => location.id === id)));
+    //console.log(id);
+    console.log(locations.find(l=>l.id===id));
+    console.log(localStorage.getItem('locationName'));
+  
+  }
 
     try {
       const token = localStorage.getItem("accessToken");

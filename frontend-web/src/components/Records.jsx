@@ -12,11 +12,17 @@ function Records() {
     if (storedData) {
       setRecordData(storedData);
     }
-    if (localStorage.getItem('locationName') != undefined && localStorage.getItem('locationName') != null) {
-      setLocation(JSON.parse(localStorage.getItem('locationName')))
+  
+    const locationName = localStorage.getItem('locationName');
+    //console.log(locationName);
+    if (locationName !== undefined && locationName !== null) {
+      //console.log("oo");
+      setLocation(JSON.parse(locationName));
     }
-    if (localStorage.getItem('campaignName') != undefined && localStorage.getItem('campaignName') != null) {
-      setCampaignName(localStorage.getItem('campaignName'))
+  
+    const campaignName = localStorage.getItem('campaignName');
+    if (campaignName !== undefined && campaignName !== null) {
+      setCampaignName(campaignName);
     }
   }, []);
 

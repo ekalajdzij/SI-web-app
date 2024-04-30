@@ -219,6 +219,34 @@ function CampaignView() {
   }
   const handleMaps = async (id) => {
     localStorage.setItem('campaignName',destinacije.find((destinacija) => destinacija.id === id)?.name);
+
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.get(
+        `https://fieldlogistics-control.azurewebsites.net/api/campaigns/${id}`,
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      );
+
+      if (response.headers.authorization) {
+        localStorage.setItem("accessToken", response.headers.authorization);
+      }
+      
+      
+        localStorage.setItem('locations', JSON.stringify(response.data.locations));
+        //console.log(localStorage.getItem('locations'));
+        
+      
+        
+
+
+    } catch (error) {
+      console.error("There was a problem with fetching company data:", error);
+    }
+  
     // console.log(id);
     try {
       const token = localStorage.getItem("accessToken");
