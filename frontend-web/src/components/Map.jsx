@@ -1,31 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
 import { Autocomplete } from "@react-google-maps/api";
-import axios from 'axios';
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../css/map.css";
-
+const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const mapContainerStyle = {
-  width: '1000px',
-  height: '500px',
-  borderRadius: '10px',
-  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-  margin: '0 auto', 
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center', 
+  width: "1000px",
+  height: "500px",
+  borderRadius: "10px",
+  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+  margin: "0 auto",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
 };
 function Map() {
-  const [recordsData, setRecord] = useState(JSON.parse(localStorage.getItem('records'))
-  
-    
+  const [recordsData, setRecord] = useState(
+    JSON.parse(localStorage.getItem("records"))
   );
 
   const navigate = useNavigate();
 
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: "",
+    googleMapsApiKey: googleMapsApiKey,
   });
 
   const [map, setMap] = useState(null);
@@ -38,17 +37,22 @@ function Map() {
   }, []);
 
   const handleRecordData = async (id) => {
-    if(localStorage.getItem('locations')!=undefined && localStorage.getItem('locations')!=null)
-    {const locations = JSON.parse(localStorage.getItem("locations"));
-     //console.log("Opp")
-     console.log(locations);
-    
-    localStorage.setItem('locationName',JSON.stringify(locations.find(location => location.id === id)));
-    //console.log(id);
-    console.log(locations.find(l=>l.id===id));
-    console.log(localStorage.getItem('locationName'));
-  
-  }
+    if (
+      localStorage.getItem("locations") != undefined &&
+      localStorage.getItem("locations") != null
+    ) {
+      const locations = JSON.parse(localStorage.getItem("locations"));
+      //console.log("Opp")
+      console.log(locations);
+
+      localStorage.setItem(
+        "locationName",
+        JSON.stringify(locations.find((location) => location.id === id))
+      );
+      //console.log(id);
+      console.log(locations.find((l) => l.id === id));
+      console.log(localStorage.getItem("locationName"));
+    }
 
     try {
       const token = localStorage.getItem("accessToken");
@@ -64,23 +68,15 @@ function Map() {
       if (response.headers.authorization) {
         localStorage.setItem("accessToken", response.headers.authorization);
       }
-      
-        localStorage.setItem('recordData', JSON.stringify(response.data));
-        //console.log(response)
-        console.log(localStorage.getItem('recordData'));
-        navigate('/record');
-      
-        
 
-
+      localStorage.setItem("recordData", JSON.stringify(response.data));
+      //console.log(response)
+      console.log(localStorage.getItem("recordData"));
+      navigate("/record");
     } catch (error) {
       console.error("There was a problem with fetching company data:", error);
     }
-  }
-
-
-
-  
+  };
 
   /*const getDirections = async (origin, destination) => {
     try {
@@ -113,7 +109,11 @@ function Map() {
 
   const onAddressSubmit = async (address) => {
     try {
-      const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=AIzaSyAnoTrrumleEp9aG0CudXZPdHdey1Fn3R0`);
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+          address
+        )}&key=AIzaSyAnoTrrumleEp9aG0CudXZPdHdey1Fn3R0`
+      );
       const data = await response.json();
       if (data.results && data.results.length > 0) {
         const location = data.results[0].geometry.location;
@@ -128,10 +128,14 @@ function Map() {
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading maps</div>;
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div
+      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+    >
       {recordsData.length ? (
         <React.Fragment>
-          <h2 id='title' style={{ color: 'black' }}>Locations for {localStorage.getItem('campaignName')}</h2>
+          <h2 id="title" style={{ color: "black" }}>
+            Locations for {localStorage.getItem("campaignName")}
+          </h2>
           {/* <input
             id='search'
             type="text"
@@ -146,16 +150,24 @@ function Map() {
             onLoad={onMapLoad}
           >
             {recordsData.map((item, index) => (
-              <MarkerF key={index} position={{lat: Number(item.coordinates.split(', ')[0]), lng: Number(item.coordinates.split(', ')[1])}} onClick={()=>handleRecordData(parseInt(item.locationId))}/>
+              <MarkerF
+                key={index}
+                position={{
+                  lat: Number(item.coordinates.split(", ")[0]),
+                  lng: Number(item.coordinates.split(", ")[1]),
+                }}
+                onClick={() => handleRecordData(parseInt(item.locationId))}
+              />
             ))}
           </GoogleMap>
         </React.Fragment>
       ) : (
-        <h2 style={{ color: 'black', marginTop:'50px' }}>No locations for this campaign</h2>
+        <h2 style={{ color: "black", marginTop: "50px" }}>
+          No locations for this campaign
+        </h2>
       )}
     </div>
   );
-  
 }
 
 export default Map;

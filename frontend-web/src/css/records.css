@@ -1,35 +1,59 @@
 .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-  }
-  
-  .heading {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: black;
-  }
-  
-  .recordsContainer {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-  }
-  
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.heading {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: black;
+}
+
+.recordsContainer {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.record {
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 19px;
+}
+
+.record img {
+  width: 400px;
+  border-radius: 5px;
+}
+
+.emptyRecord {
+  display: none;
+}
+.noRecordMessage {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+@media (max-width: 800px) {
   .record {
-    margin-bottom: 15px;
-    padding: 10px;
-    border: 1px solid #eee;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+    flex-direction: column;
+    align-items: center;
   }
-  .emptyRecord{
-    display:none;
+}
+
+@media (max-width: 520px) {
+  .record {
+    font-size: 16px;
   }
-  .noRecordMessage {
-    display: flex;
-    justify-content: center;
-    margin-top: 50px;
+  .record img {
+    width: 300px;
   }
+}
