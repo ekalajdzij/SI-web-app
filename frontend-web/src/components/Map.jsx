@@ -25,7 +25,7 @@ function Map() {
   const navigate = useNavigate();
 
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: "AIzaSyAnoTrrumleEp9aG0CudXZPdHdey1Fn3R0",
+    googleMapsApiKey: "",
   });
 
   const [map, setMap] = useState(null);
