@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from "react";
 import "../css/records.css";
+import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
-function Records() {
+
+function Records({ back }) {
+  const navigate = useNavigate();
   const [recordData, setRecordData] = useState([]);
   const [location, setLocation] = useState([]);
+  const [goBack, setGoback] = useState(back);
+
   const [campaignName, setCampaignName] = useState("");
 
   useEffect(() => {
@@ -18,19 +25,27 @@ function Records() {
       //console.log("oo");
       setLocation(JSON.parse(locationName));
     }
+    
 
     const campaignName = localStorage.getItem("campaignName");
     if (campaignName !== undefined && campaignName !== null) {
       setCampaignName(campaignName);
     }
   }, []);
+  function FormatirajKoordinate(koordinate) {
+    const [prviBroj, drugiBroj] = koordinate.split(', ').map(Number);
+    const prviSmjer = prviBroj >= 0 ? 'N' : 'S';
+    const drugiSmjer = drugiBroj >= 0 ? 'E' : 'W';
+
+    return `${Math.abs(prviBroj)}° ${prviSmjer}, ${Math.abs(drugiBroj)}° ${drugiSmjer}`;
+  }
 
   return (
     <div className="container">
       {recordData.length ? (
         <React.Fragment>
           <h2 className="heading">
-            Record for Location:{location.typeOfLocation} within Campaign:{" "}
+            Record for Location: {location.typeOfLocation}, within Campaign:{" "}
             {campaignName}
           </h2>
           <div className="recordsContainer">
@@ -50,7 +65,7 @@ function Records() {
                     <strong>Inventory Number:</strong> {record.inventoryNumber}
                   </p>
                   <p>
-                    <strong>GPS Coordinates:</strong> {record.gpsCoordinates}
+                    <strong>GPS Coordinates:</strong> {FormatirajKoordinate(record.gpsCoordinates)}
                   </p>
                   <p>
                     <strong>Full Address:</strong> {record.fullAddress}
@@ -59,6 +74,17 @@ function Records() {
                 <div>
                   <img src={record.photoUrl}></img>
                 </div>
+                <button style={{
+                  color: 'blue',
+                  width: '10px',
+                  padding: '5px',
+                  marginBottom: 0,
+                  fontSize: '26px',
+                  border: 'none',
+                  background: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                }} onClick={() => { if (back) navigate('/map'); else navigate('/location') }}> <FontAwesomeIcon icon={faArrowLeft} /></button>
               </div>
             ))}
           </div>

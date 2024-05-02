@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
+import { GoogleMap, MarkerF, useLoadScript, InfoWindowF } from "@react-google-maps/api";
 import { Autocomplete } from "@react-google-maps/api";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -16,10 +16,15 @@ const mapContainerStyle = {
   flexDirection: "column",
   alignItems: "center",
 };
-function Map() {
+function Map({ setGoBack }) {
   const [recordsData, setRecord] = useState(
     JSON.parse(localStorage.getItem("records"))
   );
+  const [location, setLoc] = useState(null);
+  const [flag, setFlag] = useState(false);
+  const [width, setWidth] = useState(0);
+
+  const [height, setHeight] = useState(0);
 
   const navigate = useNavigate();
 
@@ -37,21 +42,22 @@ function Map() {
   }, []);
 
   const handleRecordData = async (id) => {
+    setGoBack(true);
     if (
       localStorage.getItem("locations") != undefined &&
       localStorage.getItem("locations") != null
     ) {
       const locations = JSON.parse(localStorage.getItem("locations"));
       //console.log("Opp")
-      console.log(locations);
+      //console.log(locations);
 
       localStorage.setItem(
         "locationName",
         JSON.stringify(locations.find((location) => location.id === id))
       );
       //console.log(id);
-      console.log(locations.find((l) => l.id === id));
-      console.log(localStorage.getItem("locationName"));
+      //console.log(locations.find((l) => l.id === id));
+      //console.log(localStorage.getItem("locationName"));
     }
 
     try {
@@ -125,49 +131,81 @@ function Map() {
       console.error("Error fetching geocoding data:", error);
     }
   };
-  if (loadError) return <div>Error loading maps</div>;
-  if (!isLoaded) return <div>Loading maps</div>;
-  return (
-    <div
-      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-    >
-      {recordsData.length ? (
-        <React.Fragment>
-          <h2 id="title" style={{ color: "black" }}>
-            Locations for {localStorage.getItem("campaignName")}
-          </h2>
-          {/* <input
+  const setSelectedLocationHover = (id, cord1, cord2) => {
+    if(id!==null){ setFlag(true);
+    if (
+      localStorage.getItem("locations") != undefined &&
+      localStorage.getItem("locations") != null
+    ) {
+      const locations = JSON.parse(localStorage.getItem("locations"));
+      setLoc(locations.find((location) => location.id === id));}
+      setWidth(cord1);
+      setHeight(cord2);
+      //console.log(location,width,height)
+
+    }
+    else {setFlag(false); setLoc(null)}
+
+  };
+    if (loadError) return <div>Error loading maps</div>;
+    if (!isLoaded) return <div>Loading maps</div>;
+    return (
+      <div
+        style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+      >
+        {recordsData.length ? (
+          <React.Fragment>
+            <h2 id="title" style={{ color: "black" }}>
+              Locations for {localStorage.getItem("campaignName")}
+            </h2>
+            {/* <input
             id='search'
             type="text"
             placeholder="Enter address"
             onChange={(e) => setAddress(e.target.value)}
           />
           <button onClick={() => onAddressSubmit(address)}>Submit</button> */}
-          <GoogleMap
-            zoom={5}
-            center={center}
-            mapContainerStyle={mapContainerStyle}
-            onLoad={onMapLoad}
-          >
-            {recordsData.map((item, index) => (
-              <MarkerF
-                key={index}
+            <GoogleMap
+              zoom={5}
+              center={center}
+              mapContainerStyle={mapContainerStyle}
+              onLoad={onMapLoad}
+            >
+              {recordsData.map((item, index) => (
+                <MarkerF
+                  key={index}
+                  position={{
+                    lat: Number(item.coordinates.split(", ")[0]),
+                    lng: Number(item.coordinates.split(", ")[1]),
+                  }}
+                  onClick={() => handleRecordData(parseInt(item.locationId))}
+                  onMouseOver={() => setSelectedLocationHover(item.locationId, Number(item.coordinates.split(", ")[0]), Number(item.coordinates.split(", ")[1]))}
+                  
+                />
+              ))}
+              {flag && location && (
+              <InfoWindowF
                 position={{
-                  lat: Number(item.coordinates.split(", ")[0]),
-                  lng: Number(item.coordinates.split(", ")[1]),
+                  lat: width+1,
+                  lng: height+1,
                 }}
-                onClick={() => handleRecordData(parseInt(item.locationId))}
-              />
-            ))}
-          </GoogleMap>
-        </React.Fragment>
-      ) : (
-        <h2 style={{ color: "black", marginTop: "50px" }}>
-          No locations for this campaign
-        </h2>
-      )}
-    </div>
-  );
-}
+                onCloseClick={() => setSelectedLocationHover(null,null,null)}
+              > 
+                <div>
+                  <h3>{location.typeOfLocation}</h3>
+                  <p>{location.description}</p>
+                </div>
+              </InfoWindowF>
+            )}
+            </GoogleMap>
+          </React.Fragment>
+        ) : (
+          <h2 style={{ color: "black", marginTop: "50px" }}>
+            No locations for this campaign
+          </h2>
+        )}
+      </div>
+    );
+  }
 
 export default Map;

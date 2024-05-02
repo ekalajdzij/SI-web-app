@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 
 
-function LocationTable() {
+function LocationTable({setGoBack}) {
     const navigate=useNavigate();
     const [locations, setLocations] = useState([]);
     const [editableIndex, setEditableIndex] = useState(null);
@@ -92,6 +92,7 @@ function LocationTable() {
         setEditableIndex(null);
     };
     const handleRecord = async (id) => {
+      setGoBack(false);
       localStorage.setItem('locationName',JSON.stringify(locations.find(function(location) {
         return location.id === id;
     })));

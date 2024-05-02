@@ -40,6 +40,8 @@ function AppWrapper() {
 function App() {
   const [qr, setQR] = useState("default");
   const [visible, setVisible] = useState(false);
+  const [back, setBack] = useState(false);
+
   const [signedIn, setSigned] = useState(JSON.parse(localStorage.getItem('isLoggedInVia2fa')) || false);
   const navigate = useNavigate();
   const location = useLocation(); 
@@ -82,6 +84,9 @@ function App() {
   const setVisfunction = (x) => {
     setVisible(x);
   }
+  const setGoBack = (x) => {
+    setBack(x);
+  }
   const signed = (x) => {
     setSigned(x);
   }
@@ -101,9 +106,9 @@ function App() {
           <Route path="/users" element={(!isSuperAdmin && signedIn) ? <CRUDuser /> : <Error />} />
           <Route path="/campaign" element={(!isSuperAdmin && signedIn) ? <CampaignView /> : <Error />} />
           <Route path="/usercamp" element={(!isSuperAdmin && signedIn) ? <UserCampaignCRUD /> : <Error />} />
-          <Route path="/location" element={(!isSuperAdmin && signedIn) ? <Locations /> : <Error />} />
-          <Route path="/map" element={(!isSuperAdmin && signedIn) ? <Map /> : <Error />} />
-          <Route path="/record" element={(!isSuperAdmin && signedIn) ? <Records /> : <Error />} />
+          <Route path="/location" element={(!isSuperAdmin && signedIn) ? <Locations setGoBack={setGoBack} /> : <Error />} />
+          <Route path="/map" element={(!isSuperAdmin && signedIn) ? <Map setGoBack={setGoBack} /> : <Error />} />
+          <Route path="/record" element={(!isSuperAdmin && signedIn) ? <Records back={back} /> : <Error />} />
 
           <Route path="/company" element={(isSuperAdmin && signedIn) ? <Company /> : <Error />} />
           <Route path="/twofactor" element={<TwoFactorPortal qrcode={qr} vis={visible} signed={signed} isSuper={isSuperAdmin} />} />
