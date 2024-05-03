@@ -461,13 +461,13 @@ function CampaignView() {
   };
 
   return (
-    <div className="wrapper">
+    <div className="wrapper" data-testid="ID1">
       <div id="main">
         <h2 id="title">Campaigns for {companyName}</h2>
         <button onClick={() => setModalOpenD(true)}>Add Campaign</button>
       </div>
       {modalOpenD && (
-        <div className="modal">
+        <div className="modal" data-testid="formForAddingCampaign">
           <div className="modal-content">
             <h2>Add Campaign</h2>
             <input
@@ -506,7 +506,7 @@ function CampaignView() {
                 onChange={handleChange}
               />
             </div>
-            <button onClick={handleSubmitDestinacija}>Create</button>
+            <button data-testid="submitCampaignForm" onClick={handleSubmitDestinacija}>Create</button>
             <button
               className="cancelButton"
               onClick={(e) => {e.stopPropagation(); setModalOpenD(false)}}
@@ -602,7 +602,7 @@ function CampaignView() {
       </div>
 
       {modalOpen && (
-        <div className="modal">
+        <div className="modal" data-testid="formForAddingLocation">
           <div className="modal-content">
             <h3 id="lokacija">Add location for {name}</h3>
             <input
@@ -646,7 +646,7 @@ function CampaignView() {
         </div>
       )}
       {modalOpenAssign && (
-        <div className="modal" id="m">
+        <div className="modal" id="m" data-testid="formForAssigneLocationToUser">
           <div className="modal-content">
             <h4 id="user">Select User for {name}</h4>
             <select 
