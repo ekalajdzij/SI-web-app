@@ -170,5 +170,35 @@ namespace SI_Web_API.Controller
         }).WithName("GetRecordsByLocationId")
         .RequireAuthorization()
         .WithOpenApi();
+
+        group.MapGet("/company/record/{companyId}",async (HttpContext context, int companyId, SI_Web_APIContext db) =>
+        {
+            AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+
+            var campaignIds = await db.Campaign
+                .Where(c => c.CompanyId == companyId)
+                .Select(c => c.Id)
+                .ToListAsync();
+
+                if (campaignIds.Count == 0)
+                {
+                    return Results.NotFound();
+                }
+
+                var locationsAndRecords = await (from location in db.Location
+                                                 join record in db.Record on location.Id equals record.LocationId
+                                                 where campaignIds.Contains(location.CampaignId)
+                                                 select new
+                                                 {
+                                                     Location = location,
+                                                     Record = record
+                                                 }).ToListAsync();
+
+                return Results.Ok(locationsAndRecords);
+            }).WithName("GetRecordsForCompany")
+              .RequireAuthorization()
+              .WithOpenApi();
+
         }
-}}
+    }
+}
