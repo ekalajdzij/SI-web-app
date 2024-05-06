@@ -73,8 +73,7 @@ function AddAdminModal({ closeModal, companyData, setAdminData }) {
           throw new Error("Problem pri dohvaćanju podataka o kompaniji");
         }
         const companyData = await response.json();
-        newAdmin = { ...newAdmin, company: companyData.name }; //const companyName=companyData.data.name;
-        // Ovdje možete postupiti s podacima o kompaniji kako je potrebno
+        newAdmin = { ...newAdmin, company: companyData.name }; 
       } catch (error) {
         console.error(
           "Greška prilikom dohvaćanja podataka o kompaniji:",

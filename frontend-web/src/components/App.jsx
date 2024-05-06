@@ -99,7 +99,7 @@ function App() {
       <div>
         <ControlNavbar signed={signed} isSuperAdmin={isSuperAdmin} />
         <Routes>
-          <Route path="/home" element={signedIn ? <Home /> : <Error />} />
+          <Route path="/home" element={signedIn ? <Home  isSuper={isSuperAdmin}/> : <Error />} />
           <Route path="/" element={<Login QR={setQRfunction} visib={setVisfunction} supe={setSuperfunction} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/admin" element={(isSuperAdmin && signedIn) ? <CRUDadmin /> : <Error />} />

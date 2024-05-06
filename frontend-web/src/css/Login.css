@@ -122,7 +122,6 @@ button:hover {
 }
 
 .microsoft-button:hover::after {
-  content: "Recommended";
   position: absolute;
   top: 100%;
   left: 0;

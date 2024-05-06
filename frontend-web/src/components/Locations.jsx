@@ -14,10 +14,11 @@ function LocationTable({setGoBack}) {
 
     useEffect(() => {
         const locationsData = localStorage.getItem('locations');
-        if (locationsData!==undefined && locationsData!==null) {
+        if (locationsData!==undefined && locationsData!==null && locationsData!=="undefined" && locationsData!=="null") {
             setLocations(JSON.parse(locationsData));
         }
-        if(localStorage.getItem('campaignName')!==undefined && localStorage.getItem('campaignName')!==null ){
+        if(localStorage.getItem('campaignName')!==undefined && localStorage.getItem('campaignName')!==null &&
+         localStorage.getItem('campaignName')!=="undefined" && localStorage.getItem('campaignName')!=="null" ){
             setName(localStorage.getItem('campaignName'))
         }
     }, []);

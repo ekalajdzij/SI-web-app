@@ -21,14 +21,14 @@ function Records({ back }) {
 
     const locationName = localStorage.getItem("locationName");
     //console.log(locationName);
-    if (locationName !== undefined && locationName !== null) {
+    if (locationName !== undefined && locationName !== null && locationName !== "undefined" && locationName !== "null") {
       //console.log("oo");
       setLocation(JSON.parse(locationName));
     }
     
 
     const campaignName = localStorage.getItem("campaignName");
-    if (campaignName !== undefined && campaignName !== null) {
+    if (campaignName !== undefined && campaignName !== null && campaignName !== "undefined" && campaignName !== "null") {
       setCampaignName(campaignName);
     }
   }, []);

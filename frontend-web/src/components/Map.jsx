@@ -44,8 +44,9 @@ function Map({ setGoBack }) {
   const handleRecordData = async (id) => {
     setGoBack(true);
     if (
-      localStorage.getItem("locations") != undefined &&
-      localStorage.getItem("locations") != null
+      localStorage.getItem("locations") !== undefined &&
+      localStorage.getItem("locations") !== null && localStorage.getItem('campaignName')!=="undefined"
+       && localStorage.getItem('campaignName')!=="null"
     ) {
       const locations = JSON.parse(localStorage.getItem("locations"));
       //console.log("Opp")
@@ -118,7 +119,7 @@ function Map({ setGoBack }) {
       const response = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
           address
-        )}&key=AIzaSyAnoTrrumleEp9aG0CudXZPdHdey1Fn3R0`
+        )}&key=${googleMapsApiKey}`
       );
       const data = await response.json();
       if (data.results && data.results.length > 0) {
@@ -133,10 +134,11 @@ function Map({ setGoBack }) {
   };
   const setSelectedLocationHover = (id, cord1, cord2) => {
     if(id!==null){ setFlag(true);
-    if (
-      localStorage.getItem("locations") != undefined &&
-      localStorage.getItem("locations") != null
-    ) {
+      if (
+        localStorage.getItem("locations") !== undefined &&
+        localStorage.getItem("locations") !== null && localStorage.getItem('campaignName')!=="undefined"
+         && localStorage.getItem('campaignName')!=="null"
+      ) {
       const locations = JSON.parse(localStorage.getItem("locations"));
       setLoc(locations.find((location) => location.id === id));}
       setWidth(cord1);
