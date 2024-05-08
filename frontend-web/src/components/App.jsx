@@ -13,6 +13,11 @@ import CRUDuser from "./CRUDuser";
 import CampaignView from "./CampaignView";
 import UserCampaignCRUD from "./UserCampaignCRUD";
 import Locations from "./Locations";
+import Map from "./Map";
+import Records from "./Records";
+
+
+
 
 
 // Komponenta za kontrolu prikaza Navbar-a
@@ -35,6 +40,8 @@ function AppWrapper() {
 function App() {
   const [qr, setQR] = useState("default");
   const [visible, setVisible] = useState(false);
+  const [back, setBack] = useState(false);
+
   const [signedIn, setSigned] = useState(JSON.parse(localStorage.getItem('isLoggedInVia2fa')) || false);
   const navigate = useNavigate();
   const location = useLocation(); 
@@ -77,6 +84,9 @@ function App() {
   const setVisfunction = (x) => {
     setVisible(x);
   }
+  const setGoBack = (x) => {
+    setBack(x);
+  }
   const signed = (x) => {
     setSigned(x);
   }
@@ -89,15 +99,16 @@ function App() {
       <div>
         <ControlNavbar signed={signed} isSuperAdmin={isSuperAdmin} />
         <Routes>
-          <Route path="/home" element={signedIn ? <Home /> : <Error />} />
+          <Route path="/home" element={signedIn ? <Home  isSuper={isSuperAdmin}/> : <Error />} />
           <Route path="/" element={<Login QR={setQRfunction} visib={setVisfunction} supe={setSuperfunction} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/admin" element={(isSuperAdmin && signedIn) ? <CRUDadmin /> : <Error />} />
           <Route path="/users" element={(!isSuperAdmin && signedIn) ? <CRUDuser /> : <Error />} />
           <Route path="/campaign" element={(!isSuperAdmin && signedIn) ? <CampaignView /> : <Error />} />
           <Route path="/usercamp" element={(!isSuperAdmin && signedIn) ? <UserCampaignCRUD /> : <Error />} />
-          <Route path="/location" element={(!isSuperAdmin && signedIn) ? <Locations /> : <Error />} />
-
+          <Route path="/location" element={(!isSuperAdmin && signedIn) ? <Locations setGoBack={setGoBack} /> : <Error />} />
+          <Route path="/map" element={(!isSuperAdmin && signedIn) ? <Map setGoBack={setGoBack} /> : <Error />} />
+          <Route path="/record" element={(!isSuperAdmin && signedIn) ? <Records back={back} /> : <Error />} />
 
           <Route path="/company" element={(isSuperAdmin && signedIn) ? <Company /> : <Error />} />
           <Route path="/twofactor" element={<TwoFactorPortal qrcode={qr} vis={visible} signed={signed} isSuper={isSuperAdmin} />} />

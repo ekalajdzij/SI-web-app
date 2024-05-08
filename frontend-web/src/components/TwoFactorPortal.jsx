@@ -52,7 +52,7 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
           },
         }
       )
-      .then((response) => {
+      .then(async (response) => {
         if (response.headers.authorization) {
           //console.log(response.headers.authorization);
           localStorage.setItem("accessToken", response.headers.authorization);
@@ -64,6 +64,70 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
         setVisible(false);
         signed(true);
 
+        if (isSuper) {
+          try {
+            const token = localStorage.getItem("accessToken");
+            const response = await axios.get(
+              "https://fieldlogistics-control.azurewebsites.net/api/company",
+              {
+                headers: {
+                  Authorization: `${token}`,
+                },
+              }
+            );
+    
+            localStorage.setItem('homeScreen','superadmin')
+            const data = response.data;
+            localStorage.setItem("companyData", JSON.stringify(data));
+            //console.log(data);
+          } catch (error) {
+            console.error("There was a problem with fetching company data:", error);
+          }
+        } else {
+          try {
+            const token = localStorage.getItem("accessToken");
+            const response = await axios.get(
+              "https://fieldlogistics-control.azurewebsites.net/api/user",
+              {
+                headers: {
+                  Authorization: `${token}`,
+                },
+              }
+            );
+    
+            //console.log(response);
+            const data = response.data;
+            localStorage.setItem("userData", JSON.stringify(data));
+            //console.log(data);
+          } catch (error) {
+            console.error("There was a problem with fetching user data:", error);
+          }
+    
+          try {
+            const token = localStorage.getItem("accessToken");
+            const response = await axios.get(
+              `https://fieldlogistics-control.azurewebsites.net/api/campaigns/company/${company}`,
+              {
+                headers: {
+                  Authorization: `${token}`,
+                },
+              }
+            );
+    
+            // console.log(response);
+            const data1 = response.data;
+            if(data1.length) 
+              localStorage.setItem('homeScreen','admin')
+            else
+            localStorage.setItem('homeScreen','nema kampanja')
+
+            localStorage.setItem("campaignData", JSON.stringify(data1));
+            //console.log(data1);
+          } catch (error) {
+            console.error("There was a problem with fetching campaign data:", error);
+          }
+        }
+
         navigate("/home");
       })
       .catch((error) => {
@@ -71,64 +135,7 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
         setError(true);
       });
 
-    if (isSuper) {
-      try {
-        const token = localStorage.getItem("accessToken");
-        const response = await axios.get(
-          "https://fieldlogistics-control.azurewebsites.net/api/company",
-          {
-            headers: {
-              Authorization: `${token}`,
-            },
-          }
-        );
-
-        console.log(response);
-        const data = response.data;
-        localStorage.setItem("companyData", JSON.stringify(data));
-        console.log(data);
-      } catch (error) {
-        console.error("There was a problem with fetching company data:", error);
-      }
-    } else {
-      try {
-        const token = localStorage.getItem("accessToken");
-        const response = await axios.get(
-          "https://fieldlogistics-control.azurewebsites.net/api/user",
-          {
-            headers: {
-              Authorization: `${token}`,
-            },
-          }
-        );
-
-        //console.log(response);
-        const data = response.data;
-        localStorage.setItem("userData", JSON.stringify(data));
-        //console.log(data);
-      } catch (error) {
-        console.error("There was a problem with fetching company data:", error);
-      }
-
-      try {
-        const token = localStorage.getItem("accessToken");
-        const response = await axios.get(
-          `https://fieldlogistics-control.azurewebsites.net/api/campaigns/company/${company}`,
-          {
-            headers: {
-              Authorization: `${token}`,
-            },
-          }
-        );
-
-        // console.log(response);
-        const data1 = response.data;
-        localStorage.setItem("campaignData", JSON.stringify(data1));
-        //console.log(data1);
-      } catch (error) {
-        console.error("There was a problem with fetching company data:", error);
-      }
-    }
+    
   };
   return (
     <div className="main-container">

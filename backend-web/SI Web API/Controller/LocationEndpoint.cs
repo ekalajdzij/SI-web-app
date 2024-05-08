@@ -4,11 +4,14 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using SI_Web_API.Model;
 using Microsoft.AspNetCore.Mvc;
 using SI_Web_API.Services;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using SI_Web_API.Dtos;
 namespace SI_Web_API.Controller
 {
     public static class LocationEndpoints
-{
-	public static void MapLocationEndpoints (this IEndpointRouteBuilder routes, string issuer, string key, string azureAccKey)
+{   
+
+	public static void MapLocationEndpoints (this IEndpointRouteBuilder routes, string issuer, string key, string azureAccKey, string blobConnectionString)
     {
         var group = routes.MapGroup("/api/location").WithTags(nameof(Location));
 
@@ -107,26 +110,95 @@ namespace SI_Web_API.Controller
         .RequireAuthorization()
         .WithOpenApi();
 
-        group.MapPost("/record/", async (HttpContext context, [FromBody] Record recordData, SI_Web_APIContext db) =>
+        group.MapPost("/record/", async (HttpContext context, [FromForm] RecordRequest recordData, SI_Web_APIContext db) =>
         {
             AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
-            db.Record.Add(recordData);
+            Record record = new Record();
+            string url = "";
+            using (var stream = recordData.Image.OpenReadStream())
+            {
+                BlobStorageService blobStorage = new BlobStorageService(blobConnectionString);
+                url = await blobStorage.UploadFileToBlobAsync(recordData.Image.FileName, recordData.Image.ContentType, stream);
+            }
+            record.SerialNumber = recordData.SerialNumber;
+            record.InventoryNumber = recordData.InventoryNumber;
+            record.GPSCoordinates = recordData.GPSCoordinates;
+            record.FullAddress = recordData.FullAddress;
+            record.PhotoUrl = url;
+            record.CreatedAt = recordData.CreatedAt;
+            record.LocationId = recordData.LocationId;
+            record.UserId = recordData.UserId;
+            db.Record.Add(record);
             await db.SaveChangesAsync();
-            return TypedResults.Ok(recordData);
+            return TypedResults.Ok();
         })
         .WithName("CreateRecord")
         .RequireAuthorization()
+        .DisableAntiforgery()
         .WithOpenApi();
 
-        group.MapPost("/record/hash/", async (HttpContext context, string StringToSign, SI_Web_APIContext db) =>
+        group.MapGet("/record/coordinates/{campaignId}", async (HttpContext context, int campaignId, SI_Web_APIContext db) =>
         {
-           AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
-           string hashString = AuthService.CalculateHmac256(StringToSign, azureAccKey);
-           return TypedResults.Ok(hashString);
-        }).WithName("HashRecordAuth")
-          .RequireAuthorization()
-          .WithOpenApi();
+            var mergedData = await (from locationTable in db.Location
+                                    join recordTable in db.Record on locationTable.Id equals recordTable.LocationId
+                                    where locationTable.CampaignId == campaignId
+                                    select new
+                                    {
+                                        LocationId = locationTable.Id,
+                                        Coordinates = recordTable.GPSCoordinates
+                                    }).ToListAsync();
+            return mergedData;
+        }).WithName("GetCoordinates")
+        .RequireAuthorization()
+        .WithOpenApi();
+
+        group.MapGet("/record/{locationId}", async (HttpContext context, int locationId, SI_Web_APIContext db) =>
+        {
+            var records = await db.Record.Where(r => r.LocationId == locationId)
+            .Select(r => new
+            {
+                r.Id,
+                r.SerialNumber,
+                r.InventoryNumber,
+                r.GPSCoordinates,
+                r.FullAddress,
+                r.PhotoUrl,
+                r.LocationId,
+                r.UserId
+            }).ToListAsync();
+            return records;
+        }).WithName("GetRecordsByLocationId")
+        .RequireAuthorization()
+        .WithOpenApi();
+
+        group.MapGet("/company/record/{companyId}",async (HttpContext context, int companyId, SI_Web_APIContext db) =>
+        {
+            AuthService.ExtendJwtTokenExpirationTime(context, issuer, key);
+
+            var campaignIds = await db.Campaign
+                .Where(c => c.CompanyId == companyId)
+                .Select(c => c.Id)
+                .ToListAsync();
+
+                if (campaignIds.Count == 0)
+                {
+                    return Results.NotFound();
+                }
+
+                var locationsAndRecords = await (from location in db.Location
+                                                 join record in db.Record on location.Id equals record.LocationId
+                                                 where campaignIds.Contains(location.CampaignId)
+                                                 select new
+                                                 {
+                                                     Location = location,
+                                                     Record = record
+                                                 }).ToListAsync();
+
+                return Results.Ok(locationsAndRecords);
+            }).WithName("GetRecordsForCompany")
+              .RequireAuthorization()
+              .WithOpenApi();
+
         }
-
-
-}}
+    }
+}

@@ -3,6 +3,8 @@ import "../css/CampaignView.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaTrash, FaEdit, FaCheck } from "react-icons/fa";
+import moment from 'moment';
+
 
 
 function CampaignView() {
@@ -73,6 +75,7 @@ function CampaignView() {
 
   const handleEditClick = (id) => {
     const foundDest = destinacije.find((dest) => dest.id === id);
+
     setEditableRow(id);
     setEditedData({
       ...editedData,
@@ -81,8 +84,8 @@ function CampaignView() {
         name: foundDest.name,
         description: foundDest.description,
         companyId: company,
-        startDate: new Date(foundDest.startDate).toISOString().split('T')[0],
-        endDate: new Date(foundDest.endDate).toISOString().split('T')[0]
+        startDate: moment(foundDest.startDate).format('YYYY-MM-DD'),
+        endDate: moment(foundDest.endDate).format('YYYY-MM-DD')
       },
     });
   };
@@ -214,10 +217,72 @@ function CampaignView() {
       console.error("There was a problem with fetching company data:", error);
     }
   }
+  const handleMaps = async (id) => {
+    localStorage.setItem('campaignName',destinacije.find((destinacija) => destinacija.id === id)?.name);
+
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.get(
+        `https://fieldlogistics-control.azurewebsites.net/api/campaigns/${id}`,
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      );
+
+      if (response.headers.authorization) {
+        localStorage.setItem("accessToken", response.headers.authorization);
+      }
+      
+      
+        localStorage.setItem('locations', JSON.stringify(response.data.locations));
+        //console.log(localStorage.getItem('locations'));
+        
+      
+        
+
+
+    } catch (error) {
+      console.error("There was a problem with fetching company data:", error);
+    }
+  
+    // console.log(id);
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.get(
+        `https://fieldlogistics-control.azurewebsites.net/api/location/record/coordinates/${id}`,
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      );
+
+      if (response.headers.authorization) {
+        localStorage.setItem("accessToken", response.headers.authorization);
+      }
+      
+        localStorage.setItem('records', JSON.stringify(response.data));
+        //console.log(response)
+        //console.log(localStorage.getItem('records'));
+        //localStorage.setItem('campId', id);
+        navigate('/map');
+      
+        
+
+
+    } catch (error) {
+      console.error("There was a problem with fetching company data:", error);
+    }
+  }
+
 
 
   const handleOneClick = async (id) => {
-    console.log(id);
+    localStorage.setItem('campaignName',destinacije.find((destinacija) => destinacija.id === id)?.name);
+
+
     try {
       const token = localStorage.getItem("accessToken");
       const response = await axios.get(
@@ -246,6 +311,8 @@ function CampaignView() {
       console.error("There was a problem with fetching company data:", error);
     }
   }
+
+  
 
 
   const handleCombinedClick = (id) => {
@@ -455,7 +522,7 @@ function CampaignView() {
             {editableRow === destinacija.id ? (
               <div className="input-polje" onClick={(e) => e.stopPropagation()} style={{ display: 'flex', flexDirection: 'column' }}>
                 <input
-                  onClick={(e) => { e.stopPropagation }}
+                  onClick={(e) => { e.stopPropagation() }}
                   type="text"
                   className="detalji"
                   value={editedData[destinacija.id]?.name ?? destinacija.name}
@@ -464,7 +531,7 @@ function CampaignView() {
 
                 />
                 <input
-                  onClick={(e) => { e.stopPropagation }}
+                  onClick={(e) => { e.stopPropagation() }}
 
                   type="text"
                   className="detalji"
@@ -474,7 +541,7 @@ function CampaignView() {
 
                 />
                 <input
-                  onClick={(e) => { e.stopPropagation }}
+                  onClick={(e) => { e.stopPropagation() }}
 
                   type="date"
                   className="detalji"
@@ -484,7 +551,7 @@ function CampaignView() {
 
                 />
                 <input
-                  onClick={(e) => { e.stopPropagation }}
+                  onClick={(e) => { e.stopPropagation() }}
 
                   type="date"
                   className="detalji"
@@ -512,6 +579,8 @@ function CampaignView() {
                   Create location
                 </button>
                 <button onClick={(e) => { e.stopPropagation(); handleEditClick(destinacija.id) }}>Update</button>
+                <button onClick={(e) => { e.stopPropagation(); handleMaps(destinacija.id) }}>Locations on Maps</button>
+
                 <FaTrash
                   style={{
                     position: 'absolute',
