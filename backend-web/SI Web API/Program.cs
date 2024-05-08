@@ -112,7 +112,7 @@ app.MapCampaignEndpoints(jwtIssuer, jwtKey);
 
 app.MapAdminEndpoints(jwtIssuer, jwtKey);
 
-app.MapLocationEndpoints(jwtIssuer, jwtKey, azureAccKey);
+app.MapLocationEndpoints(jwtIssuer, jwtKey, azureAccKey, blobConnectionString);
 
 app.MapLocationStatusEndpoints(jwtIssuer, jwtKey);
 app.MapOCREndpoints(jwtIssuer, jwtKey, blobConnectionString);
