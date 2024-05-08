@@ -126,7 +126,39 @@ namespace SI_Web_API.Controller
         }).WithName("HashRecordAuth")
           .RequireAuthorization()
           .WithOpenApi();
+
+        group.MapGet("/record/coordinates/{campaignId}", async (HttpContext context, int campaignId, SI_Web_APIContext db) =>
+        {
+            var mergedData = await (from locationTable in db.Location
+                                    join recordTable in db.Record on locationTable.Id equals recordTable.LocationId
+                                    where locationTable.CampaignId == campaignId
+                                    select new
+                                    {
+                                        LocationId = locationTable.Id,
+                                        Coordinates = recordTable.GPSCoordinates
+                                    }).ToListAsync();
+            return mergedData;
+        }).WithName("GetCoordinates")
+        .RequireAuthorization()
+        .WithOpenApi();
+
+        group.MapGet("/record/{locationId}", async (HttpContext context, int locationId, SI_Web_APIContext db) =>
+        {
+            var records = await db.Record.Where(r => r.LocationId == locationId)
+            .Select(r => new
+            {
+                r.Id,
+                r.SerialNumber,
+                r.InventoryNumber,
+                r.GPSCoordinates,
+                r.FullAddress,
+                r.PhotoUrl,
+                r.LocationId,
+                r.UserId
+            }).ToListAsync();
+            return records;
+        }).WithName("GetRecordsByLocationId")
+        .RequireAuthorization()
+        .WithOpenApi();
         }
-
-
 }}
