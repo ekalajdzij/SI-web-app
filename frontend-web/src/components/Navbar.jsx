@@ -15,7 +15,7 @@ function Navbar({ signed, isSuperAdmin }) {
   const { instance } = useMsal();
   let navigate = useNavigate();
 
-  const [flag, setFlag] = useState(false);
+  const [flag, setFlag] = useState(true);
 
   const handleLogout = () => {
     if (JSON.parse(localStorage.getItem("isLoggedInVia2fa")) == true) {
