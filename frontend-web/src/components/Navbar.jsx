@@ -15,9 +15,7 @@ function Navbar({ signed, isSuperAdmin }) {
   const { instance } = useMsal();
   let navigate = useNavigate();
 
-  const [flag, setFlag] = useState(
-    JSON.parse(localStorage.getItem("isLoggedInVia2fa"))
-  );
+  const [flag, setFlag] = useState(false);
 
   const handleLogout = () => {
     if (JSON.parse(localStorage.getItem("isLoggedInVia2fa")) == true) {
@@ -80,9 +78,9 @@ function Navbar({ signed, isSuperAdmin }) {
   };
 
   useEffect(() => {
-    if(localStorage.getItem('isLoggedInVia2fa'))
-       setFlag(JSON.parse(localStorage.getItem("isLoggedInVia2fa")));
-    if(localStorage.getItem('isSuperAdmin'))
+    if (localStorage.getItem("isLoggedInVia2fa") !== "undefined")
+      setFlag(JSON.parse(localStorage.getItem("isLoggedInVia2fa")));
+    if (localStorage.getItem("isSuperAdmin") !== "undefined")
       setIsSuper(JSON.parse(localStorage.getItem("isSuperAdmin")) || false);
     showButton();
   }, []);
