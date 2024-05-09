@@ -41,7 +41,7 @@ function Records({ back }) {
   }
 
   return (
-    <div className="container">
+    <div className="container" data-testid="DivRecords">
       {recordData.length ? (
         <React.Fragment>
           <h2 className="heading">
