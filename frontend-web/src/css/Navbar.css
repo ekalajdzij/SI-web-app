@@ -49,10 +49,11 @@
   grid-gap: 10px;
   list-style: none;
   text-align: center;
-  width: 60vw;
+  width: 50vw;
   justify-content: center;
   margin-right: 2rem;
   overflow: hidden;
+  padding: 0;
 }
 
 .nav-item {
@@ -80,7 +81,7 @@
 #nav-title {
   color: white;
   margin-left: 30px;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
 }
 
 .loginout {

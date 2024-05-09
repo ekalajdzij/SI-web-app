@@ -6,6 +6,12 @@ body {
       hsla(204, 100%, 99%, 0.8)
     ),
     url("https://wallpapercave.com/wp/wp4313180.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
 .companyUpdateIcon,
