@@ -16,7 +16,8 @@ using FluentAssertions.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<SI_Web_APIContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("azuredatabase") ?? throw new InvalidOperationException("Connection string 'SI_Web_APIContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("azuredatabase") ?? throw new InvalidOperationException("Connection string 'SI_Web_APIContext' not found."))
+);
 
 var azureAccKey = builder.Configuration.GetSection("AzureStorage:Key").Get<string>();
 
@@ -84,14 +85,23 @@ builder.Services.AddSwaggerGen(c =>
             }
     });
 });
-
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseCors("AllowAll");
 
+// create db
+using(var scope = app.Services.CreateAsyncScope())
+{
+   var dbContext = scope.ServiceProvider.GetRequiredService<SI_Web_APIContext>();
+   dbContext.Database.EnsureCreated();
+}
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
@@ -112,7 +122,7 @@ app.MapCampaignEndpoints(jwtIssuer, jwtKey);
 
 app.MapAdminEndpoints(jwtIssuer, jwtKey);
 
-app.MapLocationEndpoints(jwtIssuer, jwtKey, azureAccKey, blobConnectionString);
+app.MapLocationEndpoints(jwtIssuer, jwtKey, azureAccKey);
 
 app.MapLocationStatusEndpoints(jwtIssuer, jwtKey);
 app.MapOCREndpoints(jwtIssuer, jwtKey, blobConnectionString);

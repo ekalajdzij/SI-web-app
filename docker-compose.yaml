@@ -1,0 +1,38 @@
+version: "3.9"
+services:
+  mssql:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    cap_add: [ 'SYS_PTRACE' ]
+    environment:
+      - "ACCEPT_EULA=1"
+      - "MSSQL_SA_PASSWORD=Admin123!"
+    ports:
+      - "1433:1433"
+    hostname: mssql
+    volumes:
+      - "mssql-azuresql-edge-data:/var/opt/mssql"
+  dotnet_backend:
+      depends_on:
+          - mssql
+      build: "../SI-web-app/backend-web/SI Web API"
+      restart: unless-stopped
+      env_file: ./.env
+      environment: 
+          REACT_APP_BACKEND_URL: $REACT_APP_BACKEND_URL
+          ASPNETCORE_ENVIRONMENT: Development
+      ports:
+          - $DOTNET_LOCAL_PORT:$DOTNET_DOCKER_PORT
+      stdin_open: true
+      tty: true
+  react_frontend:
+      depends_on:
+          - dotnet_backend
+      build: "../SI-web-app/frontend-web"
+      restart: unless-stopped
+      env_file: ./.env
+      ports:
+          - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
+volumes:
+    mssql-azuresql-edge-data:
+
+
