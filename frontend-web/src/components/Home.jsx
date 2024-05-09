@@ -25,7 +25,7 @@ function Home({ isSuper }) {
         try {
           const token = localStorage.getItem("accessToken");
           const response = await axios.get(
-            `https://fieldlogistics-control.azurewebsites.net/api/location/company/record/${localStorage.getItem(
+            `http://localhost:5200/api/location/company/record/${localStorage.getItem(
               "company"
             )}`,
             {

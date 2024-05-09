@@ -88,11 +88,11 @@ builder.Services.AddSwaggerGen(c =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 app.UseCors("AllowAll");
 
@@ -122,7 +122,7 @@ app.MapCampaignEndpoints(jwtIssuer, jwtKey);
 
 app.MapAdminEndpoints(jwtIssuer, jwtKey);
 
-app.MapLocationEndpoints(jwtIssuer, jwtKey, azureAccKey);
+app.MapLocationEndpoints(jwtIssuer, jwtKey, azureAccKey, blobConnectionString);
 
 app.MapLocationStatusEndpoints(jwtIssuer, jwtKey);
 app.MapOCREndpoints(jwtIssuer, jwtKey, blobConnectionString);

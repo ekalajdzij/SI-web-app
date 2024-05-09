@@ -33,7 +33,7 @@ function AddAdminModal({ closeModal, companyData, setAdminData }) {
     const token = localStorage.getItem("accessToken");
     try {
       const response = await fetch(
-        "https://fieldlogistics-control.azurewebsites.net/api/admin",
+        "http://localhost:5200/api/admin",
         {
           method: "POST",
           headers: {
@@ -59,7 +59,7 @@ function AddAdminModal({ closeModal, companyData, setAdminData }) {
         JSON.parse(localStorage.getItem("adminData")) || [];
       try {
         const response = await fetch(
-          `https://fieldlogistics-control.azurewebsites.net/api/company/${formData.companyId}`,
+          `http://localhost:5200/api/company/${formData.companyId}`,
           {
             method: "GET",
             headers: {

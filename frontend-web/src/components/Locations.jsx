@@ -34,7 +34,7 @@ function LocationTable({setGoBack}) {
         const token = localStorage.getItem("accessToken");
   
         const response = await fetch(
-          `https://fieldlogistics-control.azurewebsites.net/api/location/${id}`,
+          `http://localhost:5200/api/location/${id}`,
           {
             method: "DELETE",
             headers: {
@@ -58,7 +58,7 @@ function LocationTable({setGoBack}) {
         console.log(x);
         try {
             const token = localStorage.getItem("accessToken");
-            const response = await fetch(`https://fieldlogistics-control.azurewebsites.net/api/location/${id}`, {
+            const response = await fetch(`http://localhost:5200/api/location/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ function LocationTable({setGoBack}) {
         try {
           const token = localStorage.getItem("accessToken");
           const response = await axios.get(
-            `https://fieldlogistics-control.azurewebsites.net/api/location/record/${id}`,
+            `http://localhost:5200/api/location/record/${id}`,
             {
               headers: {
                 Authorization: `${token}`,

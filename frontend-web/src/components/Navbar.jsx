@@ -44,7 +44,7 @@ function Navbar({ signed, isSuperAdmin }) {
       const token = localStorage.getItem("accessToken");
 
       const response = await fetch(
-        "https://fieldlogistics-control.azurewebsites.net/api/admin",
+        "http://localhost:5200/api/admin",
         {
           method: "GET",
           headers: {

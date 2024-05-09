@@ -37,7 +37,7 @@ function CRUDuser() {
       const token = localStorage.getItem("accessToken");
 
       const response = await fetch(
-        `https://fieldlogistics-control.azurewebsites.net/api/user/${id}`,
+        `http://localhost:5200/api/user/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -92,7 +92,7 @@ function CRUDuser() {
       console.log(userToUpdate);
 
       const response = await fetch(
-        `https://fieldlogistics-control.azurewebsites.net/api/user/${id}`,
+        `http://localhost:5200/api/user/${id}`,
         {
           method: "PUT",
           headers: {
@@ -147,7 +147,7 @@ function CRUDuser() {
       const token = localStorage.getItem("accessToken");
 
       const response = await fetch(
-        "https://fieldlogistics-control.azurewebsites.net/api/user",
+        "http://localhost:5200/api/user",
         {
           method: "POST",
           headers: {
