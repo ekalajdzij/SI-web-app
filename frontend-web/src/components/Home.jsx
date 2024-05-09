@@ -124,14 +124,15 @@ function Home({ isSuper }) {
   }
 
   return (
-    <div>
-      {localStorage.getItem("homeScreen") === "superadmin" ? (
+    <div data-testid="GeneralLocationsDiv">
+      {
+        localStorage.getItem("homeScreen") === "superadmin" ? (
         <p className="home">
           Welcome <strong>{ime}</strong> you are signed in as superadministrator
         </p>
-      ) : (
+        ) : (
         <>
-          <div id="admin-info-container">
+          <div id="admin-info-container" data-testid="AdminInfoDiv">
             <h1>Welcome back</h1>
             <img
               src="https://cdn-icons-png.freepik.com/512/9187/9187604.png"
@@ -143,12 +144,14 @@ function Home({ isSuper }) {
               <strong>{localStorage.getItem("companyName")}</strong>
             </p>
           </div>
-          {!records.length ? (
+          {
+           !records.length ? (
             <p className="home">No records for this campaign</p>
-          ) : (
+           ) : (
             <div className="feed-container">
               <p id="feed-records">Records feed</p>
-              {records.slice(0, 10).map((record) => (
+              {
+                records.slice(0, 10).map((record) => (
                 <div key={record.record.locationId} className="record-card">
                   <div className="record-details">
                     <div>
@@ -188,11 +191,14 @@ function Home({ isSuper }) {
                     />
                   </div>
                 </div>
-              ))}
+                ))
+              }
             </div>
-          )}{" "}
+           )
+          }{" "}
         </>
-      )}
+        )
+      }
     </div>
   );
 }
