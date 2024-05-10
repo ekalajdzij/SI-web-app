@@ -15,7 +15,7 @@ else
     sudo apt update
     sudo apt install docker-ce -y
 
-    sudo systemctl status docker
+   # sudo systemctl status docker
 fi
 
 if [ -x "$(command -v docker-compose)" ]; then
