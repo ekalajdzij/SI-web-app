@@ -61,7 +61,6 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("isLoggedInVia2fa", true);
         localStorage.setItem("logged", false);
-        setVisible(false);
         signed(true);
 
         if (isSuper) {

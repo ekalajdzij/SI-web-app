@@ -48,10 +48,11 @@ function App() {
   const [visible, setVisible] = useState(false);
   const [back, setBack] = useState(false);
   const [signedIn, setSigned] = useState(false);
+  const [loading, setLoading] = useState(true);
   
   const navigate = useNavigate();
   const location = useLocation();
-  const [isSuperAdmin, setSuperAdmin] = useState(false);
+  const [isSuperAdmin, setSuperAdmin] = useState(true);
 
   const setSuperfunction = (x) => {
     setSuperAdmin(x);
@@ -82,6 +83,7 @@ function App() {
     } else {
       setSigned(false);
     }
+    setLoading(false);
   }, []);
 
   /* useEffect(() => {
@@ -104,6 +106,9 @@ function App() {
   const setQRfunction = (x) => {
     setQR(x);
   };
+  if(loading){
+    return <div>Loading...</div>
+  }
 
   return (
     <div>

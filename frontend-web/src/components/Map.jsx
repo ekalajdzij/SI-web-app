@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import { GoogleMap, MarkerF, useLoadScript, InfoWindowF } from "@react-google-maps/api";
 import { Autocomplete } from "@react-google-maps/api";
 import axios from "axios";
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import { useNavigate } from "react-router-dom";
 import "../css/map.css";
 const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -17,6 +19,29 @@ const mapContainerStyle = {
   alignItems: "center",
 };
 function Map({ setGoBack }) {
+  const pdfref=useRef();
+  const downloadPDF=()=>{
+    const input=pdfref.current;
+    html2canvas(input, {useCORS:true}).then((canvas)=>{
+      const imgData=canvas.toDataURL('image/png');
+      const pdf=new jsPDF('p','mm','a4',true);
+      const pdfWidth=pdf.internal.pageSize.getWidth()
+      const pdfHeight=pdf.internal.pageSize.getHeight()
+      const imgWidth=canvas.width;
+      const imgh=canvas.height;
+      const ratio=Math.min(pdfWidth/imgWidth, pdfHeight/imgh);
+      const imgX=(pdfWidth-imgWidth*ratio)/2;
+      const imgY=30;
+      pdf.addImage(imgData,'PNG',imgX,imgY, imgWidth*ratio,imgh*ratio);
+      
+      pdf.save('CampaignMap.pdf');
+    });
+  };
+
+
+
+
+
   const [recordsData, setRecord] = useState(
     JSON.parse(localStorage.getItem("records"))
   );
@@ -154,11 +179,11 @@ function Map({ setGoBack }) {
     if (!isLoaded) return <div>Loading maps</div>;
     return (
       <div
-        style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+        style={{ display: "flex", flexDirection: "column", alignItems: "center" }} ref={pdfref}
       >
         {recordsData.length ? (
           <React.Fragment>
-            <h2 id="title" style={{ color: "black" }}>
+            <h2 id="title" style={{ color: "black" }} onClick={()=>downloadPDF()}>
               Locations for {localStorage.getItem("campaignName")}
             </h2>
             {/* <input
