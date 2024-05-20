@@ -116,6 +116,8 @@ function LocationTable({setGoBack}) {
             localStorage.setItem('recordData', JSON.stringify(response.data));
             //console.log(response)
             console.log(localStorage.getItem('recordData'));
+            localStorage.setItem("previousRoute", "/location");
+
             navigate('/record');
           
             

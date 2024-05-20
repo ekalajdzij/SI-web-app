@@ -79,6 +79,7 @@ function Map({ setGoBack }) {
       localStorage.setItem("recordData", JSON.stringify(response.data));
       //console.log(response)
       console.log(localStorage.getItem("recordData"));
+      localStorage.setItem("previousRoute", "/map");
       navigate("/record");
     } catch (error) {
       console.error("There was a problem with fetching company data:", error);

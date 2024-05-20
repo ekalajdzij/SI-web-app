@@ -11,10 +11,8 @@ function CampaignView() {
   const [selectedList, setSelect] = useState([]);
 
   const navigate = useNavigate();
-  const [destinacije, setDestinacije] = useState(
-    localStorage.getItem('campaignData') ?
-      JSON.parse(localStorage.getItem("campaignData")) : []
-  );
+  const [destinacije, setDestinacije] = useState([]);
+ 
   const [editableRow, setEditableRow] = useState(null);
   const [clickTimeout, setClickTimeout] = useState(null);
 
@@ -52,6 +50,36 @@ function CampaignView() {
     CampaignId: "",
     UserId: null,
   });
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        const response = await axios.get(
+          `https://fieldlogistics-control.azurewebsites.net/api/campaigns/company/${company}`,
+          {
+            headers: {
+              Authorization: `${token}`,
+            },
+          }
+        );
+
+        const data1 = response.data;
+        if(data1) {
+          setDestinacije(data1)
+          localStorage.setItem("campaignData", JSON.stringify(data1));
+
+        }
+
+      } catch (error) {
+        console.error("There was a problem with fetching campaign data:", error);
+      }
+
+    };
+    fetchData();
+  }, []);
+
 
   const onChangeEdit = (id, field, e) => {
     const value = e.target.value;

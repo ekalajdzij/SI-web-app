@@ -29,13 +29,13 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
   useEffect(() => {
     setSlika(localStorage.getItem("QR"));
     setVisible(JSON.parse(localStorage.getItem("logged")));
-    //setSuperAdmin(JSON.parse(localStorage.getItem("isSuperAdmin")) || false);
   }, []);
 
   useEffect(() => {
     if (pin.length === 6) {
       handleLog2fa();
     }
+    else setError(false);
   }, [pin]);
   
   const handleLog2fa = async () => {
@@ -133,6 +133,7 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
       .catch((error) => {
         console.error("Error during login:", error);
         setError(true);
+        setVisible(JSON.parse(localStorage.getItem("logged")));
       });
 
     

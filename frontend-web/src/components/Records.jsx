@@ -14,6 +14,9 @@ function Records({ back }) {
   const [campaignName, setCampaignName] = useState("");
 
   useEffect(() => {
+    if(localStorage.getItem('previousRoute')=='/map'){
+      setGoback(true);
+    }
     const storedData = JSON.parse(localStorage.getItem("recordData"));
     if (storedData) {
       setRecordData(storedData);
@@ -84,7 +87,7 @@ function Records({ back }) {
                   background: 'none',
                   cursor: 'pointer',
                   display: 'flex',
-                }} onClick={() => { if (back) navigate('/map'); else navigate('/location') }}> <FontAwesomeIcon icon={faArrowLeft} /></button>
+                }} onClick={() => { if (goBack) navigate('/map'); else navigate('/location') }}> <FontAwesomeIcon icon={faArrowLeft} /></button>
               </div>
             ))}
           </div>

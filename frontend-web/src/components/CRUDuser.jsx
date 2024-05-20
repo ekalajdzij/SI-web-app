@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { FaTrash, FaEdit, FaCheck } from "react-icons/fa";
 import "../css/CRUDuser.css";
+import axios from "axios";
 
 function CRUDuser() {
-  const [userData, setUserData] = useState(
-    JSON.parse(localStorage.getItem("userData")) || null
-  );
+  const [userData, setUserData] = useState([]);
   const [companyName, setCompName] = useState(
     localStorage.getItem("companyName")
   );
@@ -24,12 +23,29 @@ function CRUDuser() {
   });
 
   useEffect(() => {
-    //console.log(userData)
-    const userDataFromStorage = localStorage.getItem("userData");
-    if (userDataFromStorage) {
-      const parsedUserData = JSON.parse(userDataFromStorage);
-      setUserData(parsedUserData);
-    }
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        const response = await axios.get(
+          "https://fieldlogistics-control.azurewebsites.net/api/user",
+          {
+            headers: {
+              Authorization: `${token}`,
+            },
+          }
+        );
+        if (response.data) {
+          localStorage.setItem("accessToken", response.headers.authorization);
+          const data = response.data;
+          setUserData(data);
+          localStorage.setItem("userData", JSON.stringify(data));
+
+        }
+      } catch (error) {
+        console.error("There was a problem with fetching company data:", error);
+      }
+    };
+    fetchData();
   }, []);
 
   const handleDeleteUser = async (id) => {
