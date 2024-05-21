@@ -120,7 +120,7 @@ function Home({ isSuper }) {
     const sati = Math.floor((minute % minuteUDanu) / minuteUSatu);
     const preostaleMinute = Math.floor(minute % minuteUSatu);
 
-    return `${dani} days ${sati} hours ${preostaleMinute} minutes ago`;
+    return `${dani} days ${Math.max(0,sati-2)} hours ${preostaleMinute} minutes ago`;
   }
 
   return (
