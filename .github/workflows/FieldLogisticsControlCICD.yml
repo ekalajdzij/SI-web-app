@@ -3,7 +3,7 @@ name: FieldLogisticsControlCICD
 on:
   push:
     branches:
-      - sprint4
+      - sprint8
     path:
       - 'frontend-web/**'
       - '.github/workflows/**'
