@@ -6,7 +6,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useNavigate } from "react-router-dom";
 import "../css/map.css";
-const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+const googleMapsApiKey = "AIzaSyAnoTrrumleEp9aG0CudXZPdHdey1Fn3R0";
 
 const mapContainerStyle = {
   width: "1000px",
