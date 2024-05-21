@@ -54,8 +54,7 @@ function LocationTable({setGoBack}) {
     };
 
     const handleSave = async (id) => {
-        let x = editedLocation;
-        console.log(x);
+      let x = editedLocation;
         try {
             const token = localStorage.getItem("accessToken");
             const response = await fetch(`https://fieldlogistics-control.azurewebsites.net/api/location/${id}`, {
@@ -64,8 +63,8 @@ function LocationTable({setGoBack}) {
                     'Content-Type': 'application/json',
                     Authorization: `${token}`,
                 },
-                body: JSON.stringify(x
-                )
+                body: JSON.stringify(x)
+                
             });
             if (response.ok) {
                 // Update the location in the state
@@ -88,7 +87,7 @@ function LocationTable({setGoBack}) {
             console.error('Error updating campaign status:', error.message);
             throw error;
         }
-        console.log('Saving location with index', id);
+       // console.log('Saving location with index', id);
         setIsEditing(false);
         setEditableIndex(null);
     };
@@ -115,7 +114,7 @@ function LocationTable({setGoBack}) {
           
             localStorage.setItem('recordData', JSON.stringify(response.data));
             //console.log(response)
-            console.log(localStorage.getItem('recordData'));
+            //console.log(localStorage.getItem('recordData'));
             localStorage.setItem("previousRoute", "/location");
 
             navigate('/record');

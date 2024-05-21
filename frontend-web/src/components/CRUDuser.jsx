@@ -105,7 +105,7 @@ function CRUDuser() {
           .join("");
         userToUpdate.password = hashHex;
       }
-      console.log(userToUpdate);
+      //console.log(userToUpdate);
 
       const response = await fetch(
         `https://fieldlogistics-control.azurewebsites.net/api/user/${id}`,
@@ -151,7 +151,24 @@ function CRUDuser() {
     });
   };
 
+  function hasEmptyFields(obj) {
+    for (let key in obj) {
+      if (typeof obj[key] === 'object' && obj[key] !== null) {
+        if (hasEmptyFields(obj[key])) {
+          return true;
+        }
+      } else if (obj[key] === '') {
+        return true;
+      }
+    }
+    return false;
+  }
+
   const handleAddUser = async () => {
+    if(hasEmptyFields(newUser)){
+      alert('All fields have to be filled');
+      return;
+    }
     try {
       const encoder = new TextEncoder();
       const data = encoder.encode(newUser.Password);
@@ -179,11 +196,20 @@ function CRUDuser() {
           }),
         }
       );
-      localStorage.setItem("accessToken", [...response.headers][0][1]);
+      
+      if (!response.ok) {
+        
+        const errorText = await response.text();
+        console.error("Error adding user:", response.status, response.statusText, errorText);
+        alert(`Error adding user: user with this username and password already exist`);
+        return; 
+      }
 
-      if (response.ok) {
+      else {
+        localStorage.setItem("accessToken", [...response.headers][0][1]);
+
         const addedUser = await response.json();
-        console.log(addedUser);
+        //console.log(addedUser);
         let currentUserData =
           JSON.parse(localStorage.getItem("userData")) || [];
 
@@ -218,6 +244,7 @@ function CRUDuser() {
             value={newUser.Username}
             onChange={handleInputChangeAdd}
             placeholder="Username"
+            required
           />
           <input
             type="password"
@@ -225,6 +252,7 @@ function CRUDuser() {
             value={newUser.Password}
             onChange={handleInputChangeAdd}
             placeholder="Password"
+            required
           />
           <input
             type="text"
@@ -232,6 +260,7 @@ function CRUDuser() {
             value={newUser.PhoneNumber}
             onChange={handleInputChangeAdd}
             placeholder="Phone Number"
+            required
           />
           <input
             type="text"
@@ -239,6 +268,7 @@ function CRUDuser() {
             value={newUser.FullName}
             onChange={handleInputChangeAdd}
             placeholder="Full Name"
+            required
           />
           <input
             type="text"
@@ -246,6 +276,7 @@ function CRUDuser() {
             value={newUser.Mail}
             onChange={handleInputChangeAdd}
             placeholder="Mail"
+            required
           />
           <button onClick={handleAddUser}>Create</button>
           <button

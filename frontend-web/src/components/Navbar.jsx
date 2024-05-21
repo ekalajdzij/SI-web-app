@@ -62,7 +62,7 @@ function Navbar({ signed, isSuperAdmin }) {
       //console.log(data);
       localStorage.setItem("adminData", JSON.stringify(data));
 
-      console.log("Podaci su uspješno dohvaćeni i pohranjeni.");
+      //console.log("Podaci su uspješno dohvaćeni i pohranjeni.");
       navigate("/admin");
     } catch (error) {
       console.error("Došlo je do greške pri dohvaćanju podataka:", error);

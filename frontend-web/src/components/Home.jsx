@@ -71,7 +71,7 @@ function Home({ isSuper }) {
                   )
               );
 
-              console.log(records);
+              console.log(data,"ovdje");
             };
 
             updateDuration();

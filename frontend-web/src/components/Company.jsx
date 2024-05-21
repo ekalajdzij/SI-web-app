@@ -99,6 +99,10 @@ function Company() {
   };
   const handleAddCompany = async () => {
     const token = localStorage.getItem("accessToken");
+    if(newCompany==''){
+      alert('You have to name a company');
+      return;
+    }
 
     try {
       const response = await axios.post(
@@ -140,12 +144,13 @@ function Company() {
 
       {isAddingCompany && (
         <div className="modal" id="addCompanyModal">
-          <input
+          <input 
             id="inputAdd"
             type="text"
             value={newCompany}
             onChange={(e) => setNewCompany(e.target.value)}
             placeholder="Enter new company name"
+            required
           />
           <button id="createCompanyButton" onClick={handleAddCompany}>
             Create

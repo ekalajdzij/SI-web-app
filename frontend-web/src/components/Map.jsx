@@ -103,7 +103,7 @@ function Map({ setGoBack }) {
 
       localStorage.setItem("recordData", JSON.stringify(response.data));
       //console.log(response)
-      console.log(localStorage.getItem("recordData"));
+      //console.log(localStorage.getItem("recordData"));
       localStorage.setItem("previousRoute", "/map");
       navigate("/record");
     } catch (error) {

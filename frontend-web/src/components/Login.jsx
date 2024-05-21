@@ -165,7 +165,7 @@ function Login({ QR, visib, supe}) {
         Password: pass,
       })
       .then((response) => {
-        console.log(response)
+        //console.log(response)
         localStorage.setItem("company", response.data.companyId);
         localStorage.setItem("companyName", response.data.name);
         localStorage.setItem("ime", response.data.username);

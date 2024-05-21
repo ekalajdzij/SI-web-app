@@ -119,7 +119,7 @@ function CampaignView() {
   };
 
   const AssignUser = async (id) => {
-    console.log(id);
+    //console.log(id);
     setId(id);
     localStorage.setItem("id-i", id);
    
@@ -150,7 +150,7 @@ function CampaignView() {
         const finalFilteredUsers = filteredUsers.filter(user => !userIds.includes(user.id));
         //localStorage.setItem('selectList', JSON.stringify(finalFilteredUsers));
         setSelect(finalFilteredUsers);
-        console.log(finalFilteredUsers)
+        //console.log(finalFilteredUsers)
         //localStorage.setItem('campId', id)
         setModalOpenAssign(true);
         setName(destinacije.find((destinacija) => destinacija.id === id)?.name);
@@ -211,7 +211,7 @@ function CampaignView() {
   };
 
   const handleDoubleClick = async (id) => {
-    console.log(id);
+   // console.log(id);
     try {
       const token = localStorage.getItem("accessToken");
       const response = await axios.get(
@@ -229,7 +229,7 @@ function CampaignView() {
       localStorage.setItem('userForCampaign', JSON.stringify(response.data));
 
       const userIds = response.data.map(u => u.userId);
-      console.log(response.data);
+      //console.log(response.data);
       //console.log(userIds);
       if (localStorage.getItem('company')) {
 
@@ -328,7 +328,7 @@ function CampaignView() {
       if (localStorage.getItem('company')) {
       
         localStorage.setItem('locations', JSON.stringify(response.data.locations));
-        console.log(localStorage.getItem('locations'));
+        //console.log(localStorage.getItem('locations'));
         localStorage.setItem('campId', id);
         navigate('/location');
       }
@@ -437,7 +437,24 @@ function CampaignView() {
     }
   }
 
+  function hasEmptyFields(obj) {
+    for (let key in obj) {
+      if (typeof obj[key] === 'object' && obj[key] !== null) {
+        if (hasEmptyFields(obj[key])) {
+          return true;
+        }
+      } else if (obj[key] === '') {
+        return true;
+      }
+    }
+    return false;
+  }
+
   const handleSubmitLokacija = async () => {
+    if (hasEmptyFields(novaLokacija)) {
+      alert('All fields have to be filled');
+      return;
+    }
     try {
       const token = localStorage.getItem("accessToken");
       const response = await axios.post(
