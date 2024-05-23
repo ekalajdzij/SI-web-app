@@ -83,6 +83,8 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
             console.error("There was a problem with fetching company data:", error);
           }
         } else {
+          localStorage.setItem('homeScreen','admin')
+
           try {
             const token = localStorage.getItem("accessToken");
             const response = await axios.get(
@@ -115,11 +117,7 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
     
             // console.log(response);
             const data1 = response.data;
-            if(data1.length) 
-              localStorage.setItem('homeScreen','admin')
-            else
-            localStorage.setItem('homeScreen','nema kampanja')
-
+           
             localStorage.setItem("campaignData", JSON.stringify(data1));
             //console.log(data1);
           } catch (error) {
