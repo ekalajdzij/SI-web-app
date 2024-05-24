@@ -233,7 +233,7 @@ function Login({ QR, visib, supe }) {
       <div className="main">
         <div className="cover-frame">
           <div className="login-frame">
-            <h2>Login to your account</h2>
+            <h2>Login into your account</h2>
             <form id="loginForm" className="login-form">
               <input
                 type="text"
@@ -260,7 +260,7 @@ function Login({ QR, visib, supe }) {
                 }}
                 type="submit"
               >
-                Log in
+                Login
               </button>
             </form>
             <p id="redirect">
