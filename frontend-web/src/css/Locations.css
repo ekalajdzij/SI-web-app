@@ -1,0 +1,12 @@
+.backIcon {
+  position: absolute;
+  top: 6cap;
+  left: 10px;
+  cursor: pointer;
+  border-radius: 40px;
+  transition: scale 0.3s;
+}
+
+.backIcon:hover {
+  scale: 1.1;
+}

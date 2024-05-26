@@ -183,71 +183,87 @@ function Map({ setGoBack }) {
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading maps</div>;
   return (
-    <div
-      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-      ref={pdfref}
-    >
-      {recordsData.length ? (
-        <React.Fragment>
-          <h2
-            id="title"
-            style={{ color: "black" }}
-            onClick={() => downloadPDF()}
-          >
-            Locations for {localStorage.getItem("campaignName")}
-          </h2>
-          {/* <input
+    <>
+      <img
+        src="./src/assets/blue-back.png"
+        alt="Back"
+        className="backIcon"
+        onClick={() => {
+          navigate("/campaign");
+        }}
+      />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+        ref={pdfref}
+      >
+        {recordsData.length ? (
+          <React.Fragment>
+            <h2
+              id="title"
+              style={{ color: "black" }}
+              onClick={() => downloadPDF()}
+            >
+              Locations for {localStorage.getItem("campaignName")}
+            </h2>
+            {/* <input
             id='search'
             type="text"
             placeholder="Enter address"
             onChange={(e) => setAddress(e.target.value)}
           />
           <button onClick={() => onAddressSubmit(address)}>Submit</button> */}
-          <GoogleMap
-            zoom={5}
-            center={center}
-            mapContainerStyle={mapContainerStyle}
-            onLoad={onMapLoad}
-          >
-            {recordsData.map((item, index) => (
-              <MarkerF
-                key={index}
-                position={{
-                  lat: Number(item.coordinates.split(", ")[0]),
-                  lng: Number(item.coordinates.split(", ")[1]),
-                }}
-                onClick={() => handleRecordData(parseInt(item.locationId))}
-                onMouseOver={() =>
-                  setSelectedLocationHover(
-                    item.locationId,
-                    Number(item.coordinates.split(", ")[0]),
-                    Number(item.coordinates.split(", ")[1])
-                  )
-                }
-              />
-            ))}
-            {flag && location && (
-              <InfoWindowF
-                position={{
-                  lat: width + 1,
-                  lng: height + 1,
-                }}
-                onCloseClick={() => setSelectedLocationHover(null, null, null)}
-              >
-                <div>
-                  <h3>{location.typeOfLocation}</h3>
-                  <p>{location.description}</p>
-                </div>
-              </InfoWindowF>
-            )}
-          </GoogleMap>
-        </React.Fragment>
-      ) : (
-        <h2 style={{ color: "black", marginTop: "50px" }}>
-          No locations for this campaign
-        </h2>
-      )}
-    </div>
+            <GoogleMap
+              zoom={5}
+              center={center}
+              mapContainerStyle={mapContainerStyle}
+              onLoad={onMapLoad}
+            >
+              {recordsData.map((item, index) => (
+                <MarkerF
+                  key={index}
+                  position={{
+                    lat: Number(item.coordinates.split(", ")[0]),
+                    lng: Number(item.coordinates.split(", ")[1]),
+                  }}
+                  onClick={() => handleRecordData(parseInt(item.locationId))}
+                  onMouseOver={() =>
+                    setSelectedLocationHover(
+                      item.locationId,
+                      Number(item.coordinates.split(", ")[0]),
+                      Number(item.coordinates.split(", ")[1])
+                    )
+                  }
+                />
+              ))}
+              {flag && location && (
+                <InfoWindowF
+                  position={{
+                    lat: width + 1,
+                    lng: height + 1,
+                  }}
+                  onCloseClick={() =>
+                    setSelectedLocationHover(null, null, null)
+                  }
+                >
+                  <div>
+                    <h3>{location.typeOfLocation}</h3>
+                    <p>{location.description}</p>
+                  </div>
+                </InfoWindowF>
+              )}
+            </GoogleMap>
+          </React.Fragment>
+        ) : (
+          <h2 style={{ color: "black", marginTop: "50px" }}>
+            No locations for this campaign
+          </h2>
+        )}
+      </div>
+    </>
   );
 }
 
