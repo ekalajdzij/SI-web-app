@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "../css/records.css";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 function Records({ back }) {
   const navigate = useNavigate();
@@ -14,7 +13,7 @@ function Records({ back }) {
   const [campaignName, setCampaignName] = useState("");
 
   useEffect(() => {
-    if(localStorage.getItem('previousRoute')=='/map'){
+    if (localStorage.getItem("previousRoute") == "/map") {
       setGoback(true);
     }
     const storedData = JSON.parse(localStorage.getItem("recordData"));
@@ -24,27 +23,47 @@ function Records({ back }) {
 
     const locationName = localStorage.getItem("locationName");
     //console.log(locationName);
-    if (locationName !== undefined && locationName !== null && locationName !== "undefined" && locationName !== "null") {
+    if (
+      locationName !== undefined &&
+      locationName !== null &&
+      locationName !== "undefined" &&
+      locationName !== "null"
+    ) {
       //console.log("oo");
       setLocation(JSON.parse(locationName));
     }
-    
 
     const campaignName = localStorage.getItem("campaignName");
-    if (campaignName !== undefined && campaignName !== null && campaignName !== "undefined" && campaignName !== "null") {
+    if (
+      campaignName !== undefined &&
+      campaignName !== null &&
+      campaignName !== "undefined" &&
+      campaignName !== "null"
+    ) {
       setCampaignName(campaignName);
     }
   }, []);
   function FormatirajKoordinate(koordinate) {
-    const [prviBroj, drugiBroj] = koordinate.split(', ').map(Number);
-    const prviSmjer = prviBroj >= 0 ? 'N' : 'S';
-    const drugiSmjer = drugiBroj >= 0 ? 'E' : 'W';
+    const [prviBroj, drugiBroj] = koordinate.split(", ").map(Number);
+    const prviSmjer = prviBroj >= 0 ? "N" : "S";
+    const drugiSmjer = drugiBroj >= 0 ? "E" : "W";
 
-    return `${Math.abs(prviBroj)}° ${prviSmjer}, ${Math.abs(drugiBroj)}° ${drugiSmjer}`;
+    return `${Math.abs(prviBroj)}° ${prviSmjer}, ${Math.abs(
+      drugiBroj
+    )}° ${drugiSmjer}`;
   }
 
   return (
     <div className="container">
+      <img
+        src="./src/assets/blue-back.png"
+        alt="Back"
+        className="backIcon"
+        onClick={() => {
+          if (goBack) navigate("/map");
+          else navigate("/location");
+        }}
+      />
       {recordData.length ? (
         <React.Fragment>
           <h2 className="heading">
@@ -68,7 +87,8 @@ function Records({ back }) {
                     <strong>Inventory Number:</strong> {record.inventoryNumber}
                   </p>
                   <p>
-                    <strong>GPS Coordinates:</strong> {FormatirajKoordinate(record.gpsCoordinates)}
+                    <strong>GPS Coordinates:</strong>{" "}
+                    {FormatirajKoordinate(record.gpsCoordinates)}
                   </p>
                   <p>
                     <strong>Full Address:</strong> {record.fullAddress}
@@ -77,17 +97,6 @@ function Records({ back }) {
                 <div>
                   <img src={record.photoUrl}></img>
                 </div>
-                <button style={{
-                  color: 'blue',
-                  width: '10px',
-                  padding: '5px',
-                  marginBottom: 0,
-                  fontSize: '26px',
-                  border: 'none',
-                  background: 'none',
-                  cursor: 'pointer',
-                  display: 'flex',
-                }} onClick={() => { if (goBack) navigate('/map'); else navigate('/location') }}> <FontAwesomeIcon icon={faArrowLeft} /></button>
               </div>
             ))}
           </div>

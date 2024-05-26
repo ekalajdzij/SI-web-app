@@ -105,3 +105,24 @@ input[type="date"]:focus {
 .modal {
   font-family: "Poppins", sans-serif;
 }
+
+.backIcon {
+  position: absolute;
+  top: 6cap;
+  left: 10px;
+  cursor: pointer;
+  border-radius: 40px;
+  transition: scale 0.3s;
+}
+
+.excelIcon {
+  position: absolute;
+  bottom: 5px;
+  left: 15px;
+  cursor: pointer;
+  height: 40px;
+}
+
+.backIcon:hover {
+  scale: 1.1;
+}
