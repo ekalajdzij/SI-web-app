@@ -727,7 +727,7 @@ function CampaignView() {
                   Locations on Maps
                 </button>
                 <img
-                  src="./src/assets/excel.png"
+                  src="https://static-00.iconduck.com/assets.00/ms-excel-icon-2048x2026-nws24wyy.png"
                   alt="excel"
                   className="excelIcon"
                   onClick={(e) => {
