@@ -166,7 +166,7 @@ function UserCampaignCRUD() {
   return (
     <div>
       <img
-        src="./src/assets/blue-back.png"
+        src="./blue-back.png"
         alt="Back"
         className="backIcon"
         onClick={() => {

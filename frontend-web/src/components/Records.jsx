@@ -56,7 +56,7 @@ function Records({ back }) {
   return (
     <div className="container">
       <img
-        src="./src/assets/blue-back.png"
+        src="./blue-back.png"
         alt="Back"
         className="backIcon"
         onClick={() => {

@@ -185,7 +185,7 @@ function Map({ setGoBack }) {
   return (
     <>
       <img
-        src="./src/assets/blue-back.png"
+        src="./blue-back.png"
         alt="Back"
         className="backIcon"
         onClick={() => {

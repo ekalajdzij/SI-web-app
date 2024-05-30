@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FaEdit, FaTrash, FaCheck, FaTimes } from "react-icons/fa";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "../css/Locations.css";
+
 
 function LocationTable({ setGoBack }) {
   const navigate = useNavigate();
@@ -152,7 +154,7 @@ function LocationTable({ setGoBack }) {
   return (
     <div>
       <img
-        src="./src/assets/blue-back.png"
+        src="./blue-back.png"
         alt="Back"
         className="backIcon"
         onClick={() => {
