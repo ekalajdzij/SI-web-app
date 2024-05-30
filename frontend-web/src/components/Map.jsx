@@ -242,8 +242,8 @@ function Map({ setGoBack }) {
               {flag && location && (
                 <InfoWindowF
                   position={{
-                    lat: width,
-                    lng: height,
+                    lat: width+1,
+                    lng: height+1,
                   }}
                   onCloseClick={() =>
                     setSelectedLocationHover(null, null, null)

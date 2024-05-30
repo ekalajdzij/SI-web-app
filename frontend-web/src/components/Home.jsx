@@ -167,7 +167,7 @@ function Home({ isSuper }) {
                         {record.location.typeOfLocation}
                       </p>
                       <p>
-                        <strong>Company:</strong> {record.location.companyName}
+                        <strong>Campaign:</strong> {record.location.companyName}
                       </p>
                       <p>
                         <strong>Contact:</strong>{" "}
