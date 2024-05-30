@@ -230,7 +230,7 @@ function Map({ setGoBack }) {
                     lng: Number(item.coordinates.split(", ")[1]),
                   }}
                   onClick={() => handleRecordData(parseInt(item.locationId))}
-                  onMouseOver={() =>
+                  onRightClick={() =>
                     setSelectedLocationHover(
                       item.locationId,
                       Number(item.coordinates.split(", ")[0]),
@@ -242,8 +242,8 @@ function Map({ setGoBack }) {
               {flag && location && (
                 <InfoWindowF
                   position={{
-                    lat: width+1,
-                    lng: height+1,
+                    lat: width,
+                    lng: height,
                   }}
                   onCloseClick={() =>
                     setSelectedLocationHover(null, null, null)
