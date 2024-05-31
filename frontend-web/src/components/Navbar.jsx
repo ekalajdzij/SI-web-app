@@ -89,7 +89,7 @@ function Navbar({ signed, isSuperAdmin }) {
 
   const handleDownload = () => {
     const link = document.createElement("a");
-    link.href = `/example.pdf`;
+    link.href = `/user-manual-web.pdf`;
     link.setAttribute("download", "example.pdf");
     document.body.appendChild(link);
     link.click();

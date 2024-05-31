@@ -201,7 +201,7 @@ function CRUDuser() {
         
         const errorText = await response.text();
         console.error("Error adding user:", response.status, response.statusText, errorText);
-        alert(`Error adding user: user with this username and password already exist`);
+        alert(`Error adding user: user with this username or phone number already exist`);
         return; 
       }
 
