@@ -89,8 +89,8 @@ function Navbar({ signed, isSuperAdmin }) {
 
   const handleDownload = () => {
     const link = document.createElement("a");
-    link.href = `/User-manual-web.pdf`;
-    link.setAttribute("download", "User-manual-web.pdf");
+    link.href = `/User manual-web.pdf`;
+    link.setAttribute("download", "User manual-web.pdf");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
