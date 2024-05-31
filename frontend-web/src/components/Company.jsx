@@ -16,7 +16,7 @@ function Company() {
       try {
         const token = localStorage.getItem("accessToken");
         const response = await axios.get(
-          "https://fieldlogistics-control.azurewebsites.net/api/company",
+          "http://localhost:5200/api/company",
           {
             headers: {
               Authorization: `${token}`,
@@ -42,7 +42,7 @@ function Company() {
       const token = localStorage.getItem("accessToken");
       await axios
         .delete(
-          `https://fieldlogistics-control.azurewebsites.net/api/company/${id}`,
+          `http://localhost:5200/api/company/${id}`,
           {
             headers: {
               Authorization: `${token}`,
@@ -67,7 +67,7 @@ function Company() {
 
     try {
       const response = await fetch(
-        `https://fieldlogistics-control.azurewebsites.net/api/company/${id}`,
+        `http://localhost:5200/api/company/${id}`,
         {
           method: "PUT",
           headers: {
@@ -106,7 +106,7 @@ function Company() {
 
     try {
       const response = await axios.post(
-        "https://fieldlogistics-control.azurewebsites.net/api/company",
+        "http://localhost:5200/api/company",
         {
           Name: newCompany,
         },

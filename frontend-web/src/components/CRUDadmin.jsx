@@ -61,7 +61,7 @@ function CRUDadmin() {
     try {
       const token = localStorage.getItem("accessToken");
       const response = await fetch(
-        `https://fieldlogistics-control.azurewebsites.net/api/admin/${id}`,
+        `http://localhost:5200/api/admin/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -89,7 +89,7 @@ function CRUDadmin() {
       }
       const token = localStorage.getItem("accessToken");
       const response = await fetch(
-        `https://fieldlogistics-control.azurewebsites.net/api/admin/${id}`,
+        `http://localhost:5200/api/admin/${id}`,
         {
           method: "PUT",
           headers: {

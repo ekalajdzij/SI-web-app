@@ -55,7 +55,7 @@ function CampaignView() {
       try {
         const token = localStorage.getItem("accessToken");
         const response = await axios.get(
-          `https://fieldlogistics-control.azurewebsites.net/api/campaigns/company/${company}`,
+          `http://localhost:5200/api/campaigns/company/${company}`,
           {
             headers: {
               Authorization: `${token}`,
@@ -123,7 +123,7 @@ function CampaignView() {
       //const id = parseInt(localStorage.getItem('campId'))
       const token = localStorage.getItem("accessToken");
       const response = await axios.get(
-        `https://fieldlogistics-control.azurewebsites.net/api/user/campaigns/${id}`,
+        `http://localhost:5200/api/user/campaigns/${id}`,
         {
           headers: {
             Authorization: `${token}`,
@@ -163,7 +163,7 @@ function CampaignView() {
       const token = localStorage.getItem("accessToken");
 
       const response = await axios.post(
-        "https://fieldlogistics-control.azurewebsites.net/api/user/campaigns",
+        "http://localhost:5200/api/user/campaigns",
         {
           userId: selectedUser,
           campaignId: localStorage.getItem("id-i"),
@@ -210,7 +210,7 @@ function CampaignView() {
     try {
       const token = localStorage.getItem("accessToken");
       const response = await axios.get(
-        `https://fieldlogistics-control.azurewebsites.net/api/user/campaigns/${id}`,
+        `http://localhost:5200/api/user/campaigns/${id}`,
         {
           headers: {
             Authorization: `${token}`,
@@ -250,7 +250,7 @@ function CampaignView() {
     try {
       const token = localStorage.getItem("accessToken");
       const response = await axios.get(
-        `https://fieldlogistics-control.azurewebsites.net/api/campaigns/${id}`,
+        `http://localhost:5200/api/campaigns/${id}`,
         {
           headers: {
             Authorization: `${token}`,
@@ -275,7 +275,7 @@ function CampaignView() {
     try {
       const token = localStorage.getItem("accessToken");
       const response = await axios.get(
-        `https://fieldlogistics-control.azurewebsites.net/api/location/record/coordinates/${id}`,
+        `http://localhost:5200/api/location/record/coordinates/${id}`,
         {
           headers: {
             Authorization: `${token}`,
@@ -306,7 +306,7 @@ function CampaignView() {
     try {
       const token = localStorage.getItem("accessToken");
       const response = await axios.get(
-        `https://fieldlogistics-control.azurewebsites.net/api/campaigns/${id}`,
+        `http://localhost:5200/api/campaigns/${id}`,
         {
           headers: {
             Authorization: `${token}`,
@@ -359,7 +359,7 @@ function CampaignView() {
         throw "Neispravni podaci";
       } else {
         const response = await axios.post(
-          "https://fieldlogistics-control.azurewebsites.net/api/campaigns",
+          "http://localhost:5200/api/campaigns",
           {
             ...novaDestinacija,
             companyId: localStorage.getItem("company"),
@@ -402,7 +402,7 @@ function CampaignView() {
     ) {
       const token = localStorage.getItem("accessToken");
       const response = await fetch(
-        `https://fieldlogistics-control.azurewebsites.net/api/campaigns/${id}`,
+        `http://localhost:5200/api/campaigns/${id}`,
         {
           method: "PUT",
           headers: {
@@ -448,7 +448,7 @@ function CampaignView() {
     try {
       const token = localStorage.getItem("accessToken");
       const response = await axios.post(
-        "https://fieldlogistics-control.azurewebsites.net/api/location",
+        "http://localhost:5200/api/location",
         novaLokacija,
         {
           headers: {
@@ -477,7 +477,7 @@ function CampaignView() {
       const token = localStorage.getItem("accessToken");
 
       const response = await fetch(
-        `https://fieldlogistics-control.azurewebsites.net/api/campaigns/${id}`,
+        `http://localhost:5200/api/campaigns/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -500,7 +500,7 @@ function CampaignView() {
     try {
       const token = localStorage.getItem("accessToken");
       const response = await axios.get(
-        `https://fieldlogistics-control.azurewebsites.net/export/excel/campaign/${id}`,
+        `http://localhost:5200/export/excel/campaign/${id}`,
         {
           headers: {
             Authorization: `${token}`,

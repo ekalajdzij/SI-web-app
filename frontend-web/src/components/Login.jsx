@@ -160,7 +160,7 @@ function Login({ QR, visib, supe }) {
     localStorage.setItem("pass", pass);
 
     await axios
-      .post("https://fieldlogistics-control.azurewebsites.net/api/login", {
+      .post("http://localhost:5200/api/login", {
         Username: user,
         Password: pass,
       })
@@ -182,7 +182,7 @@ function Login({ QR, visib, supe }) {
           localStorage.setItem("logged", true);
           axios
             .post(
-              "https://fieldlogistics-control.azurewebsites.net/api/login/setup/2fa",
+              "http://localhost:5200/api/login/setup/2fa",
               {
                 Username: user,
                 Password: pass,

@@ -48,7 +48,7 @@ function UserCampaignCRUD() {
       const token = localStorage.getItem("accessToken");
       await axios
         .delete(
-          `https://fieldlogistics-control.azurewebsites.net/api/user/campaigns/${id}`,
+          `http://localhost:5200/api/user/campaigns/${id}`,
           {
             headers: {
               Authorization: `${token}`,
@@ -90,7 +90,7 @@ function UserCampaignCRUD() {
     try {
       const token = localStorage.getItem("accessToken");
       const response = await fetch(
-        `https://fieldlogistics-control.azurewebsites.net/api/user/campaigns/${editableRow}`,
+        `http://localhost:5200/api/user/campaigns/${editableRow}`,
         {
           method: "PUT",
           headers: {
@@ -123,7 +123,7 @@ function UserCampaignCRUD() {
       const id = parseInt(localStorage.getItem("campId"));
       const token = localStorage.getItem("accessToken");
       const response = await axios.get(
-        `https://fieldlogistics-control.azurewebsites.net/api/user/campaigns/${id}`,
+        `http://localhost:5200/api/user/campaigns/${id}`,
         {
           headers: {
             Authorization: `${token}`,

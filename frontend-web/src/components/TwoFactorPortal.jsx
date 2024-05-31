@@ -41,7 +41,7 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
   const handleLog2fa = async () => {
    await axios
       .post(
-        `https://fieldlogistics-control.azurewebsites.net/api/login/authenticate/2fa?code=${pin}`,
+        `http://localhost:5200/api/login/authenticate/2fa?code=${pin}`,
         {
           Username: localStorage.getItem("user"),
           Password: localStorage.getItem("pass"),
@@ -67,7 +67,7 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
           try {
             const token = localStorage.getItem("accessToken");
             const response = await axios.get(
-              "https://fieldlogistics-control.azurewebsites.net/api/company",
+              "http://localhost:5200/api/company",
               {
                 headers: {
                   Authorization: `${token}`,
@@ -88,7 +88,7 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
           try {
             const token = localStorage.getItem("accessToken");
             const response = await axios.get(
-              "https://fieldlogistics-control.azurewebsites.net/api/user",
+              "http://localhost:5200/api/user",
               {
                 headers: {
                   Authorization: `${token}`,
@@ -107,7 +107,7 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
           try {
             const token = localStorage.getItem("accessToken");
             const response = await axios.get(
-              `https://fieldlogistics-control.azurewebsites.net/api/campaigns/company/${company}`,
+              `http://localhost:5200/api/campaigns/company/${company}`,
               {
                 headers: {
                   Authorization: `${token}`,
