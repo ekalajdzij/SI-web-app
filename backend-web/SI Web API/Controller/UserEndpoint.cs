@@ -109,8 +109,7 @@ namespace SI_Web_API.Controller
                     Token = null
                 };
 
-                var userCheck = await db.User.FirstOrDefaultAsync(u => (u.Username == user.Username || u.PhoneNumber == user.Username) &&
-                u.Password == user.Password);
+                var userCheck = await db.User.FirstOrDefaultAsync(u => (u.Username == user.Username || u.PhoneNumber == user.Username));
                 if (userCheck != null)
                 {
                     return Results.BadRequest("User already exists.");

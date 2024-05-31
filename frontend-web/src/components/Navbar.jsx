@@ -62,7 +62,7 @@ function Navbar({ signed, isSuperAdmin }) {
       //console.log(data);
       localStorage.setItem("adminData", JSON.stringify(data));
 
-      console.log("Podaci su uspješno dohvaćeni i pohranjeni.");
+      //console.log("Podaci su uspješno dohvaćeni i pohranjeni.");
       navigate("/admin");
     } catch (error) {
       console.error("Došlo je do greške pri dohvaćanju podataka:", error);
@@ -87,11 +87,29 @@ function Navbar({ signed, isSuperAdmin }) {
 
   window.addEventListener("resize", showButton);
 
+  const handleDownload = () => {
+    const link = document.createElement("a");
+    link.href = `/User-manual-web.pdf`;
+    link.setAttribute("download", "User-manual-web.pdf");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <>
       <nav className="navbar">
         <div className="navbar-container">
-          <i className="fas fa-map-marker-alt" style={{ color: "white" }} />
+          <i
+            className="fas fa-info"
+            style={{ color: "white", cursor: "pointer", marginRight: "50px" }}
+            onClick={handleDownload}
+          />
+
+          <i
+            className="fas fa-map-marker-alt"
+            style={{ color: "white", marginRight: "-20px" }}
+          />
           <p id="nav-title">Field Logistic Control</p>
           <div className="menu-icon" onClick={handleClick}>
             <i className={click ? "fas fa-times" : "fas fa-bars"} />

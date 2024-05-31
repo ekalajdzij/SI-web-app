@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { FaTrash, FaEdit, FaCheck } from "react-icons/fa";
 import "../css/CRUDuser.css";
+import axios from "axios";
 
 function CRUDuser() {
-  const [userData, setUserData] = useState(
-    JSON.parse(localStorage.getItem("userData")) || null
-  );
+  const [userData, setUserData] = useState([]);
   const [companyName, setCompName] = useState(
     localStorage.getItem("companyName")
   );
@@ -24,12 +23,29 @@ function CRUDuser() {
   });
 
   useEffect(() => {
-    //console.log(userData)
-    const userDataFromStorage = localStorage.getItem("userData");
-    if (userDataFromStorage) {
-      const parsedUserData = JSON.parse(userDataFromStorage);
-      setUserData(parsedUserData);
-    }
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        const response = await axios.get(
+          "https://fieldlogistics-control.azurewebsites.net/api/user",
+          {
+            headers: {
+              Authorization: `${token}`,
+            },
+          }
+        );
+        if (response.data) {
+          localStorage.setItem("accessToken", response.headers.authorization);
+          const data = response.data;
+          setUserData(data);
+          localStorage.setItem("userData", JSON.stringify(data));
+
+        }
+      } catch (error) {
+        console.error("There was a problem with fetching company data:", error);
+      }
+    };
+    fetchData();
   }, []);
 
   const handleDeleteUser = async (id) => {
@@ -89,7 +105,7 @@ function CRUDuser() {
           .join("");
         userToUpdate.password = hashHex;
       }
-      console.log(userToUpdate);
+      //console.log(userToUpdate);
 
       const response = await fetch(
         `https://fieldlogistics-control.azurewebsites.net/api/user/${id}`,
@@ -135,7 +151,24 @@ function CRUDuser() {
     });
   };
 
+  function hasEmptyFields(obj) {
+    for (let key in obj) {
+      if (typeof obj[key] === 'object' && obj[key] !== null) {
+        if (hasEmptyFields(obj[key])) {
+          return true;
+        }
+      } else if (obj[key] === '') {
+        return true;
+      }
+    }
+    return false;
+  }
+
   const handleAddUser = async () => {
+    if(hasEmptyFields(newUser)){
+      alert('All fields have to be filled');
+      return;
+    }
     try {
       const encoder = new TextEncoder();
       const data = encoder.encode(newUser.Password);
@@ -163,11 +196,20 @@ function CRUDuser() {
           }),
         }
       );
-      localStorage.setItem("accessToken", [...response.headers][0][1]);
+      
+      if (!response.ok) {
+        
+        const errorText = await response.text();
+        console.error("Error adding user:", response.status, response.statusText, errorText);
+        alert(`Error adding user: user with this username or phone number already exist`);
+        return; 
+      }
 
-      if (response.ok) {
+      else {
+        localStorage.setItem("accessToken", [...response.headers][0][1]);
+
         const addedUser = await response.json();
-        console.log(addedUser);
+        //console.log(addedUser);
         let currentUserData =
           JSON.parse(localStorage.getItem("userData")) || [];
 
@@ -202,6 +244,7 @@ function CRUDuser() {
             value={newUser.Username}
             onChange={handleInputChangeAdd}
             placeholder="Username"
+            required
           />
           <input
             type="password"
@@ -209,6 +252,7 @@ function CRUDuser() {
             value={newUser.Password}
             onChange={handleInputChangeAdd}
             placeholder="Password"
+            required
           />
           <input
             type="text"
@@ -216,6 +260,7 @@ function CRUDuser() {
             value={newUser.PhoneNumber}
             onChange={handleInputChangeAdd}
             placeholder="Phone Number"
+            required
           />
           <input
             type="text"
@@ -223,6 +268,7 @@ function CRUDuser() {
             value={newUser.FullName}
             onChange={handleInputChangeAdd}
             placeholder="Full Name"
+            required
           />
           <input
             type="text"
@@ -230,6 +276,7 @@ function CRUDuser() {
             value={newUser.Mail}
             onChange={handleInputChangeAdd}
             placeholder="Mail"
+            required
           />
           <button onClick={handleAddUser}>Create</button>
           <button

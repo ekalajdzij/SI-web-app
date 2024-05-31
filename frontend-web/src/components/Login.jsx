@@ -5,7 +5,7 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
-function Login({ QR, visib, supe}) {
+function Login({ QR, visib, supe }) {
   const { instance } = useMsal();
   const [user, setUser] = useState("");
   const [pass, setPass] = useState("");
@@ -28,14 +28,14 @@ function Login({ QR, visib, supe}) {
     setFlag(JSON.parse(localStorage.getItem("isLoggedIn")) || false);
     setIme(localStorage.getItem("ime") || null);
     const numberOfActiveAccounts = instance.getAllAccounts().length;
-     if(flag)
-    if (!numberOfActiveAccounts) {
-      localStorage.setItem("imee", "neautorizovanno");
-      localStorage.setItem("isLoggedIn", "false");
-      //localStorage.removeItem("accessToken");
-      localStorage.removeItem("decodedToken");
-      setFlag(false);
-    }
+    if (flag)
+      if (!numberOfActiveAccounts) {
+        localStorage.setItem("imee", "neautorizovanno");
+        localStorage.setItem("isLoggedIn", "false");
+        //localStorage.removeItem("accessToken");
+        localStorage.removeItem("decodedToken");
+        setFlag(false);
+      }
 
     if (!flag) {
       //localStorage.removeItem("accessToken");
@@ -165,13 +165,13 @@ function Login({ QR, visib, supe}) {
         Password: pass,
       })
       .then((response) => {
-        console.log(response)
+        //console.log(response)
         localStorage.setItem("company", response.data.companyId);
         localStorage.setItem("companyName", response.data.name);
         localStorage.setItem("ime", response.data.username);
         localStorage.setItem("accessToken", response.data.token);
-        localStorage.setItem("isSuperAdmin",response.data.isSuperAdmin)
-        supe(response.data.isSuperAdmin)
+        localStorage.setItem("isSuperAdmin", response.data.isSuperAdmin);
+        supe(response.data.isSuperAdmin);
         console.log("Token na loginu:", response.data.token);
         if (
           response.data.secretKey == "" ||
@@ -181,11 +181,12 @@ function Login({ QR, visib, supe}) {
           visib(true);
           localStorage.setItem("logged", true);
           axios
-            .post("https://fieldlogistics-control.azurewebsites.net/api/login/setup/2fa", {
-              Username: user,
-              Password: pass,
-            }
-              
+            .post(
+              "https://fieldlogistics-control.azurewebsites.net/api/login/setup/2fa",
+              {
+                Username: user,
+                Password: pass,
+              }
             )
             .then((response) => {
               localStorage.setItem("QR", response.data.qrCodeImageUrl);
@@ -232,7 +233,7 @@ function Login({ QR, visib, supe}) {
       <div className="main">
         <div className="cover-frame">
           <div className="login-frame">
-            <h2>Login to your account</h2>
+            <h2>Login into your account</h2>
             <form id="loginForm" className="login-form">
               <input
                 type="text"
@@ -259,20 +260,9 @@ function Login({ QR, visib, supe}) {
                 }}
                 type="submit"
               >
-                Log in
+                Login
               </button>
             </form>
-            <button
-              className="microsoft-button"
-              onClick={() => handleLogin("popup")}
-            >
-              <img
-                src="https://avatars.githubusercontent.com/u/31075795?s=280&v=4"
-                alt="Microsoft Logo"
-                className="button-logo"
-              ></img>
-              Log in with Microsoft
-            </button>
             <p id="redirect">
               Don't have an account?{" "}
               <Link id="linkToRegister" to="/register">

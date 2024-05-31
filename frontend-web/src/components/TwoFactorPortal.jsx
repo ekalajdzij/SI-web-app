@@ -29,13 +29,13 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
   useEffect(() => {
     setSlika(localStorage.getItem("QR"));
     setVisible(JSON.parse(localStorage.getItem("logged")));
-    //setSuperAdmin(JSON.parse(localStorage.getItem("isSuperAdmin")) || false);
   }, []);
 
   useEffect(() => {
     if (pin.length === 6) {
       handleLog2fa();
     }
+    else setError(false);
   }, [pin]);
   
   const handleLog2fa = async () => {
@@ -61,7 +61,6 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("isLoggedInVia2fa", true);
         localStorage.setItem("logged", false);
-        setVisible(false);
         signed(true);
 
         if (isSuper) {
@@ -84,6 +83,8 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
             console.error("There was a problem with fetching company data:", error);
           }
         } else {
+          localStorage.setItem('homeScreen','admin')
+
           try {
             const token = localStorage.getItem("accessToken");
             const response = await axios.get(
@@ -116,11 +117,7 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
     
             // console.log(response);
             const data1 = response.data;
-            if(data1.length) 
-              localStorage.setItem('homeScreen','admin')
-            else
-            localStorage.setItem('homeScreen','nema kampanja')
-
+           
             localStorage.setItem("campaignData", JSON.stringify(data1));
             //console.log(data1);
           } catch (error) {
@@ -133,6 +130,7 @@ function TwoFactorPortal({ qrcode, vis, signed, isSuper }) {
       .catch((error) => {
         console.error("Error during login:", error);
         setError(true);
+        setVisible(JSON.parse(localStorage.getItem("logged")));
       });
 
     

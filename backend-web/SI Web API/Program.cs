@@ -13,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Any;
 using Microsoft.Extensions.FileProviders;
 using FluentAssertions.Common;
+using OfficeOpenXml;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<SI_Web_APIContext>(options =>
@@ -23,6 +24,9 @@ var azureAccKey = builder.Configuration.GetSection("AzureStorage:Key").Get<strin
 //Jwt configuration
 var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
 var jwtKey = builder.Configuration.GetSection("Jwt:Key").Get<string>();
+
+//Adding license for office
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
 
 var blobConnectionString = builder.Configuration.GetSection("AzureStorage:ConnectionString").Get<string>();
@@ -116,6 +120,8 @@ app.MapLocationEndpoints(jwtIssuer, jwtKey, azureAccKey, blobConnectionString);
 
 app.MapLocationStatusEndpoints(jwtIssuer, jwtKey);
 app.MapOCREndpoints(jwtIssuer, jwtKey, blobConnectionString);
+
+app.MapExportEndpoints(jwtIssuer, jwtKey);
 
 app.Run();
 public partial class Program { }

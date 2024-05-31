@@ -12,26 +12,46 @@ function Company() {
   const [newCompanyName, setNewCompanyName] = useState("");
 
   useEffect(() => {
-    const storedCompanies = localStorage.getItem("companyData");
-    if (storedCompanies) {
-      setCompanies(JSON.parse(storedCompanies));
-    }
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        const response = await axios.get(
+          "https://fieldlogistics-control.azurewebsites.net/api/company",
+          {
+            headers: {
+              Authorization: `${token}`,
+            },
+          }
+        );
+        if (response.data) {
+          localStorage.setItem("accessToken", response.headers.authorization);
+          const data = response.data;
+          setCompanies(data);
+          localStorage.setItem("companyData", JSON.stringify(data));
+
+        }
+      } catch (error) {
+        console.error("There was a problem with fetching company data:", error);
+      }
+    };
+    fetchData();
   }, []);
 
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("accessToken");
-      await axios.delete(
-        `https://fieldlogistics-control.azurewebsites.net/api/company/${id}`,
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
-        }
-      ).then(response=>{
-        localStorage.setItem("accessToken", response.headers.authorization);
-
-      });
+      await axios
+        .delete(
+          `https://fieldlogistics-control.azurewebsites.net/api/company/${id}`,
+          {
+            headers: {
+              Authorization: `${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          localStorage.setItem("accessToken", response.headers.authorization);
+        });
       const updatedCompanies = companies.filter((company) => company.id !== id);
       setCompanies(updatedCompanies);
       localStorage.setItem("companyData", JSON.stringify(updatedCompanies));
@@ -79,12 +99,16 @@ function Company() {
   };
   const handleAddCompany = async () => {
     const token = localStorage.getItem("accessToken");
+    if(newCompany==''){
+      alert('You have to name a company');
+      return;
+    }
 
     try {
       const response = await axios.post(
         "https://fieldlogistics-control.azurewebsites.net/api/company",
         {
-          Name: newCompany, 
+          Name: newCompany,
         },
         {
           headers: {
@@ -120,12 +144,13 @@ function Company() {
 
       {isAddingCompany && (
         <div className="modal" id="addCompanyModal">
-          <input
+          <input 
             id="inputAdd"
             type="text"
             value={newCompany}
             onChange={(e) => setNewCompany(e.target.value)}
             placeholder="Enter new company name"
+            required
           />
           <button id="createCompanyButton" onClick={handleAddCompany}>
             Create

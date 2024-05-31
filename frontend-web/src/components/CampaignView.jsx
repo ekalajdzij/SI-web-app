@@ -3,18 +3,14 @@ import "../css/CampaignView.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaTrash, FaEdit, FaCheck } from "react-icons/fa";
-import moment from 'moment';
-
-
+import moment from "moment";
 
 function CampaignView() {
   const [selectedList, setSelect] = useState([]);
 
   const navigate = useNavigate();
-  const [destinacije, setDestinacije] = useState(
-    localStorage.getItem('campaignData') ?
-      JSON.parse(localStorage.getItem("campaignData")) : []
-  );
+  const [destinacije, setDestinacije] = useState([]);
+
   const [editableRow, setEditableRow] = useState(null);
   const [clickTimeout, setClickTimeout] = useState(null);
 
@@ -28,8 +24,9 @@ function CampaignView() {
   const [id, setId] = useState();
 
   const [users, setUsers] = useState(
-    localStorage.getItem('userData') ?
-      JSON.parse(localStorage.getItem("userData")) : []
+    localStorage.getItem("userData")
+      ? JSON.parse(localStorage.getItem("userData"))
+      : []
   );
 
   const [company, setCompId] = useState(localStorage.getItem("company"));
@@ -53,6 +50,34 @@ function CampaignView() {
     UserId: null,
   });
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        const response = await axios.get(
+          `https://fieldlogistics-control.azurewebsites.net/api/campaigns/company/${company}`,
+          {
+            headers: {
+              Authorization: `${token}`,
+            },
+          }
+        );
+
+        const data1 = response.data;
+        if (data1) {
+          setDestinacije(data1);
+          localStorage.setItem("campaignData", JSON.stringify(data1));
+        }
+      } catch (error) {
+        console.error(
+          "There was a problem with fetching campaign data:",
+          error
+        );
+      }
+    };
+    fetchData();
+  }, []);
+
   const onChangeEdit = (id, field, e) => {
     const value = e.target.value;
     setEditedData((prev) => ({
@@ -63,7 +88,6 @@ function CampaignView() {
       },
     }));
   };
-
 
   const formatirajDatum = (datum) => {
     const dateObj = new Date(datum);
@@ -84,17 +108,17 @@ function CampaignView() {
         name: foundDest.name,
         description: foundDest.description,
         companyId: company,
-        startDate: moment(foundDest.startDate).format('YYYY-MM-DD'),
-        endDate: moment(foundDest.endDate).format('YYYY-MM-DD')
+        startDate: moment(foundDest.startDate).format("YYYY-MM-DD"),
+        endDate: moment(foundDest.endDate).format("YYYY-MM-DD"),
       },
     });
   };
 
   const AssignUser = async (id) => {
-    console.log(id);
+    //console.log(id);
     setId(id);
     localStorage.setItem("id-i", id);
-   
+
     try {
       //const id = parseInt(localStorage.getItem('campId'))
       const token = localStorage.getItem("accessToken");
@@ -113,26 +137,26 @@ function CampaignView() {
       /*localStorage.setItem('userForCampaign', JSON.stringify(response.data));
       setUserData(response.data);*/
 
-      const userIds = response.data.map(u => u.userId);
-      //console.log(response.data); 
+      const userIds = response.data.map((u) => u.userId);
+      //console.log(response.data);
       //console.log(userIds);
-      if (localStorage.getItem('company') && localStorage.getItem('userData')) {
-
-        const filteredUsers = JSON.parse(localStorage.getItem('userData')).filter(u => u.companyId == localStorage.getItem('company'));
-        const finalFilteredUsers = filteredUsers.filter(user => !userIds.includes(user.id));
+      if (localStorage.getItem("company") && localStorage.getItem("userData")) {
+        const filteredUsers = JSON.parse(
+          localStorage.getItem("userData")
+        ).filter((u) => u.companyId == localStorage.getItem("company"));
+        const finalFilteredUsers = filteredUsers.filter(
+          (user) => !userIds.includes(user.id)
+        );
         //localStorage.setItem('selectList', JSON.stringify(finalFilteredUsers));
         setSelect(finalFilteredUsers);
-        console.log(finalFilteredUsers)
+        //console.log(finalFilteredUsers)
         //localStorage.setItem('campId', id)
         setModalOpenAssign(true);
         setName(destinacije.find((destinacija) => destinacija.id === id)?.name);
-
       }
-
     } catch (error) {
       console.error("There was a problem with fetching company data:", error);
     }
-
   };
   const JAssignUser = async () => {
     try {
@@ -142,10 +166,10 @@ function CampaignView() {
         "https://fieldlogistics-control.azurewebsites.net/api/user/campaigns",
         {
           userId: selectedUser,
-          campaignId: localStorage.getItem('id-i'),
+          campaignId: localStorage.getItem("id-i"),
           status: "none",
           locationId: null,
-          workingStatus: "none"
+          workingStatus: "none",
         },
         {
           headers: {
@@ -162,7 +186,6 @@ function CampaignView() {
       alert("You have to choose some user");
     }
   };
-
 
   const makeLocation = (id) => {
     //console.log(id);
@@ -183,7 +206,7 @@ function CampaignView() {
   };
 
   const handleDoubleClick = async (id) => {
-    console.log(id);
+    // console.log(id);
     try {
       const token = localStorage.getItem("accessToken");
       const response = await axios.get(
@@ -198,27 +221,31 @@ function CampaignView() {
       if (response.headers.authorization) {
         localStorage.setItem("accessToken", response.headers.authorization);
       }
-      localStorage.setItem('userForCampaign', JSON.stringify(response.data));
+      localStorage.setItem("userForCampaign", JSON.stringify(response.data));
 
-      const userIds = response.data.map(u => u.userId);
-      console.log(response.data);
+      const userIds = response.data.map((u) => u.userId);
+      //console.log(response.data);
       //console.log(userIds);
-      if (localStorage.getItem('company')) {
-
-        const filteredUsers = users.filter(u => u.companyId == localStorage.getItem('company'));
-        const finalFilteredUsers = filteredUsers.filter(user => !userIds.includes(user.id));
-        localStorage.setItem('selectList', JSON.stringify(finalFilteredUsers));
-        localStorage.setItem('campId', id)
-        navigate('/usercamp');
-
+      if (localStorage.getItem("company")) {
+        const filteredUsers = users.filter(
+          (u) => u.companyId == localStorage.getItem("company")
+        );
+        const finalFilteredUsers = filteredUsers.filter(
+          (user) => !userIds.includes(user.id)
+        );
+        localStorage.setItem("selectList", JSON.stringify(finalFilteredUsers));
+        localStorage.setItem("campId", id);
+        navigate("/usercamp");
       }
-
     } catch (error) {
       console.error("There was a problem with fetching company data:", error);
     }
-  }
+  };
   const handleMaps = async (id) => {
-    localStorage.setItem('campaignName',destinacije.find((destinacija) => destinacija.id === id)?.name);
+    localStorage.setItem(
+      "campaignName",
+      destinacije.find((destinacija) => destinacija.id === id)?.name
+    );
 
     try {
       const token = localStorage.getItem("accessToken");
@@ -234,19 +261,16 @@ function CampaignView() {
       if (response.headers.authorization) {
         localStorage.setItem("accessToken", response.headers.authorization);
       }
-      
-      
-        localStorage.setItem('locations', JSON.stringify(response.data.locations));
-        //console.log(localStorage.getItem('locations'));
-        
-      
-        
 
-
+      localStorage.setItem(
+        "locations",
+        JSON.stringify(response.data.locations)
+      );
+      //console.log(localStorage.getItem('locations'));
     } catch (error) {
       console.error("There was a problem with fetching company data:", error);
     }
-  
+
     // console.log(id);
     try {
       const token = localStorage.getItem("accessToken");
@@ -262,26 +286,22 @@ function CampaignView() {
       if (response.headers.authorization) {
         localStorage.setItem("accessToken", response.headers.authorization);
       }
-      
-        localStorage.setItem('records', JSON.stringify(response.data));
-        //console.log(response)
-        //console.log(localStorage.getItem('records'));
-        //localStorage.setItem('campId', id);
-        navigate('/map');
-      
-        
 
-
+      localStorage.setItem("records", JSON.stringify(response.data));
+      //console.log(response)
+      //console.log(localStorage.getItem('records'));
+      //localStorage.setItem('campId', id);
+      navigate("/map");
     } catch (error) {
       console.error("There was a problem with fetching company data:", error);
     }
-  }
-
-
+  };
 
   const handleOneClick = async (id) => {
-    localStorage.setItem('campaignName',destinacije.find((destinacija) => destinacija.id === id)?.name);
-
+    localStorage.setItem(
+      "campaignName",
+      destinacije.find((destinacija) => destinacija.id === id)?.name
+    );
 
     try {
       const token = localStorage.getItem("accessToken");
@@ -297,39 +317,33 @@ function CampaignView() {
       if (response.headers.authorization) {
         localStorage.setItem("accessToken", response.headers.authorization);
       }
-      if (localStorage.getItem('company')) {
-      
-        localStorage.setItem('locations', JSON.stringify(response.data.locations));
-        console.log(localStorage.getItem('locations'));
-        localStorage.setItem('campId', id);
-        navigate('/location');
+      if (localStorage.getItem("company")) {
+        localStorage.setItem(
+          "locations",
+          JSON.stringify(response.data.locations)
+        );
+        //console.log(localStorage.getItem('locations'));
+        localStorage.setItem("campId", id);
+        navigate("/location");
       }
-        
-
-
     } catch (error) {
       console.error("There was a problem with fetching company data:", error);
     }
-  }
-
-  
-
+  };
 
   const handleCombinedClick = (id) => {
     if (clickTimeout != null) {
       handleDoubleClick(id);
       clearTimeout(clickTimeout);
       setClickTimeout(null);
-    }
-    else {
+    } else {
       const newTimeout = setTimeout(() => {
         handleOneClick(id);
         setClickTimeout(null);
       }, 700);
       setClickTimeout(newTimeout);
     }
-
-  }
+  };
 
   const handleChangeLokacija = (e) => {
     const { name, value } = e.target;
@@ -380,7 +394,12 @@ function CampaignView() {
   const handleConfirm = async (id) => {
     //console.log(editedData[id]);
     //console.log(destinacije[0]);
-    if (editedData[id].startDate < editedData[id].endDate && editedData[id].startDate != '' && editedData[id].startDate != '' && editedData[id].name != '') {
+    if (
+      editedData[id].startDate < editedData[id].endDate &&
+      editedData[id].startDate != "" &&
+      editedData[id].startDate != "" &&
+      editedData[id].name != ""
+    ) {
       const token = localStorage.getItem("accessToken");
       const response = await fetch(
         `https://fieldlogistics-control.azurewebsites.net/api/campaigns/${id}`,
@@ -403,22 +422,39 @@ function CampaignView() {
       if (!response.ok) {
         throw new Error("Problem sa ažuriranjem admina");
       }
+    } else {
+      alert("Neispravni podaci");
     }
-    else {
-      alert('Neispravni podaci');
+  };
+
+  function hasEmptyFields(obj) {
+    for (let key in obj) {
+      if (typeof obj[key] === "object" && obj[key] !== null) {
+        if (hasEmptyFields(obj[key])) {
+          return true;
+        }
+      } else if (obj[key] === "") {
+        return true;
+      }
     }
+    return false;
   }
 
   const handleSubmitLokacija = async () => {
+    if (hasEmptyFields(novaLokacija)) {
+      alert("All fields have to be filled");
+      return;
+    }
     try {
       const token = localStorage.getItem("accessToken");
       const response = await axios.post(
         "https://fieldlogistics-control.azurewebsites.net/api/location",
-        novaLokacija, {
-        headers: {
-          Authorization: `${token}`,
-        },
-      }
+        novaLokacija,
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
       );
       if (response.headers.authorization)
         localStorage.setItem("accessToken", response.headers.authorization);
@@ -457,6 +493,36 @@ function CampaignView() {
       }
     } catch (error) {
       console.error("Error deleting user:", error);
+    }
+  };
+
+  const generateExcel = async (id) => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.get(
+        `https://fieldlogistics-control.azurewebsites.net/export/excel/campaign/${id}`,
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+          responseType: "blob",
+        }
+      );
+
+      if (response.headers.authorization) {
+        localStorage.setItem("accessToken", response.headers.authorization);
+      }
+
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `Campaign-${id}-Records.xlsx`;
+      a.click();
+    } catch (error) {
+      console.error("There was a problem with fetching company data:", error);
     }
   };
 
@@ -509,7 +575,10 @@ function CampaignView() {
             <button onClick={handleSubmitDestinacija}>Create</button>
             <button
               className="cancelButton"
-              onClick={(e) => {e.stopPropagation(); setModalOpenD(false)}}
+              onClick={(e) => {
+                e.stopPropagation();
+                setModalOpenD(false);
+              }}
             >
               Cancel
             </button>
@@ -518,84 +587,169 @@ function CampaignView() {
       )}
       <div className="destinacije">
         {destinacije.map((destinacija) => (
-          <div className="komponenta" key={destinacija.id} onClick={() => handleCombinedClick(destinacija.id)}>
+          <div
+            className="komponenta"
+            key={destinacija.id}
+            onClick={() => handleCombinedClick(destinacija.id)}
+          >
             {editableRow === destinacija.id ? (
-              <div className="input-polje" onClick={(e) => e.stopPropagation()} style={{ display: 'flex', flexDirection: 'column' }}>
+              <div
+                className="input-polje"
+                onClick={(e) => e.stopPropagation()}
+                style={{ display: "flex", flexDirection: "column" }}
+              >
                 <input
-                  onClick={(e) => { e.stopPropagation() }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
                   type="text"
                   className="detalji"
                   value={editedData[destinacija.id]?.name ?? destinacija.name}
                   onChange={(e) => onChangeEdit(destinacija.id, "name", e)}
-                  style={{ marginBottom: '20px', padding: '8px', borderRadius: '5px', border: '1px solid #ccc' }}
-
+                  style={{
+                    marginBottom: "20px",
+                    padding: "8px",
+                    borderRadius: "5px",
+                    border: "1px solid #ccc",
+                  }}
                 />
                 <input
-                  onClick={(e) => { e.stopPropagation() }}
-
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
                   type="text"
                   className="detalji"
-                  value={editedData[destinacija.id]?.description ?? destinacija.description}
-                  onChange={(e) => onChangeEdit(destinacija.id, "description", e)}
-                  style={{ marginBottom: '20px', padding: '8px', borderRadius: '5px', border: '1px solid #ccc' }}
-
+                  value={
+                    editedData[destinacija.id]?.description ??
+                    destinacija.description
+                  }
+                  onChange={(e) =>
+                    onChangeEdit(destinacija.id, "description", e)
+                  }
+                  style={{
+                    marginBottom: "20px",
+                    padding: "8px",
+                    borderRadius: "5px",
+                    border: "1px solid #ccc",
+                  }}
                 />
                 <input
-                  onClick={(e) => { e.stopPropagation() }}
-
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
                   type="date"
                   className="detalji"
-                  value={editedData[destinacija.id]?.startDate ?? formatirajDatum(destinacija.startDate)}
+                  value={
+                    editedData[destinacija.id]?.startDate ??
+                    formatirajDatum(destinacija.startDate)
+                  }
                   onChange={(e) => onChangeEdit(destinacija.id, "startDate", e)}
-                  style={{ marginBottom: '20px', padding: '8px', borderRadius: '5px', border: '1px solid #ccc' }}
-
+                  style={{
+                    marginBottom: "20px",
+                    padding: "8px",
+                    borderRadius: "5px",
+                    border: "1px solid #ccc",
+                  }}
                 />
                 <input
-                  onClick={(e) => { e.stopPropagation() }}
-
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
                   type="date"
                   className="detalji"
-                  value={editedData[destinacija.id]?.endDate ?? formatirajDatum(destinacija.endDate)}
-                  onChange={(e) => { e.stopPropagation(); onChangeEdit(destinacija.id, "endDate", e) }}
-                  style={{ marginBottom: '20px', padding: '8px', borderRadius: '5px', border: '1px solid #ccc' }}
-
+                  value={
+                    editedData[destinacija.id]?.endDate ??
+                    formatirajDatum(destinacija.endDate)
+                  }
+                  onChange={(e) => {
+                    e.stopPropagation();
+                    onChangeEdit(destinacija.id, "endDate", e);
+                  }}
+                  style={{
+                    marginBottom: "20px",
+                    padding: "8px",
+                    borderRadius: "5px",
+                    border: "1px solid #ccc",
+                  }}
                 />
-                <button onClick={(e) => { e.stopPropagation(); handleConfirm(destinacija.id) }}>Confirm</button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleConfirm(destinacija.id);
+                  }}
+                >
+                  Confirm
+                </button>
               </div>
             ) : (
               <div>
                 <h2>{destinacija.name}</h2>
-                <p className="detalji">Description: {destinacija.description} </p>
+                <p className="detalji">
+                  Description: {destinacija.description}{" "}
+                </p>
                 <p className="detalji">
                   Start Date: {formatirajDatum(destinacija.startDate)}{" "}
                 </p>
                 <p className="detalji">
                   End Date: {formatirajDatum(destinacija.endDate)}{" "}
                 </p>
-                <button onClick={(e) => { e.stopPropagation(); AssignUser(destinacija.id) }}>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    AssignUser(destinacija.id);
+                  }}
+                >
                   Assign user
                 </button>
-                <button onClick={(e) => { e.stopPropagation(); makeLocation(destinacija.id) }}>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    makeLocation(destinacija.id);
+                  }}
+                >
                   Create location
                 </button>
-                <button onClick={(e) => { e.stopPropagation(); handleEditClick(destinacija.id) }}>Update</button>
-                <button onClick={(e) => { e.stopPropagation(); handleMaps(destinacija.id) }}>Locations on Maps</button>
-
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEditClick(destinacija.id);
+                  }}
+                >
+                  Update
+                </button>
+                <button
+                  style={{ marginBottom: "30px" }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleMaps(destinacija.id);
+                  }}
+                >
+                  Locations on Maps
+                </button>
+                <img
+                  src="https://static-00.iconduck.com/assets.00/ms-excel-icon-2048x2026-nws24wyy.png"
+                  alt="excel"
+                  className="excelIcon"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    generateExcel(destinacija.id);
+                  }}
+                />
                 <FaTrash
                   style={{
-                    position: 'absolute',
+                    position: "absolute",
                     bottom: "5px",
-                    right: "5px",
-                    fontSize: '32px',
-                    cursor: "default",
-                    color: "red"
+                    right: "15px",
+                    fontSize: "32px",
+                    cursor: "pointer",
+                    color: "red",
                   }}
                   onClick={(e) => {
-                    e.stopPropagation(); handleDeleteCampaign(destinacija.id);
-
+                    e.stopPropagation();
+                    handleDeleteCampaign(destinacija.id);
                   }}
-                /> </div>
-
+                />
+              </div>
             )}
           </div>
         ))}
@@ -638,7 +792,10 @@ function CampaignView() {
             <button onClick={handleSubmitLokacija}>Create</button>
             <button
               className="cancelButton"
-              onClick={(e) => {e.stopPropagation(); setModalOpen(false)}}
+              onClick={(e) => {
+                e.stopPropagation();
+                setModalOpen(false);
+              }}
             >
               Cancel
             </button>
@@ -649,24 +806,26 @@ function CampaignView() {
         <div className="modal" id="m">
           <div className="modal-content">
             <h4 id="user">Select User for {name}</h4>
-            <select 
+            <select
               className="dropdown"
               value={selectedUser}
               onChange={(e) => setSelectedUser(e.target.value)}
               style={{ color: "black" }}
             >
               <option value="">Select user</option>
-              {selectedList
-                .map((user) => (
-                  <option key={user.id} value={user.id}>
-                    {user.username}
-                  </option>
-                ))}
+              {selectedList.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.username}
+                </option>
+              ))}
             </select>
             <button onClick={JAssignUser}>Assign</button>
             <button
               className="cancelButton"
-              onClick={(e) => {e.stopPropagation();setModalOpenAssign(false)}}
+              onClick={(e) => {
+                e.stopPropagation();
+                setModalOpenAssign(false);
+              }}
             >
               Cancel{" "}
             </button>
