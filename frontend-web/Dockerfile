@@ -17,5 +17,5 @@ COPY . .
 EXPOSE 5173
 
 # Command to run the application
-ENTRYPOINT ["npm", "run","dev"]
+ENTRYPOINT ["npm", "run","dev","--","--host"]
 
