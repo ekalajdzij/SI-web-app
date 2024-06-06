@@ -6,8 +6,6 @@ services:
     environment:
      - MYSQL_ROOT_PASSWORD=password
      - MYSQL_DATABASE=baza
-    ports:
-     - "3306:3306"
     volumes:
      - my-datavolume:/var/lib/mysql
   dotnet_backend:
