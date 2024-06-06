@@ -8,6 +8,8 @@ services:
      - MYSQL_DATABASE=baza
     ports:
      - "3306:3306"
+    volumes:
+     - my-datavolume:/var/lib/mysql
   dotnet_backend:
       depends_on:
           - mysql-db
@@ -29,6 +31,8 @@ services:
       env_file: ./.env
       ports:
           - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
+volumes:
+  my-datavolume:
 
 
 
