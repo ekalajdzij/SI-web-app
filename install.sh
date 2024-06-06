@@ -30,10 +30,10 @@ sudo docker-compose build
 # sudo docker-compose up -d
 
 # Manual run
-sudo docker run --name mysql-db -e MYSQL_DATABASE=baza -e MYSQL_ROOT_PASSWORD=password -d mysql:latest
-sleep 5
-sudo docker run -dp 5200:8080 --name back -e REACT_APP_BACKEND_URL=http://localhost:8080/  -e ASPNETCORE_ENVIRONMENT=Development -d si-web-app_dotnet_backend
-sudo docker run -dp 5173:5173 --name front -d si-web-app_react_frontend
+#sudo docker run --name mysql-db -e MYSQL_DATABASE=baza -e MYSQL_ROOT_PASSWORD=password -d mysql:latest
+#sleep 5
+#sudo docker run -dp 5200:8080 --name back -e REACT_APP_BACKEND_URL=http://localhost:8080/  -e ASPNETCORE_ENVIRONMENT=Development -d si-web-app_dotnet_backend
+#sudo docker run -dp 5173:5173 --name front -d si-web-app_react_frontend
 
 echo "Images are built..."
 
