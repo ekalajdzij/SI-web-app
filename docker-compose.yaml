@@ -1,0 +1,34 @@
+version: "3.9"
+services:
+  mysql-db:
+    image: mysql:latest
+    container_name: mysql-db
+    environment:
+     - MYSQL_ROOT_PASSWORD=password
+     - MYSQL_DATABASE=baza
+    ports:
+     - "3306:3306"
+  dotnet_backend:
+      depends_on:
+          - mysql-db
+      build: "../SI-web-app/backend-web/SI Web API"
+      restart: unless-stopped
+      env_file: ./.env
+      environment: 
+          REACT_APP_BACKEND_URL: $REACT_APP_BACKEND_URL
+          ASPNETCORE_ENVIRONMENT: Development
+      ports:
+          - $DOTNET_LOCAL_PORT:$DOTNET_DOCKER_PORT
+      stdin_open: true
+      tty: true
+  react_frontend:
+      depends_on:
+          - dotnet_backend
+      build: "../SI-web-app/frontend-web"
+      restart: unless-stopped
+      env_file: ./.env
+      ports:
+          - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
+
+
+
