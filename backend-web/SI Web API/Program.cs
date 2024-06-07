@@ -14,10 +14,15 @@ using Microsoft.OpenApi.Any;
 using Microsoft.Extensions.FileProviders;
 using FluentAssertions.Common;
 using OfficeOpenXml;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 builder.Services.AddDbContext<SI_Web_APIContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("azuredatabase") ?? throw new InvalidOperationException("Connection string 'SI_Web_APIContext' not found.")));
+    options.UseMySql(builder.Configuration.GetConnectionString("azuredatabase") ?? throw new InvalidOperationException("Connection string 'SI_Web_APIContext' not found."),
+    new MySqlServerVersion(new Version(8, 0, 21)) // Replace with your MySQL version
+));
 
 var azureAccKey = builder.Configuration.GetSection("AzureStorage:Key").Get<string>();
 
@@ -95,6 +100,13 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseCors("AllowAll");
+
+// create db
+using(var scope = app.Services.CreateAsyncScope())
+{
+   var dbContext = scope.ServiceProvider.GetRequiredService<SI_Web_APIContext>();
+   dbContext.Database.EnsureCreated();
+}
 
 app.UseHttpsRedirection();
 
