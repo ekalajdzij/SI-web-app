@@ -4,7 +4,7 @@ DELETE FROM LocationStatus;
 DELETE FROM UserCampaign;
 DELETE FROM Location;
 DELETE FROM Campaign;
-DELETE FROM 'User';
+DELETE FROM User;
 DELETE FROM Admin;
 DELETE FROM Company;
 
