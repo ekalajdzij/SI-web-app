@@ -32,9 +32,9 @@ public static class LoginEndpoints
 
         group.MapPost("/", async (HttpContext httpContext, [FromBody] LoginRequest payload, SI_Web_APIContext db) =>
         {
-            var hashedPassword = AuthService.GetSha256Hash(payload.Password);
+            // var hashedPassword = AuthService.GetSha256Hash(payload.Password);
             var user = await db.User.FirstOrDefaultAsync(u => (u.Username == payload.Username || u.PhoneNumber == payload.Username) &&
-                u.Password == hashedPassword);
+                u.Password == payload.Password);
             if (user != null) { 
                 user.Token = AuthService.GenerateJwtToken(issuer, key);
                 var company = await db.Company.FirstOrDefaultAsync(c => c.Id == user.CompanyId);
@@ -54,7 +54,7 @@ public static class LoginEndpoints
                 });
             }
             var admin = await db.Admin.FirstOrDefaultAsync(a => (a.Username == payload.Username || a.PhoneNumber == payload.Username) &&
-                a.Password == hashedPassword);
+                a.Password == payload.Password);
             if (admin != null)
             {
                 admin.Token = AuthService.GenerateJwtToken(issuer, key);
@@ -92,7 +92,7 @@ public static class LoginEndpoints
                 });
             }
             var admin = await db.Admin.FirstOrDefaultAsync(a => (a.Username == payload.Username || a.PhoneNumber == payload.Username) &&
-                a.Password == hashedPassword);
+                a.Password == payload.Password);
             if (admin != null)
             {
                 var setup2fa = TwoFactorAuthService.GenerateSetupCode(db, admin, null);
@@ -109,9 +109,9 @@ public static class LoginEndpoints
 
         group.MapPost("/authenticate/2fa", async (HttpContext httpContext, string code, SI_Web_APIContext db, [FromBody] LoginRequest payload) =>
         {
-            var hashedPassword = AuthService.GetSha256Hash(payload.Password);
+            // var hashedPassword = AuthService.GetSha256Hash(payload.Password);
             var user = await db.User.FirstOrDefaultAsync(u => (u.Username == payload.Username || u.PhoneNumber == payload.Username) &&
-                u.Password == hashedPassword);
+                u.Password == payload.Password);
             if (user != null)
             {
                 AuthService.ExtendJwtTokenExpirationTime(httpContext, issuer, key);
@@ -123,7 +123,7 @@ public static class LoginEndpoints
                 }
             }
             var admin = await db.Admin.FirstOrDefaultAsync(a => (a.Username == payload.Username || a.PhoneNumber == payload.Username) &&
-                a.Password == hashedPassword);
+                a.Password == payload.Password);
             if (admin != null)
             {
                 AuthService.ExtendJwtTokenExpirationTime(httpContext, issuer, key);
