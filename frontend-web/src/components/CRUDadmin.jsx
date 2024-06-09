@@ -45,7 +45,7 @@ function CRUDadmin() {
     });
   };
 
-  const hashPassword = async (password) => {
+  /* const hashPassword = async (password) => {
     const encoder = new TextEncoder();
     const data = encoder.encode(password);
     const hashBuffer = await crypto.subtle.digest("SHA-256", data);
@@ -55,7 +55,7 @@ function CRUDadmin() {
       .join("");
 
     return hashHex;
-  };
+  }; */
 
   const deleteAdmin = async (id) => {
     try {
@@ -83,10 +83,10 @@ function CRUDadmin() {
   const handleConfirmEdit = async (id) => {
     try {
       //console.log(editedData[id]);
-      if (editedData[id].password) {
+     /* if (editedData[id].password) {
         editedData[id].password = await hashPassword(editedData[id].password);
         //console.log(editedData[id].password);
-      }
+      } */
       const token = localStorage.getItem("accessToken");
       const response = await fetch(
         `http://localhost:5200/api/admin/${id}`,

@@ -22,6 +22,7 @@ function AddAdminModal({ closeModal, companyData, setAdminData }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    /*
     const encoder = new TextEncoder();
     const data = encoder.encode(formData.password);
     const hashBuffer = await crypto.subtle.digest("SHA-256", data);
@@ -29,7 +30,8 @@ function AddAdminModal({ closeModal, companyData, setAdminData }) {
     const hashHex = hashArray
       .map((b) => b.toString(16).padStart(2, "0"))
       .join("");
-
+    */
+    const passwd = formData.password;
     const token = localStorage.getItem("accessToken");
     try {
       const response = await fetch(
@@ -44,7 +46,7 @@ function AddAdminModal({ closeModal, companyData, setAdminData }) {
             ...formData,
             secretKey: "",
             token: "",
-            password: hashHex,
+            password: passwd,
             isSuperAdmin: false,
           }),
         }
