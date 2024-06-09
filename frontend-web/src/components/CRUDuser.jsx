@@ -178,7 +178,7 @@ function CRUDuser() {
         .map((b) => b.toString(16).padStart(2, "0"))
         .join("");
         */
-      const passwd = newUser.password;
+      const passwd = newUser.Password;
       const token = localStorage.getItem("accessToken");
 
       const response = await fetch(
