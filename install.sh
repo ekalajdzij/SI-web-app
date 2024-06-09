@@ -38,7 +38,7 @@ sudo docker-compose up -d
 echo "Images are built..."
 
 sudo docker cp dbinit.sql mysql-db:dbinit.sql
-sudo docker exec -u root mysql-db sh -c "mysql -u root -ppassword  baza < dbinit.sql"
+# sudo docker exec -u root mysql-db sh -c "mysql -u root -ppassword  baza < dbinit.sql"
 
 
 
