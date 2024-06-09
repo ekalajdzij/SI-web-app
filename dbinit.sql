@@ -9,7 +9,7 @@ DELETE FROM Admin;
 DELETE FROM Company;
 
 -- companies
---SET IDENTITY_INSERT Company ON;
+-- SET IDENTITY_INSERT Company ON;
 INSERT INTO Company
 (Id, Name)
 VALUES(1, N'Kompanija 1');
@@ -37,9 +37,9 @@ VALUES(64, N'Sarajevo Travel');
 INSERT INTO Company
 (Id, Name)
 VALUES(77, N'nova');
---SET IDENTITY_INSERT Company OFF;
+-- SET IDENTITY_INSERT Company OFF;
 -- admins
---SET IDENTITY_INSERT Admin ON;
+-- SET IDENTITY_INSERT Admin ON;
 INSERT INTO Admin
 (Id, Username, Password, IsSuperAdmin, CompanyId, PhoneNumber, SecretKey)
 VALUES(1, N'tarik', N'49b8ebd7fa9eb7eca44fcc7301b34c4ced40d2fe6647f273f2bb0e1fb4ad23c3', 0, 1, N'0622222', N'3R6BYGL6TXYLIKLOABSX');
@@ -118,9 +118,9 @@ VALUES(118, N'gr', N'183ee0870433a102edb987ee4924a9d4f39af24db56c0e5d01bb9e8e562
 INSERT INTO Admin
 (Id, Username, Password, IsSuperAdmin, CompanyId, PhoneNumber, SecretKey)
 VALUES(122, N'ndz', N'a7753ed716a5740772a03dfab4365788614d2ac219cf45d38a123c105c836c4a', 0, 1, N'12', N'4CNVM43Z2EZ5KAQQ2XI4');
---SET IDENTITY_INSERT Admin OFF;	 
+-- SET IDENTITY_INSERT Admin OFF;	 
 -- users
---SET IDENTITY_INSERT [User] ON;
+-- SET IDENTITY_INSERT [User] ON;
 INSERT INTO User
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(3, N'test', N'9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', N'123456', N'testtest', N'test@', 1, N'RKGSF4MBDKGNQM22MD3X');
@@ -187,9 +187,9 @@ VALUES(108, N'asas', N'49b8ebd7fa9eb7eca44fcc7301b34c4ced40d2fe6647f273f2bb0e1fb
 INSERT INTO User
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(111, N'tarik1', N'88e586bab89ddff842b77b06da49bc1b7b9adb1f05034a19a91834d93b1a129d', N'123', N'Tarik', N'tvelic1@etf.unsa.ba', 2, N'');
---SET IDENTITY_INSERT [User] OFF;	 
---campaigns
---SET IDENTITY_INSERT Campaign ON;
+-- SET IDENTITY_INSERT [User] OFF;	 
+-- campaigns
+-- SET IDENTITY_INSERT Campaign ON;
 INSERT INTO Campaign
 (Id, Name, Description, CompanyId, StartDate, EndDate)
 VALUES(28, N'Proljetna promocija', N'Akcija i marketinške aktivnosti usmjerene na privlacenje kupaca.', 1, '2024-02-06 00:00:00.000', '2024-04-25 00:00:00.000');
@@ -229,9 +229,9 @@ VALUES(66, N'Zagreb Travel', N'Sarajevo je jedan od najljepših gradova u Evropi
 INSERT INTO Campaign
 (Id, Name, Description, CompanyId, StartDate, EndDate)
 VALUES(69, N'Skopje Travel', N'Skopje je glavni grad Makedonijee', 37, '2024-04-03 00:00:00.000', '2024-04-26 00:00:00.000');
---SET IDENTITY_INSERT Campaign OFF;
+-- SET IDENTITY_INSERT Campaign OFF;
 -- locations
---SET IDENTITY_INSERT Location ON;
+-- SET IDENTITY_INSERT Location ON;
 INSERT INTO Location
 (Id, TypeOfLocation, Address, ContactNumber, CampaignId, UserId, Description)
 VALUES(55, N'Ulica', N'Envera Šehovica 14, Dolac Malta, 71000 Sarajevo', N'033333444', 29, NULL, N'Street');
@@ -292,9 +292,9 @@ VALUES(104, N'Planina', N'planinaa', N'21525', 66, NULL, N'Web application for e
 INSERT INTO Location
 (Id, TypeOfLocation, Address, ContactNumber, CampaignId, UserId, Description)
 VALUES(113, N'abc', N'Abc', N'515', 69, NULL, N'Abc');
---SET IDENTITY_INSERT Location OFF;	 
+-- SET IDENTITY_INSERT Location OFF;	 
 -- user campaigns
---SET IDENTITY_INSERT UserCampaign ON;
+-- SET IDENTITY_INSERT UserCampaign ON;
 INSERT INTO UserCampaign
 (Id, UserId, CampaignId, Status, LocationId, WorkingStatus)
 VALUES(23, 3, 29, N'accepted', NULL, N'done');
@@ -409,9 +409,9 @@ VALUES(112, 8, 30, N'none', NULL, N'none');
 INSERT INTO UserCampaign
 (Id, UserId, CampaignId, Status, LocationId, WorkingStatus)
 VALUES(114, 64, 29, N'none', NULL, N'none');
---SET IDENTITY_INSERT UserCampaign OFF;	 
+-- SET IDENTITY_INSERT UserCampaign OFF;	 
 -- location status
---SET IDENTITY_INSERT LocationStatus ON;
+-- SET IDENTITY_INSERT LocationStatus ON;
 INSERT INTO LocationStatus
 (Id, UserId, LocationId, Status)
 VALUES(2, 80, 85, N'none');
@@ -478,9 +478,9 @@ VALUES(24, 51, 57, N'none');
 INSERT INTO LocationStatus
 (Id, UserId, LocationId, Status)
 VALUES(25, 51, 55, N'none');
---SET IDENTITY_INSERT LocationStatus OFF;	 
+-- SET IDENTITY_INSERT LocationStatus OFF;	 
 -- record
---SET IDENTITY_INSERT Record ON;
+-- SET IDENTITY_INSERT Record ON;
 INSERT INTO Record
 (Id, SerialNumber, InventoryNumber, GPSCoordinates, FullAddress, PhotoUrl, LocationId, UserId, CreatedAt)
 VALUES(21, N'SN19432064', N'1943206421', N'51.5080, -0.1281', N'Trafalgar Square, London WC2N 5DS, UK', N'https://fieldlogisticscontrol.blob.core.windows.net/locationimages/Trafalgar_Square%2C_London_2_-_Jun_2009.jpg', 62, 80, '2024-01-02 09:28:29.675');
@@ -505,4 +505,4 @@ VALUES(38, N'111111', N'2222222', N'43.6550002, 17.9539555', N'Adres', N'https:/
 INSERT INTO Record
 (Id, SerialNumber, InventoryNumber, GPSCoordinates, FullAddress, PhotoUrl, LocationId, UserId, CreatedAt)
 VALUES(41, N'Serijski', N'Inventarski', N'43.8602975, 18.4151836', N'Adresa', N'https://fieldlogisticscontrol.blob.core.windows.net/locationimages/record-85-2024-05-08T13%3A24%3A37.713Z.jpeg', 85, 80, '2024-05-08 13:24:37.713');
---SET IDENTITY_INSERT Record OFF;
+-- SET IDENTITY_INSERT Record OFF;
