@@ -4,7 +4,7 @@ DELETE FROM LocationStatus;
 DELETE FROM UserCampaign;
 DELETE FROM Location;
 DELETE FROM Campaign;
-DELETE FROM [User];
+DELETE FROM 'User';
 DELETE FROM Admin;
 DELETE FROM Company;
 
@@ -121,70 +121,70 @@ VALUES(122, N'ndz', N'a7753ed716a5740772a03dfab4365788614d2ac219cf45d38a123c105c
 --SET IDENTITY_INSERT Admin OFF;	 
 -- users
 --SET IDENTITY_INSERT [User] ON;
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(3, N'test', N'9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', N'123456', N'testtest', N'test@', 1, N'RKGSF4MBDKGNQM22MD3X');
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(4, N'test2', N'60303ae22b998861bce3b28f33eec1be758a213c86c93c076dbe9f558c11c752', N'9992', N'testtest2', N'test2@', 1, N'IBAHDHYSOFWFMNIOHPY2');
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(5, N'test3', N'fd61a03af4f77d870fc21e05e7e80678095c92d808cfb3b5c279ee04c74aca13', N'9994', N'testtest3', N'test3@', 2, N'AENRQCWIJ75EGVCAW27Q');
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(6, N'test4', N'a4e624d686e03ed2767c0abd85c14426b0b1157d2ce81d27bb4fe4f6f01d688a', N'9994', N'testtest4', N'test4@', 2, N'SXHSKL3VSWUGMVBTCQBP');
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(8, N'test2FA', N'858dc2fb9169d93cecfa2ed8468ee2e6aad992ee042331abd7614564eaf1cc3b', N'9990', N'testtest45', N'test45@', 1, N'LMY2MHJMR565ZFLFYSND');
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(10, N'griza', N'0459f61b4d7cd31cc2aab93c90b43ce2cc60683f32dc5a562a30d1c9b5e2fc28', N'7777777', N'testtest777', N'testgriza@aa', 2, N'YEYUQPNQTV4TLR5TZKOE');
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(51, N'dzajic', N'9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', N'111111', N'dzajic', N'pp@example.com', 1, N'QYV6NZEFJVNHOF6LP7AF');
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(57, N'user1', N'0a041b9462caa4a31bac3567e0b6e6fd9100787db2ab433d96f6d178cabfce90', N'062', N'User', N'u@gmail.com', 27, N'');
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(58, N'Username2', N'88e586bab89ddff842b77b06da49bc1b7b9adb1f05034a19a91834d93b1a129d', N'062185444', N'Tarikistan', N'mail@gmail.com', 21, N'');
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(64, N'aida', N'a3f9a909aa816e10ace873b59ad22164424f63b1987f0624803739475c94c255', N'033466111', N'Aida Z', N'aida@example.com', 1, N'4PY24LCQCQSNJMGXBKER');
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(68, N'New1', N'4c94485e0c21ae6c41ce1dfe7b6bfaceea5ab68e40a2476f50208e526f506080', N'0001', N'New1', N'n1@gmail.com', 2, N'');
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(75, N'testUser', N'fd5cb51bafd60f6fdbedde6e62c473da6f247db271633e15919bab78a02ee9eb', N'1234567894', N'Test User', N'test@example.com', 2, N'');
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(78, N'Adnan1', N'256b93a925d9f71f4db05e2ce8a0a8c33cd6f13e907e62e0a8ac0dfbb29657dc', N'1252', N'Adnan', N'a@gmail.com', 64, N'');
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(80, N'mobilni', N'5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', N'61123456', N'Mobilni User', N'mobilni@mobilni.com', 1, N'ZEEH3GH2V4MEPVKI4FXO');
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(82, N'emirUser', N'95717ad2a39ff21655be2788d32dec929b3d713f26b64e536df0b2f6037794c9', N'1245', N'Emir User', N'euser@example.com', 1, N'');
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(101, N'dummy', N'b5a2c96250612366ea272ffac6d9744aaf4b45aacd96aa7cfcb931ee3b558259', N'123', N'Tariik', N'a@gmail.com', 37, N'');
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(102, N'Someone', N'5ad0e75a5119ff6de36d3fab783202c0224e685aa48461aed16aa72aa3960d21', N'2121', N'Some', N'ab@gmail.com', 37, N'');
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(103, N'amina', N'09b56f21e3c4370acc15a9e76ed4064f50d06085b630f7b2e736d8a90b369923', N'5454', N'Amina', N'am@gmail.com', 37, N'');
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(104, N'mobilni1', N'5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', N'061', N'mobilni1', N'mobilni1@gmail.com', 1, N'ENEYZREOEJAHCWD5MBWA');
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(106, N'juzer', N'8f9fb2d31a20a07c9f047361afc76e1e41e8408d879a9915afa3d3fc549e87ce', N'5215', N'Juzer', N'juzer@gmail.com', 37, N'');
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(108, N'asas', N'49b8ebd7fa9eb7eca44fcc7301b34c4ced40d2fe6647f273f2bb0e1fb4ad23c3', N'sasas', N'asasa', N'sasasss', 37, N'');
-INSERT INTO [User]
+INSERT INTO 'User'
 (Id, Username, Password, PhoneNumber, FullName, Mail, CompanyId, SecretKey)
 VALUES(111, N'tarik1', N'88e586bab89ddff842b77b06da49bc1b7b9adb1f05034a19a91834d93b1a129d', N'123', N'Tarik', N'tvelic1@etf.unsa.ba', 2, N'');
 --SET IDENTITY_INSERT [User] OFF;	 
