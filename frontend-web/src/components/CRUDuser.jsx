@@ -39,7 +39,7 @@ function CRUDuser() {
           const data = response.data;
           setUserData(data);
           localStorage.setItem("userData", JSON.stringify(data));
-
+          
         }
       } catch (error) {
         console.error("There was a problem with fetching company data:", error);
@@ -94,7 +94,7 @@ function CRUDuser() {
     try {
       const token = localStorage.getItem("accessToken");
       const userToUpdate = editedData[id];
-
+      /*
       if (passwordChanged) {
         const encoder = new TextEncoder();
         const data = encoder.encode(userToUpdate.password);
@@ -104,7 +104,7 @@ function CRUDuser() {
           .map((b) => b.toString(16).padStart(2, "0"))
           .join("");
         userToUpdate.password = hashHex;
-      }
+      } */
       //console.log(userToUpdate);
 
       const response = await fetch(
@@ -170,13 +170,15 @@ function CRUDuser() {
       return;
     }
     try {
-      const encoder = new TextEncoder();
+      /* const encoder = new TextEncoder();
       const data = encoder.encode(newUser.Password);
       const hashBuffer = await crypto.subtle.digest("SHA-256", data);
       const hashArray = Array.from(new Uint8Array(hashBuffer)); // convert buffer to byte array
       const hashHex = hashArray
         .map((b) => b.toString(16).padStart(2, "0"))
         .join("");
+        */
+      const passwd = newUser.password;
       const token = localStorage.getItem("accessToken");
 
       const response = await fetch(
@@ -189,7 +191,7 @@ function CRUDuser() {
           },
           body: JSON.stringify({
             ...newUser,
-            Password: hashHex,
+            Password: passwd,
             CompanyId: company,
             SecretKey: "",
             Token: null,

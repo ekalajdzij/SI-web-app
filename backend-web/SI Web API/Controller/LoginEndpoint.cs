@@ -79,9 +79,9 @@ public static class LoginEndpoints
 
         group.MapPost("/setup/2fa", async (HttpContext httpContext, SI_Web_APIContext db, [FromBody] LoginRequest payload) =>
         {
-            var hashedPassword = AuthService.GetSha256Hash(payload.Password);
+           // var hashedPassword = AuthService.GetSha256Hash(payload.Password);
             var user = await db.User.FirstOrDefaultAsync(u => (u.Username == payload.Username || u.PhoneNumber == payload.Username) &&
-                u.Password == hashedPassword);
+                u.Password == payload.Password);
             if (user != null)
             {
                 var setup2fa = TwoFactorAuthService.GenerateSetupCode(db, null, user);
