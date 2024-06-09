@@ -20,8 +20,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddDbContext<SI_Web_APIContext>(options =>
-    options.UseMySql("server=localhost;port=8080;database=baza;user=root;password=password;" ?? throw new InvalidOperationException("Connection string 'SI_Web_APIContext' not found."),
-    ServerVersion.AutoDetect("server=localhost;port=8080;database=baza;user=root;password=password;") // Replace with your MySQL version
+    options.UseMySql("server=mysql-db;port=3306;database=baza;user=root;password=password;" ?? throw new InvalidOperationException("Connection string 'SI_Web_APIContext' not found."),
+    ServerVersion.AutoDetect("server=mysql-db;port=3306;database=baza;user=root;password=password;") // Replace with your MySQL version
 ));
 
 
